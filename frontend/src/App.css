@@ -1,0 +1,120 @@
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background-color: rgb(249, 249, 249);
+}
+.header{
+  top: 0;
+  margin-left:90px;
+  position: fixed;
+  width: 100vw;
+  height: 100px;
+  box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.1);
+  background-color: rgb(249, 249, 249);
+}
+
+.page{
+  height: calc(100vh - 110px);
+  padding: 20px;
+  margin-left: 95px;
+  margin-right: 5px;
+  margin-bottom: 5px;
+  margin-top: 105px;
+  background-color:rgb(249, 249, 249);
+  box-shadow: 1px 0 1px rgba(0, 0, 0, 0.1);
+  box-sizing: border-box;
+}
+.side-bar{
+  top:0;
+  position: fixed;
+  width: 250px;
+  height: 100vh;
+  gap: 5vh;
+  display: flex;
+  align-items: flex;
+  flex-direction: column;
+  box-shadow: 1px 0 1px rgba(0, 0, 0, 0.1);
+  background-color: rgb(249, 249, 249);
+}
+.side-bar-hide{
+  top:0;
+  position: fixed;
+  width: 90px;
+  height: 100vh;
+  gap: 5vh;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  box-shadow: 1px 0 1px rgba(0, 0, 0, 0.1);
+  background-color: rgb(249, 249, 249);
+}
+.side-bar .icon{
+  margin-top: auto;
+  font-size: 30px;
+  color: rgb(60, 60, 211);
+}
+.side-bar-hide .icon{
+  width:100%;
+  font-size: 30px;
+  color: rgb(60, 60, 211);
+}
+.side-bar .text{
+  font-size: 25px;
+  font-weight: 500;
+  color: rgb(60, 60, 211);
+}
+
+.side-bar .toggle-button{
+  cursor: pointer;
+  margin-top: 40px;
+  margin-left: 30px;
+  font-size: 30px;
+  color: rgb(60, 60, 211);
+}
+.side-bar-hide .toggle-button{
+  cursor: pointer;
+  margin-top: 40px;
+  font-size: 30px;
+  color: rgb(60, 60, 211);
+}
+
+.menu-item {
+  padding: 30px;
+  padding-top: 20px;
+  padding-bottom: 10px;
+  padding-right: 10px;
+  text-decoration: none;
+  color: black;
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
+  box-sizing: border-box;
+}
+.menu-item-hide {
+  padding: 30px;
+  padding-top: 20px;
+  padding-bottom: 10px;
+  color: black;
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
+}
+.menu-items-container{
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+.menu-item:hover {
+  background-color: #eaeaea;
+}
+
+.menu-content {
+  gap:20px;
+  display: flex;
+  align-items: center;
+}
+
+.menu-item.active {
+  background-color:rgb(233, 247, 247) 
+}
+
+
+.menu-content span {
+  margin-left: 10px; 
+}
