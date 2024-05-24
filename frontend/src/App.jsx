@@ -5,11 +5,18 @@ import HomePage from './pages/HomePage';
 import StatisticPage from './pages/StatisticsPage';
 import MenuPage from './pages/MenuPage';
 import RestaurantPage from './pages/RestaurantPage';
+import AuthenticationPage, {
+  action as authAction,
+} from './pages/AuthenticationPage';
+import { tokenLoader } from './util/auth';
+import { action as logoutAction } from './pages/Logout';
 
 const router = createBrowserRouter([
   {
     path: '/',
     element: <RootLayout />,
+    id: 'root',
+    loader: tokenLoader,
     children: [
       { index: true, element: <HomePage /> },
       {
@@ -23,6 +30,15 @@ const router = createBrowserRouter([
       {
         path: 'restaurant',
         element: <RestaurantPage />,
+      },
+      {
+        path: 'auth',
+        element: <AuthenticationPage />,
+        action: authAction,
+      },
+      {
+        path: 'logout',
+        action: logoutAction,
       },
     ],
   },

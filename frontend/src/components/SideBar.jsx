@@ -13,42 +13,30 @@ function Sidebar() {
   };
 
   return (
-    <div className={isOpen?"side-bar":"side-bar-hide"}>
+    <div className={isOpen ? "side-bar" : "side-bar-hide"}>
       <div className="toggle-button" onClick={toggleSidebar}>
-        {isOpen ? <ArrowBackIosOutlinedIcon className="icon"/> : <ArrowForwardIosOutlinedIcon className="icon"/>}
+        {isOpen ? <ArrowBackIosOutlinedIcon /> : <ArrowForwardIosOutlinedIcon />}
       </div>
       <div className="menu-items-container">
-      <MenuItem 
-      text="Menu" 
-      link="/menu" 
-      icon={<RestaurantMenuOutlinedIcon className="icon"/>}
-      hide={isOpen}
-      />
-      <MenuItem 
-      text="Statistics" 
-      link="/statistics" 
-      icon={<LeaderboardOutlinedIcon className="icon"/>}
-      hide={isOpen}
-      />
-      <MenuItem 
-      text="Restaurant" 
-      link="/restaurant" 
-      icon={<TableBarOutlinedIcon className="icon"/>}
-      hide={isOpen}
-      />
+        <MenuItem
+          text="Menu"
+          link="/menu"
+          icon={<RestaurantMenuOutlinedIcon />}
+          hide={isOpen}
+        />
+        <MenuItem
+          text="Statistics"
+          link="/statistics"
+          icon={<LeaderboardOutlinedIcon />}
+          hide={isOpen}
+        />
+        <MenuItem
+          text="Restaurant"
+          link="/restaurant"
+          icon={<TableBarOutlinedIcon />}
+          hide={isOpen}
+        />
       </div>
-      {/* <div className={`sidebar ${isOpen ? 'open' : ''}`}>
-        <div className="content">
-          <h2>Sidebar</h2>
-          <ul>
-            <li><a href="home">Home</a></li>
-            <li><a href="about">About</a></li>
-            <li><a href="contact">Contact</a></li>
-          </ul>
-          </div>
-        </div>*/}
-      {/* <div className={`main-content ${isOpen ? 'shifted' : ''}`}>
-  // </div> */}
     </div>
   );
 }
