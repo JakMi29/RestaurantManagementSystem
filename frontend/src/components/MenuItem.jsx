@@ -1,12 +1,12 @@
 import { NavLink } from "react-router-dom"
 import PropTypes from 'prop-types';
 
-function MenuItem({ text, link, icon, hide }) {
+function MenuItem({ text, link, icon}) {
     return (
-        <NavLink to={link} className={hide ? "menu-item" : "menu-item-hide"} activeclassname="active">
+        <NavLink to={link} className="menu-item" activeclassname="active">
             <div className="menu-content">
                 {icon}
-                {hide && <span>{text}</span>}
+                {text}
             </div>
         </NavLink>
     );

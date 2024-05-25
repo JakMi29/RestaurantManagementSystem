@@ -1,13 +1,20 @@
 import { Outlet, useLoaderData, useSubmit } from "react-router-dom";
 import PageHeader from "../components/PageHeader";
 import Sidebar from "../components/SideBar";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { getTokenDuration } from "../util/auth";
-
+import ArrowBackIosOutlinedIcon from '@mui/icons-material/ArrowBackIosOutlined';
+import ArrowForwardIosOutlinedIcon from '@mui/icons-material/ArrowForwardIosOutlined';
 
 function RootLayout() {
   const token = useLoaderData();
   const submit = useSubmit();
+  const [isOpen, setIsOpen] = useState(false);
+
+  const toggleSidebar = () => {
+    setIsOpen(!isOpen);
+  };
+
   useEffect(() => {
     if (!token) {
       return;
@@ -27,13 +34,15 @@ function RootLayout() {
   }, [token, submit]);
   
 
+
   return (
     <>
       <PageHeader />
-      <div className="main-container">
-        <Sidebar />
-        <Outlet />
+      <div className="toggle-button" onClick={toggleSidebar}>
+        {isOpen ? <ArrowBackIosOutlinedIcon /> : <ArrowForwardIosOutlinedIcon />}
       </div>
+        {isOpen && <Sidebar />}
+        <Outlet />
     </>
   );
 }

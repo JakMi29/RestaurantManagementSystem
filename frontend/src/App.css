@@ -78,57 +78,41 @@ body {
   gap: 5vh;
   display: flex;
   flex-direction: column;
-  box-shadow: 1px 0 1px rgba(0, 0, 0, 0.1);
-  background-color: rgb(249, 249, 249);
+  background-color: #f7f7f7;
+  border-radius: 8px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
 }
-.side-bar-hide{
-  top:100px;
-  position: fixed;
-  width: 80px;
-  height: calc(100vh - 100px);
-  gap: 5vh;
-  display: flex;
-  flex-direction: column;
-  box-shadow: 1px 0 1px rgba(0, 0, 0, 0.1);
-  background-color: rgb(249, 249, 249);
-}
+
 .side-bar .text{
   font-size: 25px;
   font-weight: 500;
   color: rgb(0, 0, 0);
 }
 
-.side-bar .toggle-button{
+.toggle-button{
   cursor: pointer;
-  margin-top: 40px;
-  margin-left: 20px;
+  position:fixed;
+  margin-top: 10px;
+  margin-left: 10px;
   font-size: 30px;
   padding: 0.5rem 0.5rem;
   border-radius: 4px;
-  color: rgb(60, 60, 211);
-  align-self: flex-start;
-
-}
-.side-bar-hide .toggle-button{
-  cursor: pointer;
-  margin-top: 40px;
-  margin-left: 20px;
-  font-size: 30px;
-  padding: 0.5rem 0.5rem;
-  border-radius: 4px;
-  color: rgb(60, 60, 211);
-  align-self: flex-start;
-}
-
-.side-bar .toggle-button:hover {
   background-color: rgb(60, 60, 211);
   color: rgb(249, 249, 249);
+  z-index: 10000;
+}
+
+.toggle-button:hover {
+  color: rgb(60, 60, 211);
+  background-color: rgb(249, 249, 249);
   font-size: 30px;
 }
-.side-bar-hide .toggle-button:hover {
-  background-color: rgb(60, 60, 211);
-  color: rgb(249, 249, 249);
-  font-size: 30px;
+
+.menu-items-container{
+  margin-top: 150px;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
 }
 
 .menu-item {
@@ -144,26 +128,7 @@ body {
   color: rgb(60, 60, 211);
   font-size:20px;
 }
-.menu-item-hide {
-  border-radius: 4px;
-  padding:10px;
-  margin-left:20px;
-  margin-right:20px;
-  margin-top: 5px;
-  text-decoration: none;
-  color: rgb(60, 60, 211);
-  font-size:20px;
-}
-.menu-items-container{
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-}
 .menu-item:hover {
-  background-color:rgb(60, 60, 211,0.2);
-  color: rgb(249, 249, 249);
-}
-.menu-item-hide:hover {
   background-color:rgb(60, 60, 211,0.2);
   color: rgb(249, 249, 249);
 }
@@ -177,11 +142,6 @@ body {
 .menu-item.active {
   background-color:rgb(60, 60, 211);
   color: rgb(249, 249, 249);
-}
-.menu-item-hide.active {
-  color: rgb(255, 255, 255);
-  background-color:rgb(60, 60, 211);
-  box-shadow: 0 0 1px rgba(0, 0, 0, 0.1);
 }
 
 .menu-content span {

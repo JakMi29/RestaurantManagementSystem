@@ -9,7 +9,8 @@ function AuthForm() {
   const data = useActionData();
 
   return (
-    <div className={classes.page}>
+    <div className='page'>
+    <div className={classes.login}>
       <Form method="post" className={classes.form}>
         <h1>Login</h1>
         <div className={classes.errorContainer}>
@@ -29,6 +30,7 @@ function AuthForm() {
           </button>
         </div>
       </Form>
+    </div>
     </div>
   );
 }
