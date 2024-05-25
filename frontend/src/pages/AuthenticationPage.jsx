@@ -9,14 +9,34 @@ function AuthenticationPage() {
 export default AuthenticationPage;
 
 export async function action({ request }) {
-  const data = await request.formData();
+  const searchParams = new URL(request.url).searchParams;
+  const mode = searchParams.get('mode') || 'login';
   
-  const authData = {
-    email: data.get('email'),
-    password: data.get('password'),
-  };
+  if (mode !== 'login' && mode !== 'signup') {
+    throw json({ message: 'Unsupported mode.' }, { status: 422 });
+  }
+  
+  const data = await request.formData();
+ let authData;
 
-  const response = await fetch('http://localhost:8080/api/restaurantManagementSystem/authentication', {
+  if (mode === 'signup') {
+    authData = {
+      email: data.get('email'),
+      password: data.get('password'),
+      name: data.get('name'),
+      surname: data.get('surname'),
+      restaurantName: data.get('restaurantName'),
+      phone: data.get('phone'),
+    };
+  }
+  else{
+    authData = {
+      email: data.get('email'),
+      password: data.get('password'),
+    };
+  }
+
+  const response = await fetch('http://localhost:8080/api/restaurantManagementSystem/' + mode, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -34,6 +54,7 @@ export async function action({ request }) {
 
   const resData = await response.json();
   const token = resData.token;
+  
   localStorage.setItem('token', token);
   const expiration = new Date();
   expiration.setMinutes(expiration.getMinutes() + 15);

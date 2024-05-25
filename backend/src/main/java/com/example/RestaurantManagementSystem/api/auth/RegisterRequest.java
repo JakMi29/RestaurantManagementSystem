@@ -15,11 +15,13 @@ import org.springframework.validation.annotation.Validated;
 @NoArgsConstructor
 public class RegisterRequest {
     @NotBlank
-    private String firstname;
+    private String name;
     @NotBlank
-    private String lastname;
+    private String surname;
     @NotBlank
-    private String username;
+    private String restaurantName;
+    @NotBlank
+    private String phone;
     @NotBlank
     @Email
     private String email;

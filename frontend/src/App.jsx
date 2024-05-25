@@ -10,11 +10,13 @@ import AuthenticationPage, {
 } from './pages/AuthenticationPage';
 import { tokenLoader } from './util/auth';
 import { action as logoutAction } from './pages/Logout';
+import ErrorPage from './pages/ErrorPage';
 
 const router = createBrowserRouter([
   {
     path: '/',
     element: <RootLayout />,
+    errorElement: <ErrorPage />,
     id: 'root',
     loader: tokenLoader,
     children: [

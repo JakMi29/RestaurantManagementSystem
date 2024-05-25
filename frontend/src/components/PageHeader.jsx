@@ -7,7 +7,7 @@ function PageHeader() {
             <h1>Restaurant Management System</h1>
             {!token && (
             <NavLink
-                to="/auth"
+                to="/auth?mode=login"
                 className="login-button"
                 activeclassname="active"
             >

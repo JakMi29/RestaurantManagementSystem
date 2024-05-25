@@ -38,10 +38,14 @@ function RootLayout() {
   return (
     <>
       <PageHeader />
+      { token && (
+        <>
       <div className="toggle-button" onClick={toggleSidebar}>
         {isOpen ? <ArrowBackIosOutlinedIcon /> : <ArrowForwardIosOutlinedIcon />}
       </div>
         {isOpen && <Sidebar />}
+        </>
+      )}
         <Outlet />
     </>
   );
