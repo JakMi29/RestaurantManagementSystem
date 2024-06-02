@@ -60,7 +60,7 @@ body {
 }
 
 .page{
-  height: calc(100vh - 110px);
+  height: calc(100vh - 215px);
   padding: 20px;
   margin-left: 95px;
   margin-right: 5px;
@@ -92,10 +92,10 @@ body {
 .toggle-button{
   cursor: pointer;
   position:fixed;
-  margin-top: 10px;
+  margin-top: 5px;
   margin-left: 10px;
   font-size: 30px;
-  padding: 0.5rem 0.5rem;
+  padding: 0.6rem 0.6rem;
   border-radius: 4px;
   background-color: rgb(60, 60, 211);
   color: rgb(249, 249, 249);

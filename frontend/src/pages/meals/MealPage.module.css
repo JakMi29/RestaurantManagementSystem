@@ -1,0 +1,159 @@
+.page {
+    height: calc(100vh - 110px);
+    padding: 20px;
+    padding-left: 90px;
+    margin-bottom: 5px;
+    margin-top: 105px;
+    background-color: rgba(244, 244, 244, 0.613);
+    box-shadow: 1px 0 1px rgba(0, 0, 0, 0.1);
+    box-sizing: border-box;
+}
+
+.categoryContainer {
+    display:flex;
+    margin-top: -15px;
+    gap: 5px;
+    width: 100%;
+}
+
+.categoryButton {
+    background-color: rgb(60, 60, 211, 0.2);
+    color: rgb(249, 249, 249);
+    margin-right: calc(1%);
+    padding: 1rem 3rem;
+    border-radius: 4px;
+    border: none;
+    font-size: 20px;
+    text-decoration: none;
+}
+
+.categoryButton:hover {
+    background-color: rgb(60, 60, 211);
+    color: rgb(249, 249, 249);
+}
+
+.categoryButtonActive {
+    background-color: rgb(60, 60, 211);
+    color: rgb(249, 249, 249);
+    margin-right: 1%;
+    padding: 1rem 3rem;
+    border-radius: 4px;
+    border: none;
+    font-size: 20px;
+    text-decoration: none;
+}
+.mealsContainer{
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 80px;
+    gap:40px
+}
+
+.mealsOfDayContainer{
+    background-color: #f7f7f7;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+.meal {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 300px;
+    height: auto;
+    background-color: #f7f7f7;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+    margin-bottom: 20px;
+}
+
+.mealImage {
+    padding: 10px;
+    height: 250px;
+    overflow: hidden;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+}
+
+.mealImage img {
+    border-radius: 4px;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.mealContent {
+    color: black;
+    padding: 10px;
+    text-align: center;
+}
+
+.mealContent h3 {
+    margin-bottom: 10px;
+}
+
+.mealContent p {
+    color: black;
+    margin-bottom: 8px;
+}
+.newMealButton{
+    background-color: rgb(79, 156, 109);
+    color: rgb(249, 249, 249);
+    right: 1vw;
+    margin-left: auto;
+    padding: 1rem 3rem;
+    border-radius: 4px;;
+    border: none;
+    font-size: 20px;
+    text-decoration: none;
+}
+
+.newMealButton:hover{
+    background-color: rgba(14, 185, 88, 0.2);
+    color: rgb(249, 249, 249);
+}
+.newMealButtonActive{
+    background-color: rgba(14, 185, 88, 0.2);
+    color: rgb(249, 249, 249);
+    padding: 1rem rem;
+    border-radius: 4px;
+    border: none;
+    font-size: 20px;
+    text-decoration: none;
+}
+.actions {
+    display: flex;
+    gap: 100px;
+    justify-content: space-between;
+    padding: 20px;
+  }
+
+  .deleteButton{
+    background-color: rgb(237, 14, 14);
+    color: rgb(249, 249, 249);
+    right: 1vw;
+    padding: 0.5rem 0.4rem;
+    border-radius: 4px;;
+    border: none;
+    font-size: 20px;
+    text-decoration: none;
+}
+
+.deleteButton:hover{
+    background-color: rgba(255, 0, 0,0.2);
+    color: rgb(249, 249, 249);
+}
+
+.editButton{
+    background-color: rgb(79, 156, 109);
+    color: rgb(249, 249, 249);
+    right: 1vw;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;;
+    border: none;
+    font-size: 20px;
+    text-decoration: none;
+}
+
+.editButton:hover{
+    background-color: rgba(14, 185, 88, 0.2);
+    color: rgb(249, 249, 249);
+}

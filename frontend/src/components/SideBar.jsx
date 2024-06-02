@@ -10,8 +10,8 @@ function Sidebar() {
     <div className="side-bar">
       <div className="menu-items-container">
         <MenuItem
-          text="Menu"
-          link="/menu"
+          text="Meals"
+          link="/meals?category=soup"
           icon={<RestaurantMenuOutlinedIcon />}
         />
         <MenuItem

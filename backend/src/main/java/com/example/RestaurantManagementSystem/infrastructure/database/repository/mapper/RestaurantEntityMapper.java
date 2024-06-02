@@ -7,7 +7,7 @@ import com.example.RestaurantManagementSystem.infrastructure.database.entity.Res
 import org.springframework.stereotype.Component;
 
 @Component
-public class RestaurantMapper {
+public class RestaurantEntityMapper {
     public Restaurant map(RestaurantEntity entity){
         return Restaurant.builder()
                 .id(entity.getId())

@@ -1,2 +1,4 @@
-package com.example.RestaurantManagementSystem.infrastructure.database.repository;public class WaiterRepository {
+package com.example.RestaurantManagementSystem.infrastructure.database.repository;
+
+public class WaiterRepository {
 }

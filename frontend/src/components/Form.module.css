@@ -1,28 +1,34 @@
 .login{
   display: flex;
   justify-content: center;
-  margin-top: 20vh;
+  margin-top: 15vh;
 }
 
 .form {
   width: 30vw;
-  padding: 20px;
+  padding: 10px;
   background-color: #f7f7f7;
   border-radius: 8px;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 .inputContainer {
-  margin: 30px;
+  margin: 20px;
 }
 
+p{
+  margin: 20px;
+  color: #ed5656;
+}
 label {
   display: block;
   margin-bottom: 10px;
   color: #333;
 }
 
-input {
+input,
+textarea,
+select {
   width: 100%;
   padding: 10px;
   border: 1px solid #ccc;
@@ -36,7 +42,7 @@ input {
   gap:10px;
 }
 
-.loginButton {
+.actionButton {
   background-color: #3c3cd3;
   color: #fff;
   border: none;
@@ -46,7 +52,7 @@ input {
   cursor: pointer;
 }
 
-.loginButton:hover {
+.button:hover {
   background-color: rgba(60, 60, 211, 0.2);
 }
 
@@ -64,3 +70,41 @@ input {
 .mode:hover {
   background-color: #3c3cd3;
 }
+
+.form select {
+  font-size: 1rem;
+}
+.upload-container {
+  width: 30vw;
+  padding: 20px;
+  background-color: #f7f7f7;
+  border: 2px dashed #ccc;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  cursor: pointer;
+}
+
+.upload-container.dragover {
+  background-color: #e0e0e0;
+}
+
+.upload-container input[type="file"] {
+  display: none;
+}
+
+.upload-icon {
+  font-size: 3rem;
+  color: #ccc;
+  margin-bottom: 10px;
+}
+
+.upload-text {
+  font-size: 1.2rem;
+  color: #333;
+}
+
+

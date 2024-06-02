@@ -1,6 +1,7 @@
 package com.example.RestaurantManagementSystem.api.auth;
 
-import com.example.RestaurantManagementSystem.domain.exception.UserAlreadyExist;
+import com.example.RestaurantManagementSystem.business.RestaurantOwnerService;
+import com.example.RestaurantManagementSystem.domain.exception.ObjectAlreadyExist;
 import com.example.RestaurantManagementSystem.infrastructure.security.JwtService;
 import com.example.RestaurantManagementSystem.infrastructure.security.Role;
 import com.example.RestaurantManagementSystem.infrastructure.security.User;
@@ -22,17 +23,18 @@ public class AuthenticationService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
+    private final RestaurantOwnerService restaurantOwnerService;
 
     @Transactional
     public AuthenticationResponse register(RegisterRequest request) {
 
         Optional<User> existingUser = repository.findByEmail(request.getEmail());
         if (existingUser.isPresent())
-            throw new UserAlreadyExist("Email: %s is already taken".formatted(request.getEmail()));
-
+            throw new ObjectAlreadyExist("User with this email already exist!");
         var user = buildUser(request);
         repository.save(user);
 
+        restaurantOwnerService.createRestaurantOwner(request.getEmail(), request.getRestaurantName());
 
         var jwtToken = jwtService.generateToken(user);
         return AuthenticationResponse.builder()

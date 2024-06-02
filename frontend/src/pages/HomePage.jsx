@@ -4,8 +4,9 @@ import InsertChartOutlinedIcon from '@mui/icons-material/InsertChartOutlined';
 import AttachMoneyOutlinedIcon from '@mui/icons-material/AttachMoneyOutlined';
 import classes from './HomePage.module.css';
 function HomePage() {
+ 
   return (
-    <div className="page">
+          <div className="page">
         <div className={classes.content}>
           <div className={classes.container}>
           <h1>Welcome in our management system</h1>

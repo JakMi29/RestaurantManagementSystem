@@ -1,8 +1,8 @@
 package com.example.RestaurantManagementSystem.domain.exception;
 
-public class UserAlreadyExist extends RuntimeException {
+public class ObjectAlreadyExist extends RuntimeException {
 
-    public UserAlreadyExist(final String message) {
+    public ObjectAlreadyExist(final String message) {
         super(message);
     }
 }
