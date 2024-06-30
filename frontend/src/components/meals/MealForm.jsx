@@ -1,97 +1,103 @@
-import { Form, json, useNavigation,useNavigate } from 'react-router-dom';
+import { Form, json, useActionData, useNavigation } from 'react-router-dom';
 import classes from '../Form.module.css';
 import { getAuthToken } from '../../util/auth';
+import MealModal from '../ui/MealModal';
+import { useContext, useState } from 'react';
+import MealPageContext from '../../store/MealPageContext';
 
-function MealForm({ method, meal }) {
-  const navigate = useNavigate();
+
+function MealForm() {
   const navigation = useNavigation();
-
+  const mealPageCtx=useContext(MealPageContext);
+  const [error, setError] = useState(true);
   const isSubmitting = navigation.state === 'submitting';
-
-  function cancelHandler() {
-    navigate('..');
+  const method=(mealPageCtx.progress==='create'?'post':'patch');
+  const meal=mealPageCtx.meal;
+  const data = useActionData();
+  console.log(data)
+  function handleChange() {
+    setError(false);
   }
 
   return (
-    < div className = 'page' >
-      <div className={classes.login}>
-        <Form method={method} className={classes.form} encType="multipart/form-data">
-          <h1>{meal ? "Edit meal" : "Add new meal"}</h1>
-          <div className={classes.inputContainer}>
-            <label htmlFor="name">Name</label>
-            <input
-              id="name"
-              type="text"
-              name="name"
-              required
-              defaultValue={meal ? meal.name : ''}
-            />
-          </div>
-          <div className={classes.inputContainer}>
-            <label htmlFor="category">Category</label>
-            <select
-              id="category"
-              name="category"
-              defaultValue={meal ? meal.category : ''}
-              required
-            >
-              <option value="APPETIZER">Appetizer</option>
-              <option value="MAIN_DISH">Main Dish</option>
-              <option value="SOUP">Soup</option>
-              <option value="DRINK">Drink</option>
-              <option value="DESSERT">Dessert</option>
-              <option value="ALCOHOLIC_DRINK">Alcoholic Drink</option>
-            </select>
-          </div>
-          <div className={classes.inputContainer}>
-            <label htmlFor="image">Image</label>
-            <input
-              id="image"
-              type="file"
-              name="image"
-              required
-            />
-          </div>
-          <div className={classes.inputContainer}>
-            <label htmlFor="price">Price</label>
-            <input
-              id="price"
-              name="price"
-              required
-              defaultValue={meal ? meal.price : ''}
-            />
-          </div>
-          <div className={classes.inputContainer}>
-            <label htmlFor="description">Description</label>
-            <textarea
-              id="description"
-              name="description"
-              rows="5"
-              required
-              defaultValue={meal ? meal.description : ''}
-            />
-          </div>
-          <div className={classes.actions}>
-            <button type="button" onClick={cancelHandler} className={classes.actions}>
-              Cancel
-            </button>
-            <button type="submit" className={classes.actionButton} disabled={isSubmitting}>
-              {isSubmitting ? 'Submitting...' : (method === 'post' ? 'create' : 'Save')}
-            </button>
-          </div>
-        </Form>
-      </div>
-    </div >
+    <MealModal open={mealPageCtx.progress==='create'} onClose={()=>{mealPageCtx.hide}}>
+          <Form method={method} className={classes.form} encType="multipart/form-data">
+            <h1>{meal ? "Edit meal" : "Add new meal"}</h1>
+            {(data?.errors && error) && (<p>
+            {data}
+          </p>)}
+            <div className={classes.inputContainer}>
+              <label htmlFor="name">Name</label>
+              <input
+                id="name"
+                type="text"
+                name="name"
+                required
+                defaultValue={meal ? meal.name : ''}
+              />
+            </div>
+            <div className={classes.inputContainer}>
+              <label htmlFor="category">Category</label>
+              <select
+                id="category"
+                name="category"
+                defaultValue={meal ? meal.category : ''}
+                required
+              >
+                <option value="APPETIZER">Appetizer</option>
+                <option value="MAIN_DISH">Main Dish</option>
+                <option value="SOUP">Soup</option>
+                <option value="DRINK">Drink</option>
+                <option value="DESSERT">Dessert</option>
+                <option value="ALCOHOLIC_DRINK">Alcoholic Drink</option>
+              </select>
+            </div>
+            <div className={classes.inputContainer}>
+              <label htmlFor="image">Image</label>
+              <input
+                id="image"
+                type="file"
+                name="image"
+                required
+              />
+            </div>
+            <div className={classes.inputContainer}>
+              <label htmlFor="price">Price</label>
+              <input
+                id="price"
+                name="price"
+                required
+                defaultValue={meal ? meal.price : ''}
+              />
+            </div>
+            <div className={classes.inputContainer}>
+              <label htmlFor="description">Description</label>
+              <textarea
+                id="description"
+                name="description"
+                rows="5"
+                required
+                defaultValue={meal ? meal.description : ''}
+              />
+            </div>
+            <div className={classes.actions}>
+              <button onClick={mealPageCtx.hide} className={classes.cancelButton}>
+                Cancel
+              </button>
+              <button type="submit" className={classes.actionButton} disabled={isSubmitting} onClick={handleChange}>
+                {isSubmitting ? 'Submitting...' : (method === 'post' ? 'create' : 'Save')}
+              </button>
+            </div>
+          </Form>
+    </MealModal>
   );
 }
 
 export default MealForm;
 
 
-export async function action({ request, params }) {
+export async function action({ request }) {
   const data = await request.formData();
-
-
   const mealData = {
     name: data.get('name'),
     category: data.get('category'),
@@ -99,6 +105,7 @@ export async function action({ request, params }) {
     description: data.get('description'),
     restaurantName: "Italiano"
   };
+  console.log(mealData)
 
   const formData = new FormData();
   const mealBlob = new Blob([JSON.stringify(mealData)], { type: 'application/json' });
@@ -110,7 +117,7 @@ export async function action({ request, params }) {
 
   const token = getAuthToken();
   const response = await fetch(url, {
-    method: { method },
+    method: 'post',
     headers: {
       'Authorization': 'Bearer ' + token
     },
@@ -125,8 +132,8 @@ export async function action({ request, params }) {
   }
 
   if (!response.ok) {
-    throw json({ message: 'Could not save event.' }, { status: 500 });
+    throw json({ message: 'Could not save meal.' }, { status: 500 });
   }
 
-  return cancelHandler();
+  return { success: true };
 }

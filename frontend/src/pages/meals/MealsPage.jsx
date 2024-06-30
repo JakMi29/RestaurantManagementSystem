@@ -6,21 +6,26 @@ import { getAuthToken } from "../../util/auth";
 import { Suspense } from "react";
 import CircularProgress from '@mui/material/CircularProgress';
 import MealList from "../../components/meals/MealList";
+import { MealPageContextProvider } from "../../store/MealPageContext";
+import MealForm from "../../components/meals/MealForm";
 function MealsPage() {
-    const {meals} = useLoaderData();
+    const { meals } = useLoaderData();
     const location = useLocation();
     const queryParams = new URLSearchParams(location.search);
     const currentCategory = queryParams.get('category');
 
     return (
-        <div className={classes.page}>
-            <MealCategoryContainer currentCategory={currentCategory} />
-                <Suspense fallback={<p style={{ textAlign: 'center' }}>{<CircularProgress/>}</p>}>
+        <MealPageContextProvider>
+            <MealForm />
+            <div className={classes.page}>
+                <MealCategoryContainer currentCategory={currentCategory} />
+                <Suspense fallback={<p style={{ textAlign: 'center' }}>{<CircularProgress />}</p>}>
                     <Await resolve={meals}>
-                       {(loadedMeals)=><MealList meals={loadedMeals}/>}
+                        {(loadedMeals) => <MealList meals={loadedMeals} />}
                     </Await>
                 </Suspense>
-                    </div>
+            </div>
+        </MealPageContextProvider>
     );
 }
 
@@ -28,13 +33,13 @@ export default MealsPage;
 
 async function loadMeals(category) {
     const token = getAuthToken();
-    
+
     const response = await fetch('http://localhost:8080/api/admin/meals?restaurantName=Italiano&category=' + category, {
         headers: {
             'Authorization': 'Bearer ' + token
         }
     });
-console.log(response)
+    console.log(response)
     if (!response.ok) {
         throw json(
             { message: 'Could not fetch events.' },

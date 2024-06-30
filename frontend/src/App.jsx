@@ -16,6 +16,7 @@ import MealsRootLayout from './pages/meals/MealRootLayout';
 import MealsPage, { loader as mealsLoader } from './pages/meals/MealsPage';
 import { loader as mealLoader } from './pages/meals/EditMealPage';
 import EditMealPage from './pages/meals/EditMealPage';
+import { MessageContextProvider } from './store/MessageContext';
 
 
 const router = createBrowserRouter([
@@ -40,11 +41,11 @@ const router = createBrowserRouter([
             index: true,
             element: <MealsPage />,
             loader: mealsLoader,
+            action: mealAction,
           },
           {
             path: 'new',
             element: <MealPage />,
-            action: mealAction,
           },
           {
             path: 'details',
@@ -77,6 +78,10 @@ const router = createBrowserRouter([
 ]);
 
 function App() {
-  return <RouterProvider router={router} />;
+  return (
+    <MessageContextProvider>
+      <RouterProvider router={router} />
+    </MessageContextProvider>
+  );
 }
 export default App;

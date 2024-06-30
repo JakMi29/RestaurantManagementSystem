@@ -15,7 +15,7 @@ export default EditMealPage;
 
 async function loadMeal(name) {
   const token = getAuthToken();
-  const response = await fetch('http://localhost:8080/api/admin/mealed?restaurantName=Italiano&name=' + name, {
+  const response = await fetch('http://localhost:8080/api/admin/meal?restaurantName=Italiano&name=' + name, {
     headers: {
       'Authorization': 'Bearer ' + token
     }

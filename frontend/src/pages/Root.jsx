@@ -1,16 +1,17 @@
 import { Outlet, useLoaderData, useSubmit } from "react-router-dom";
 import PageHeader from "../components/PageHeader";
 import Sidebar from "../components/SideBar";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { getTokenDuration } from "../util/auth";
 import ArrowBackIosOutlinedIcon from '@mui/icons-material/ArrowBackIosOutlined';
 import ArrowForwardIosOutlinedIcon from '@mui/icons-material/ArrowForwardIosOutlined';
-
+import MessageModal from "../components/ui/MessageModal";
+import MessageContext from "../store/MessageContext";
 function RootLayout() {
   const token = useLoaderData();
   const submit = useSubmit();
   const [isOpen, setIsOpen] = useState(false);
-
+  const messageContext=useContext(MessageContext)
   const toggleSidebar = () => {
     setIsOpen(!isOpen);
   };
@@ -26,29 +27,33 @@ function RootLayout() {
     }
 
     const tokenDuration = getTokenDuration();
-    console.log(tokenDuration);
 
     setTimeout(() => {
       submit(null, { action: '/logout', method: 'post' });
     }, tokenDuration);
-  }, [token, submit]);
-  
 
+    const clearProgressTimeout = setTimeout(() => {
+    }, tokenDuration + 1000);
+
+    return () => clearTimeout(clearProgressTimeout);
+
+  }, [token, submit]);
 
   return (
     <>
       <PageHeader />
-      { token && (
+      {token && (
         <>
-      <div className="toggle-button" onClick={toggleSidebar}>
-        {isOpen ? <ArrowBackIosOutlinedIcon /> : <ArrowForwardIosOutlinedIcon />}
-      </div>
-        {isOpen && <Sidebar />}
+          <div className="toggle-button" onClick={toggleSidebar}>
+            {isOpen ? <ArrowBackIosOutlinedIcon /> : <ArrowForwardIosOutlinedIcon />}
+          </div>
+          {isOpen && <Sidebar />}
         </>
       )}
+        <MessageModal open={messageContext.message !== ''}/>
         <Outlet />
     </>
   );
 }
 
-export default RootLayout;
+export default RootLayout

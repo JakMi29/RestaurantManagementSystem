@@ -1,9 +1,12 @@
 import { NavLink } from 'react-router-dom';
 import classes from '../../pages/meals/MealPage.module.css';
+import { useContext } from 'react';
+import MealPageContext from '../../store/MealPageContext';
 
 // eslint-disable-next-line react/prop-types
 function MealCategoryContainer({currentCategory}) {
     const isActive = (category) => currentCategory === category;
+    const mealPageCtx=useContext(MealPageContext);
     return(
     <div className={classes.categoryContainer}>
         <NavLink
@@ -33,7 +36,7 @@ function MealCategoryContainer({currentCategory}) {
             className={isActive("dessert") ? classes.categoryButtonActive : classes.categoryButton
             }
         >
-            dessert
+            Dessert
         </NavLink>
         <NavLink
             to="/meals?category=drink"
@@ -42,13 +45,12 @@ function MealCategoryContainer({currentCategory}) {
         >
             Drink
         </NavLink>
-        <NavLink
-            to="new"
+        <button
             className={classes.newMealButton}
-            activeclassname={classes.newMealButtonActive}
+            onClick={mealPageCtx.create}
         >
             New meal
-        </NavLink>
+        </button>
     </div>
     );
 }
