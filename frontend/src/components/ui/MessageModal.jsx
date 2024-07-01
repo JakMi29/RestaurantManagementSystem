@@ -28,7 +28,6 @@ export default function MessageModal() {
         messageCtx.hideMessage();
         messageCtx.confirmCallback(false);
       }, TIMER);
-      console.log("dupa")
       return () => {
         clearTimeout(timer);
       };

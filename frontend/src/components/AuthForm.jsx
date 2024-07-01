@@ -6,13 +6,20 @@ import {
 } from 'react-router-dom';
 
 import classes from './Form.module.css';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 function AuthForm() {
   const data = useActionData();
-  const [error, setError] = useState(true);
+  const [error, setError] = useState(false);
   const [searchParams] = useSearchParams();
   const isLogin = searchParams.get('mode') === 'login';
+  useEffect(() => {
+    if (data) {
+      setError(true);
+    } else {
+      setError(false);
+    }
+  }, [data]);
 
   function handleChange() {
     setError(false);
@@ -23,26 +30,26 @@ function AuthForm() {
       <div className={classes.login}>
         <Form method="post" className={classes.form}>
           <h1>{isLogin ? "Login" : "Sign up"}</h1>
-          {(data && error) && (<p>
-            {data}
-          </p>)}
+          {error && (
+            <p>{data.message}</p>
+          )}
           {!isLogin && (
             <>
               <div className={classes.inputContainer}>
                 <label htmlFor="name">Name</label>
-                <input id="name" type="name" name="name" required onChange={handleChange} />
+                <input id="name" type="text" name="name" required onChange={handleChange} />
               </div>
               <div className={classes.inputContainer}>
                 <label htmlFor="surname">Surname</label>
-                <input id="surname" type="surname" name="surname" required onChange={handleChange} />
+                <input id="surname" type="text" name="surname" required onChange={handleChange} />
               </div>
               <div className={classes.inputContainer}>
                 <label htmlFor="restaurantName">Restaurant name</label>
-                <input id="restaurantName" type="restaurantName" name="restaurantName" required onChange={handleChange} />
+                <input id="restaurantName" type="text" name="restaurantName" required onChange={handleChange} />
               </div>
               <div className={classes.inputContainer}>
                 <label htmlFor="phone">Phone</label>
-                <input id="phone" type="phone" name="phone" required onChange={handleChange} />
+                <input id="phone" type="text" name="phone" required onChange={handleChange} />
               </div>
             </>
           )}
@@ -56,9 +63,9 @@ function AuthForm() {
           </div>
           <div className={classes.actions}>
             <Link to={`?mode=${isLogin ? 'signup' : 'login'}`} className={classes.mode}>
-              {isLogin ? 'Create new user' : 'Login'}
+              {isLogin ? 'Sign up' : 'Login'}
             </Link>
-            <button type="submit" className={classes.actionButton} onClick={() => { setError(true) }}>
+            <button type="submit" className={classes.actionButton}>
               {isLogin ? "Login" : "Sign up"}
             </button>
           </div>
