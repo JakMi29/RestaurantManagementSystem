@@ -4,6 +4,7 @@ import com.example.RestaurantManagementSystem.api.rest.request.AddMealRequest;
 import com.example.RestaurantManagementSystem.business.dao.MealDAO;
 import com.example.RestaurantManagementSystem.domain.Category;
 import com.example.RestaurantManagementSystem.domain.Meal;
+import com.example.RestaurantManagementSystem.domain.MealStatus;
 import com.example.RestaurantManagementSystem.domain.Restaurant;
 import com.example.RestaurantManagementSystem.domain.exception.ObjectAlreadyExist;
 import jakarta.transaction.Transactional;
@@ -24,6 +25,7 @@ import java.nio.file.StandardCopyOption;
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Optional;
+
 @Slf4j
 @Service
 @AllArgsConstructor
@@ -33,10 +35,10 @@ public class MealService {
     private final RestaurantService restaurantService;
 
     @Transactional
-    public void addMeal(AddMealRequest request,MultipartFile image) {
-        Meal meal= buildMeal(request);
+    public void addMeal(AddMealRequest request, MultipartFile image) {
+        Meal meal = buildMeal(request);
         Restaurant restaurant = restaurantService.findByName(request.getRestaurantName());
-        List<Meal> meals=mealDAO.findAllByRestaurant(restaurant);
+        List<Meal> meals = mealDAO.findAllByRestaurant(restaurant);
         Optional<Meal> existingMeal = meals.stream()
                 .filter(c -> c.getName().equals(meal.getName()))
                 .findFirst();
@@ -57,9 +59,25 @@ public class MealService {
                 .price(new BigDecimal((request.getPrice())))
                 .category(Category.valueOf(request.getCategory()))
                 .mealOfTheDay(false)
+                .mealStatus(MealStatus.ACTIVE)
                 .build();
     }
 
+    @Transactional
+    public void deleteMeal(String name, String restaurantName) {
+        Restaurant restaurant = restaurantService.findByName(restaurantName);
+        Meal meal = mealDAO.findByNameAndRestaurant(name, restaurant);
+        mealDAO.updateMeal(meal.withMealStatus(MealStatus.DELETE));
+        log.info("Successful deleted meal: [%s]".formatted(name));
+    }
+
+    public void setMealOfTheDay(String restaurantName, String mealName) {
+        Restaurant restaurant = restaurantService.findByName(restaurantName);
+        Meal meal = mealDAO.findByNameAndRestaurant(mealName, restaurant);
+        meal.withMealOfTheDay(!meal.isMealOfTheDay());
+    }
+
+    @Transactional
     public String createFile(MultipartFile file) {
         try {
             String fileName = PhotoNumberGenerator.generatePhotoNumber(OffsetDateTime.now());
@@ -74,15 +92,21 @@ public class MealService {
         return "/images/oh_no.png";
     }
 
+    @Transactional
     public List<Meal> findByCategory(String restaurantName, String category) {
-        Restaurant restaurant= restaurantService.findByName(restaurantName);
-        return mealDAO.findAllByRestaurantAndCategory(restaurant,Category.valueOf(category.toUpperCase()));
+        Restaurant restaurant = restaurantService.findByName(restaurantName);
+        return mealDAO.findAllByRestaurantAndCategoryAndStatusNot(
+                restaurant,
+                Category.valueOf(category.toUpperCase()),
+                MealStatus.DELETE
+        );
     }
 
-    public void updateMeal(AddMealRequest request,MultipartFile image) {
+    @Transactional
+    public void updateMeal(AddMealRequest request, MultipartFile image) {
         Restaurant restaurant = restaurantService.findByName(request.getRestaurantName());
         Meal mealToUpdate = mealDAO.findByNameAndRestaurant(request.getName(), restaurant);
-        List<Meal> meals=mealDAO.findAllByRestaurant(restaurant);
+        List<Meal> meals = mealDAO.findAllByRestaurant(restaurant);
         Optional<Meal> existingMeal = meals.stream()
                 .filter(c -> c.getName().equals(mealToUpdate.getName()))
                 .findFirst();
@@ -93,7 +117,6 @@ public class MealService {
         try {
             Resource resource = resourceLoader.getResource("classpath:static/images/" + path);
             File file = resource.getFile();
-
             if (file.exists()) {
                 if (file.delete()) {
                     log.info("The file has been deleted " + path);
@@ -106,11 +129,10 @@ public class MealService {
         } catch (IOException e) {
             log.error("An error occurred while deleting the file: " + path);
         }
-
     }
 
     public Meal getMeal(String restaurantName, String name) {
         Restaurant restaurant = restaurantService.findByName(restaurantName);
-        return mealDAO.findByNameAndRestaurant(name,restaurant);
+        return mealDAO.findByNameAndRestaurant(name, restaurant);
     }
 }

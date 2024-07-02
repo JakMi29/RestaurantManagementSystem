@@ -7,6 +7,3 @@ INSERT INTO restaurant_owner(email)
 VALUES
 ('userAdam@gmail.com');
 
-INSERT INTO restaurant(name, restaurant_owner_id)
-VALUES
-('Italiano',1);

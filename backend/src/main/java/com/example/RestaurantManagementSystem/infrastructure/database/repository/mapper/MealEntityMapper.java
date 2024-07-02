@@ -19,6 +19,7 @@ public class MealEntityMapper {
                 .description(entity.getDescription())
                 .mealOfTheDay(entity.getMealOfTheDay())
                 .image(entity.getImage())
+                .mealStatus(entity.getStatus())
                 .restaurant(
                         Restaurant
                                 .builder()
@@ -32,6 +33,7 @@ public class MealEntityMapper {
                 .id(meal.getId())
                 .name(meal.getName())
                 .category(meal.getCategory())
+                .status(meal.getMealStatus())
                 .price(meal.getPrice())
                 .description(meal.getImage())
                 .mealOfTheDay(meal.isMealOfTheDay())

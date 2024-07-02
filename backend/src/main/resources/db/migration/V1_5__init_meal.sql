@@ -1,9 +1,10 @@
 CREATE TABLE meal
 (
     id          SERIAL          NOT NULL,
-    name             VARCHAR(20)     NOT NULL,
+    name             VARCHAR(32)     NOT NULL,
     description      VARCHAR(64)     NOT NULL,
     category      VARCHAR(32)     NOT NULL,
+    status      VARCHAR(32)     NOT NULL,
     price            NUMERIC(19, 2)  NOT NULL,
     restaurant_id       INT             NOT NULL,
     image      VARCHAR(128)     NOT NULL,

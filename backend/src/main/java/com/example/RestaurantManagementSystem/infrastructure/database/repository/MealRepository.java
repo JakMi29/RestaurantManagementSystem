@@ -3,6 +3,7 @@ package com.example.RestaurantManagementSystem.infrastructure.database.repositor
 import com.example.RestaurantManagementSystem.business.dao.MealDAO;
 import com.example.RestaurantManagementSystem.domain.Category;
 import com.example.RestaurantManagementSystem.domain.Meal;
+import com.example.RestaurantManagementSystem.domain.MealStatus;
 import com.example.RestaurantManagementSystem.domain.Restaurant;
 import com.example.RestaurantManagementSystem.infrastructure.database.entity.MealEntity;
 import com.example.RestaurantManagementSystem.infrastructure.database.entity.RestaurantEntity;
@@ -20,15 +21,22 @@ public class MealRepository implements MealDAO {
     private final MealJpaRepository repository;
     private final MealEntityMapper meaLMapper;
     private final RestaurantEntityMapper restaurantMapper;
+
     @Override
     public Meal createMeal(Meal meal) {
-        MealEntity entity= meaLMapper.map(meal);
+        MealEntity entity = meaLMapper.map(meal);
+        return meaLMapper.map(repository.save(entity));
+    }
+
+    @Override
+    public Meal updateMeal(Meal meal) {
+        MealEntity entity = meaLMapper.map(meal);
         return meaLMapper.map(repository.save(entity));
     }
 
     @Override
     public List<Meal> findAllByRestaurant(Restaurant restaurant) {
-        RestaurantEntity entity= restaurantMapper.map(restaurant);
+        RestaurantEntity entity = restaurantMapper.map(restaurant);
         return repository.findAllByRestaurant(entity)
                 .stream()
                 .map(meaLMapper::map)
@@ -36,10 +44,10 @@ public class MealRepository implements MealDAO {
     }
 
     @Override
-    public List<Meal> findAllByRestaurantAndCategory(Restaurant restaurant, Category category) {
-        RestaurantEntity restaurantEntity= restaurantMapper.map(restaurant);
+    public List<Meal> findAllByRestaurantAndCategoryAndStatusNot(Restaurant restaurant, Category category, MealStatus mealStatus) {
+        RestaurantEntity restaurantEntity = restaurantMapper.map(restaurant);
         return repository
-                .findAllByRestaurantAndCategory(restaurantEntity,category)
+                .findAllByRestaurantAndCategoryAndStatusNot(restaurantEntity, category, mealStatus)
                 .stream()
                 .map(meaLMapper::map)
                 .toList();
@@ -47,9 +55,10 @@ public class MealRepository implements MealDAO {
 
     @Override
     public Meal findByNameAndRestaurant(String name, Restaurant restaurant) {
-        RestaurantEntity restaurantEntity= restaurantMapper.map(restaurant);
+        RestaurantEntity restaurantEntity = restaurantMapper.map(restaurant);
         return meaLMapper.map(
-                repository.findByNameAndRestaurant(name,restaurantEntity)
+                repository.findByNameAndRestaurant(name, restaurantEntity)
         );
     }
+
 }
