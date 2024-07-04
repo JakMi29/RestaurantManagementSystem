@@ -30,7 +30,6 @@
 
 .categoryButton:hover {
     background-color: rgb(60, 60, 211);
-    color: rgb(249, 249, 249);
 }
 
 .categoryButtonActive {
@@ -49,8 +48,8 @@
     display: flex;
     justify-content: center; 
     flex-wrap: wrap;
-    margin-top: 20px;
-    gap: 20px;
+    padding: 20px;
+    gap: 30px;
     overflow: auto;
     scrollbar-width: none;
 }
@@ -65,44 +64,81 @@
     flex-direction: column;
     align-items: center;
     width: 250px;
-    height: auto;
+    height: 380px;
     background-color: #f7f7f7;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
     border-radius: 4px;
     margin-bottom: 20px;
+    position:relative;
 }
+
+.mealOfDayFalse {
+    position: absolute;
+    top: -25px;
+    right: -25px;
+    z-index: 10;
+    opacity: 0;
+    color: rgb(60, 60, 211, 0.2);
+    transition: opacity 0.3s ease;
+}
+.mealOfDayFalse:hover {
+    color:rgb(60, 60, 211);
+}
+
+.meal:hover .mealOfDayFalse {
+    opacity: 1;
+}
+
+.mealOfDayTrue {
+    position: absolute;
+    top: -25px;
+    right: -25px;
+    z-index: 10;
+    padding: 0px;
+    color:rgb(60, 60, 211);
+    transition: opacity 0.3s ease;
+    opacity: 1;
+}
+
+.mealOfDayTrue:hover {
+    color: rgb(60, 60, 211, 0.2);
+}
+
 .meal:hover {
-    box-shadow: 0px 0px 30px rgba(60, 60, 211, 0.2);
+    box-shadow: 0px 0px 20px rgba(60, 60, 211, 0.2);
 }
 
 .mealImage {
     padding: 10px;
-    height: 250px;
+    height: 150px;
     overflow: hidden;
     border-top-left-radius: 4px;
     border-top-right-radius: 4px;
+    flex-shrink: 0; /* Zapobiegaj kurczeniu się obrazu */
 }
 
 .mealImage img {
     border-radius: 4px;
     width: 100%;
     height: 100%;
-    object-fit: cover;
 }
 
 .mealContent {
     color: black;
-    padding: 10px;
     text-align: center;
+    flex-grow: 1; 
+    overflow: hidden; 
 }
 
 .mealContent h3 {
     margin-bottom: 10px;
+    font-size: 1.4em;
 }
 
 .mealContent p {
     color: black;
     margin-bottom: 8px;
+    font-size: 0.9em;
 }
 
 .newMealButton {
@@ -127,10 +163,11 @@
 
 .actions {
     display: flex;
-    gap: 100px;
+    gap: 80px;
     justify-content: space-between;
     padding: 20px;
 }
+
 .deleteButton {
     background-color: rgba(255, 0, 0, 0.2);
     color: rgb(249, 249, 249);
@@ -151,7 +188,6 @@
     right: 1vw;
     padding: 0.5rem 1rem;
     border-radius: 4px;
-    ;
     border: none;
     font-size: 20px;
     text-decoration: none;

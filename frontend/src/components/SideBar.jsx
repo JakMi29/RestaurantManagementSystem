@@ -11,7 +11,7 @@ function Sidebar() {
       <div className="menu-items-container">
         <MenuItem
           text="Meals"
-          link="/meals?category=soup"
+          link='/meals?category=soup&pageNumber=0&pageSize=10'
           icon={<RestaurantMenuOutlinedIcon />}
         />
         <MenuItem

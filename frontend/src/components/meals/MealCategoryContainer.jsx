@@ -10,7 +10,7 @@ function MealCategoryContainer({currentCategory}) {
     return(
     <div className={classes.categoryContainer}>
         <NavLink
-            to="/meals?category=appetizer"
+            to="/meals?category=appetizer&pageNumber=0&pageSize=10"
             className={
                 isActive("appetizer") ? classes.categoryButtonActive : classes.categoryButton
             }
@@ -18,28 +18,28 @@ function MealCategoryContainer({currentCategory}) {
             Appetizer
         </NavLink>
         <NavLink
-            to="/meals?category=soup"
+            to="/meals?category=soup&pageNumber=0&pageSize=10"
             className={isActive("soup") ? classes.categoryButtonActive : classes.categoryButton
             }
         >
             Soup
         </NavLink>
         <NavLink
-            to="/meals?category=main_dish"
+            to="/meals?category=main_dish&pageNumber=0&pageSize=10"
             className={isActive("main_dish") ? classes.categoryButtonActive : classes.categoryButton
             }
         >
             Main dish
         </NavLink>
         <NavLink
-            to="/meals?category=dessert"
+            to="/meals?category=dessert&pageNumber=0&pageSize=10"
             className={isActive("dessert") ? classes.categoryButtonActive : classes.categoryButton
             }
         >
             Dessert
         </NavLink>
         <NavLink
-            to="/meals?category=drink"
+            to="/meals?category=drink&pageNumber=0&pageSize=10"
             className={isActive("drink") ? classes.categoryButtonActive : classes.categoryButton
             }
         >

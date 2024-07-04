@@ -14,7 +14,6 @@ function MealForm() {
   const method=(mealPageCtx.progress==='create'?'post':'patch');
   const meal=mealPageCtx.meal;
   const data = useActionData();
-  console.log(data)
   function handleChange() {
     setError(false);
   }
@@ -105,7 +104,6 @@ export async function action({ request }) {
     description: data.get('description'),
     restaurantName: "Italiano"
   };
-  console.log(mealData)
 
   const formData = new FormData();
   const mealBlob = new Blob([JSON.stringify(mealData)], { type: 'application/json' });

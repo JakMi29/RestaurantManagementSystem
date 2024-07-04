@@ -5,7 +5,6 @@ import { getAuthToken } from '../../util/auth';
 
 function EditMealPage() {
   const {meal}=useLoaderData();
-  console.log(meal)
   return (
     <MealForm method="patch" meal={meal}/>
   );
@@ -21,7 +20,6 @@ async function loadMeal(name) {
     }
   });
   if (!response.ok) {
-    console.log(response)
     throw json(
       { message: 'Could not fetch meal.' },
       {

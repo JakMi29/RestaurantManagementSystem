@@ -16,7 +16,7 @@ export function MessageContextProvider({ children }) {
   function showMessage(messageText,mode, callback) {
     setMessage(messageText);
     setMode(mode);
-    setConfirmCallback(() => callback);
+    setConfirmCallback(() => callback || (() => {}));
   }
 
   function hideMessage() {
