@@ -34,28 +34,42 @@ function MealsPage() {
                 <MealCategoryContainer currentCategory={currentCategory} />
                 <div style={{ marginRight: "90px" }}>
                     <div className={classes.mealsContainer}>
-                        <Suspense fallback={<p style={{ textAlign: 'center' }}>{<CircularProgress />}</p>}>
+                        <Suspense fallback={<p style={{ textAlign: 'center' }}><CircularProgress /></p>}>
                             <Await resolve={meals}>
-                                {(loadedMeals) => <MealList meals={loadedMeals} />}
+                                {(loadedMeals) => (
+                                    <>
+                                        <MealList meals={loadedMeals.content} />
+                                        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                                            {!loadedMeals.first && (
+                                                <button
+                                                    className={classes.categoryButton}
+                                                    style={{ left: "0px" }}
+                                                    onClick={handlePreviousPage}
+                                                    disabled={loadedMeals.first}
+                                                >
+                                                    Previous
+                                                </button>
+                                            )}
+                                            {!loadedMeals.last && (
+                                                <button
+                                                    className={classes.categoryButton}
+                                                    style={{ right: "0px" }}
+                                                    onClick={handleNextPage}
+                                                >
+                                                    Next
+                                                </button>
+                                            )}
+                                        </div>
+                                    </>
+                                )}
                             </Await>
                         </Suspense>
-                    </div>
-                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                    {pageNumber!==0&&<button className={classes.categoryButton} style={{left:"0px"}}
-                        onClick={handlePreviousPage} disabled={meals.first}
-                    >Previous
-                    </button>}
-                        <button className={classes.categoryButton} style={{right:"0px"}}
-                            onClick={handleNextPage} disabled={meals.last}
-                        >Next
-                        </button>
                     </div>
                 </div>
             </div>
         </MealPageContextProvider>
     );
 }
-
 export default MealsPage;
 
 async function loadMeals(category, pageNumber, pageSize) {

@@ -13,6 +13,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -74,7 +76,7 @@ public class MealService {
     public void setMealOfTheDay(String restaurantName, String mealName) {
         Restaurant restaurant = restaurantService.findByName(restaurantName);
         Meal meal = mealDAO.findByNameAndRestaurant(mealName, restaurant);
-        meal.withMealOfTheDay(!meal.isMealOfTheDay());
+        mealDAO.updateMeal(meal.withMealOfTheDay(!meal.isMealOfTheDay()));
     }
 
     @Transactional
@@ -93,13 +95,15 @@ public class MealService {
     }
 
     @Transactional
-    public List<Meal> findByCategory(String restaurantName, String category) {
+    public Page<Meal> findAllByCategory(String restaurantName, String category, Pageable page) {
         Restaurant restaurant = restaurantService.findByName(restaurantName);
         return mealDAO.findAllByRestaurantAndCategoryAndStatusNot(
                 restaurant,
                 Category.valueOf(category.toUpperCase()),
-                MealStatus.DELETE
+                MealStatus.DELETE,
+                page
         );
+
     }
 
     @Transactional

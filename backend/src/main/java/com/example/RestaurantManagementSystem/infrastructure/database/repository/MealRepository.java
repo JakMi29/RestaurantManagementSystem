@@ -11,6 +11,8 @@ import com.example.RestaurantManagementSystem.infrastructure.database.repository
 import com.example.RestaurantManagementSystem.infrastructure.database.repository.mapper.MealEntityMapper;
 import com.example.RestaurantManagementSystem.infrastructure.database.repository.mapper.RestaurantEntityMapper;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -44,13 +46,16 @@ public class MealRepository implements MealDAO {
     }
 
     @Override
-    public List<Meal> findAllByRestaurantAndCategoryAndStatusNot(Restaurant restaurant, Category category, MealStatus mealStatus) {
+    public Page<Meal> findAllByRestaurantAndCategoryAndStatusNot(
+            Restaurant restaurant,
+            Category category,
+            MealStatus mealStatus,
+            Pageable pageable
+    ) {
         RestaurantEntity restaurantEntity = restaurantMapper.map(restaurant);
         return repository
-                .findAllByRestaurantAndCategoryAndStatusNot(restaurantEntity, category, mealStatus)
-                .stream()
-                .map(meaLMapper::map)
-                .toList();
+                .findAllByRestaurantAndCategoryAndStatusNot(restaurantEntity, category, mealStatus,pageable)
+                .map(meaLMapper::map);
     }
 
     @Override

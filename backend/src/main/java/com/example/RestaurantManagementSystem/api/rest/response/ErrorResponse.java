@@ -1,4 +1,4 @@
-package com.example.RestaurantManagementSystem.api.rest;
+package com.example.RestaurantManagementSystem.api.rest.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

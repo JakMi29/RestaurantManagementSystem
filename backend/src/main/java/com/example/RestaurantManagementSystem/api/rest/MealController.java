@@ -1,6 +1,8 @@
 package com.example.RestaurantManagementSystem.api.rest;
 
 import com.example.RestaurantManagementSystem.api.rest.request.AddMealRequest;
+import com.example.RestaurantManagementSystem.api.rest.response.MealPageResponse;
+import com.example.RestaurantManagementSystem.business.MealPaginationService;
 import com.example.RestaurantManagementSystem.business.MealService;
 import com.example.RestaurantManagementSystem.domain.Meal;
 import jakarta.validation.Valid;
@@ -8,6 +10,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
+import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,6 +27,7 @@ import java.util.List;
 @RequestMapping("/api/admin")
 public class MealController {
     private final MealService mealService;
+    private final MealPaginationService mealPaginationService;
 
     @PostMapping(value = "/meal", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<String> addMeal(
@@ -42,11 +46,13 @@ public class MealController {
     }
 
     @GetMapping("/meals")
-    public ResponseEntity<List<Meal>> meals(
+    public ResponseEntity<Page<Meal>> meals(
             @RequestParam String restaurantName,
-            @RequestParam String category
+            @RequestParam String category,
+            @RequestParam Integer pageNumber,
+            @RequestParam Integer pageSize
     ) {
-        return ResponseEntity.ok(mealService.findByCategory(restaurantName, category));
+        return ResponseEntity.ok(mealPaginationService.findAllByCategory(restaurantName, category, pageNumber, pageSize));
     }
 
     @GetMapping("/image")
@@ -67,7 +73,7 @@ public class MealController {
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/meal/mealOfTheDay")
+    @PatchMapping("/meal/mealOfTheDay")
     public void setMealOfTheDay(@RequestParam String restaurantName, @RequestParam String name) {
         mealService.setMealOfTheDay(restaurantName, name);
     }
