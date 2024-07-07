@@ -52,24 +52,26 @@ function Meal({ name, price, description, image, mealOfTheDay, category }) {
             });
     }
 
-return (
-    <div className={classes.meal} >
-        <div className={mealOfTheDay ? classes.mealOfDayTrue : classes.mealOfDayFalse}>
-            <FavoriteIcon sx={{ fontSize: 50 }} onClick={handleMealofTheDay} />
+    return (
+        <div className={classes.meal} >
+            <div className={mealOfTheDay ? classes.mealOfDayTrue : classes.mealOfDayFalse}>
+                <FavoriteIcon sx={{ fontSize: 30 }} onClick={handleMealofTheDay} />
+            </div>
+            <div className={classes.mealImage}>
+                <img src={image} />
+            </div>
+            <div className={classes.contentContainer}>
+                <div className={classes.mealContent}>
+                    <p>{name}</p>
+                    <p>{price} usd</p>
+                    <p>{description}</p>
+                </div>
+                <div className={classes.actions}>
+                    <button className={classes.editButton} >Edit</button>
+                    <button className={classes.deleteButton} onClick={handleConfirmAction}>Delete</button>
+                </div>
+            </div>
         </div>
-        <div className={classes.mealImage}>
-            <img src={"http://localhost:8080/api/admin/image?image=" + image} />
-        </div>
-        <div className={classes.mealContent}>
-            <h3>{name}</h3>
-            <p>{price} usd</p>
-            <p>{description}</p>
-        </div>
-        <div className={classes.actions}>
-            <button className={classes.editButton} >Edit</button>
-            <button className={classes.deleteButton} onClick={handleConfirmAction}>Delete</button>
-        </div>
-    </div>
-)
+    )
 }
 export default Meal;

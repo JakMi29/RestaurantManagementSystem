@@ -6,7 +6,6 @@ import classes from './HomePage.module.css';
 function HomePage() {
  
   return (
-          <div className="page" style={{marginLeft:"5px"}}>
         <div className={classes.content}>
           <div className={classes.container}>
           <h1>Welcome in our management system</h1>
@@ -22,7 +21,6 @@ function HomePage() {
           </div>
           </div>
       </div>
-    </div>
   );
 }
 

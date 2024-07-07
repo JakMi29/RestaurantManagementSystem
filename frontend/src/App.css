@@ -1,8 +1,16 @@
 body {
   margin: 0;
   font-family: Arial, sans-serif;
-  background-color: rgb(249, 249, 249);
 }
+
+button{
+  padding: 10px 20px;
+  border-radius: 4px;
+  font-size: 16px;
+  border: none;
+  text-decoration: none;
+}
+
 .header{
   top: 0;
   display: flex;
@@ -10,44 +18,39 @@ body {
   justify-content: space-between;
   position: fixed;
   width: 100vw;
-  height: 100px;
+  height: 80px;
   background-color: #f7f7f7;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
   z-index: 1000;
 }
-.header .login-button{
-  margin-right: calc(1% + 5px);
+.login-button{
+  margin-right: 30px;
   background-color:rgb(60, 60, 211);
   color: rgb(249, 249, 249);
-  padding: 1rem 3rem;
+  padding: 10px 20px;
   border-radius: 4px;
+  font-size: 16px;
   border: none;
-  font-size: 20px;
   text-decoration: none;
 }
 
-.header .login-button:hover {
+.login-button:hover {
   background-color:rgb(60, 60, 211,0.2);
   color: rgb(249, 249, 249);
 }
-.header .login-button.active {
+.login-button.active {
   background-color:rgb(60, 60, 211,0.2);
   color: rgb(249, 249, 249);
 }
 
 .logout-form {
+  margin-right: 30px;
   color:rgb(60, 60, 211);
-  margin-right: calc(1% + 5px);
   background-color: rgb(249, 249, 249);
 }
 .logout-form button{
   background-color:rgb(60, 60, 211,0.2);
   color: rgb(249, 249, 249);
-  border-radius: 4px;
-  border: none;
-  padding: 1rem 3rem;
-  font-size: 20px;
-  text-decoration: none;
 }
 .logout-form button:hover{
   background-color:rgb(60, 60, 211);
@@ -59,27 +62,39 @@ body {
   color: rgb(60, 60, 211);
 }
 .page{
-  height: calc(100vh - 215px);
-  padding: 20px;
-  margin-left: 95px;
-  margin-right: 5px;
-  margin-bottom: 5px;
-  margin-top: 105px;
-  background-color:rgb(249, 249, 249);
-  box-shadow: 1px 0 1px rgba(0, 0, 0, 0.1);
-  box-sizing: border-box;
+    height: calc(100vh - 80px);
+    width: 1920px;
+    margin: 80px auto 0 auto;
+    padding: 0 80px;
+    padding-top: 10px;
+    background-color: rgba(244, 244, 244, 0.613);
+    box-shadow: 1px 0 1px rgba(0, 0, 0, 0.1);
+    box-sizing: border-box;
+    position: relative;
+}
+.page.button{
+    padding: 10px 20px;
+  border-radius: 4px;
+  font-size: 16px;
+  border: none;
+  text-decoration: none;
 }
 .side-bar{
-  top: 100px;
+  top: 80px;
   position: fixed;
   width: 250px;
-  height: calc(100vh - 100px);
-  gap: 5vh;
+  height: calc(100vh - 80px);
   display: flex;
   flex-direction: column;
   background-color: #f7f7f7;
   border-radius: 8px;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  z-index: 9999;
+}
+
+.paginationContainer {
+  position: relative;
+  height: 50px; /* Adjust height as needed */
 }
 
 .side-bar .text{
@@ -87,21 +102,14 @@ body {
   font-weight: 500;
   color: rgb(0, 0, 0);
 }
-button{
-  color: #fff;
-  border: none;
-  border-radius: 4px;
-  padding: 12px 24px;
-  font-size: 18px;
-  cursor: pointer;
-}
+
 .toggle-button{
   cursor: pointer;
   position:fixed;
-  margin-top: 5px;
+  margin-top: 10px;
   margin-left: 10px;
   font-size: 30px;
-  padding: 0.6rem 0.6rem;
+  padding: 0.2rem 0.6rem;
   border-radius: 4px;
   background-color: rgb(60, 60, 211);
   color: rgb(249, 249, 249);
@@ -111,7 +119,6 @@ button{
 .toggle-button:hover {
   color: rgb(60, 60, 211);
   background-color: rgb(249, 249, 249);
-  font-size: 30px;
 }
 
 .menu-items-container{
@@ -123,10 +130,7 @@ button{
 
 .menu-item {
   border-radius: 4px;
-  padding-left: 10px;
-  padding-right: 10px;
-  padding-top: 10px;
-  padding-bottom: 10px;
+  padding: 10px;
   margin-left:10px;
   margin-right:10px;
   margin-top: 5px;

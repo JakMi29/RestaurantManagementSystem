@@ -1,5 +1,4 @@
 .content {
-  margin-top: 10%;
   display: flex;
   justify-content: center;
 }
@@ -8,7 +7,7 @@
     border-radius: 8px;
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
     padding: 40px;
-    color: #3c3cd3;;
+    color: #3c3cd3;
 }
 .images{
     display: flex;

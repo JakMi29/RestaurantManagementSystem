@@ -26,7 +26,6 @@ function AuthForm() {
   }
 
   return (
-    <div className='page' style={{ marginLeft: "5px" }}>
       <div className={classes.login}>
         <Form method="post" className={classes.form}>
           <h1>{isLogin ? "Login" : "Sign up"}</h1>
@@ -71,7 +70,6 @@ function AuthForm() {
           </div>
         </Form>
       </div>
-    </div>
   );
 }
 

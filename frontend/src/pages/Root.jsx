@@ -11,7 +11,7 @@ function RootLayout() {
   const token = useLoaderData();
   const submit = useSubmit();
   const [isOpen, setIsOpen] = useState(false);
-  const messageContext=useContext(MessageContext)
+  const messageContext = useContext(MessageContext)
   const toggleSidebar = () => {
     setIsOpen(!isOpen);
   };
@@ -50,8 +50,10 @@ function RootLayout() {
           {isOpen && <Sidebar />}
         </>
       )}
-        <MessageModal open={messageContext.message !== ''}/>
+      <MessageModal open={messageContext.message !== ''} />
+      <div className="page">
         <Outlet />
+      </div>
     </>
   );
 }

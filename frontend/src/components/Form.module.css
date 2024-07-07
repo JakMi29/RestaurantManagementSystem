@@ -1,7 +1,6 @@
 .login{
   display: flex;
   justify-content: center;
-  margin-top: 15vh;
 }
 
 .form {
@@ -30,8 +29,8 @@ input,
 textarea,
 select {
   width: 300px;
-  padding-right: 20px;
   padding: 10px;
+  padding-right: 20px;
   border: 1px solid #ccc;
   border-radius: 4px;
   font-size: 16px;
@@ -46,6 +45,7 @@ select {
 
 .actionButton {
   background-color: #3c3cd3;
+  color: #fff;
 }
 .actionButton:hover {
   background-color: rgba(60, 60, 211, 0.2);
@@ -58,10 +58,9 @@ select {
   background-color: rgba(60, 60, 211, 0.2);
   color: #fff;
   border: none;
+  padding: 10px 20px;
   border-radius: 4px;
-  padding: 12px 24px;
-  font-size: 18px;
-  cursor: pointer;
+  font-size: 16px;
   text-decoration: none;
 }
 
@@ -108,10 +107,6 @@ select {
 .cancelButton {
   background-color: rgba(255, 0, 0, 0.2);
   color: rgb(249, 249, 249);
-  right: 1vw;
-  padding: 0.5rem 0.4rem;
-  font-size: 20px;
-  text-decoration: none;
 }
 
 .cancelButton:hover {

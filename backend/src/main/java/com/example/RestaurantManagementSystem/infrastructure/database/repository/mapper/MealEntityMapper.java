@@ -35,7 +35,7 @@ public class MealEntityMapper {
                 .category(meal.getCategory())
                 .status(meal.getMealStatus())
                 .price(meal.getPrice())
-                .description(meal.getImage())
+                .description(meal.getDescription())
                 .mealOfTheDay(meal.isMealOfTheDay())
                 .image(meal.getImage())
                 .restaurant(
