@@ -18,6 +18,10 @@ public interface MealDAO {
             Restaurant restaurant, Category category,  MealStatus mealStatus, Pageable pageable
     );
 
+    Page<Meal> findAllByRestaurantAndCategoryAndStatusNotAndSearchTerms(
+            Restaurant restaurant, Category category,  MealStatus mealStatus, Pageable pageable,String searchTerms
+    );
+
     Meal findByNameAndRestaurant(String name, Restaurant restaurant);
 
 }

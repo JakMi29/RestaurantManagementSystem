@@ -95,14 +95,28 @@ public class MealService {
     }
 
     @Transactional
-    public Page<Meal> findAllByCategory(String restaurantName, String category, Pageable page) {
+    public Page<Meal> findAllByCategory
+            (
+                    String restaurantName,
+                    String category,
+                    Pageable page,
+                    String searchTerm
+            ) {
         Restaurant restaurant = restaurantService.findByName(restaurantName);
-        return mealDAO.findAllByRestaurantAndCategoryAndStatusNot(
-                restaurant,
-                Category.valueOf(category.toUpperCase()),
-                MealStatus.DELETE,
-                page
-        );
+        return searchTerm!=null ?
+                mealDAO.findAllByRestaurantAndCategoryAndStatusNotAndSearchTerms(
+                        restaurant,
+                        Category.valueOf(category.toUpperCase()),
+                        MealStatus.DELETE,
+                        page,
+                        searchTerm
+                ) :
+                mealDAO.findAllByRestaurantAndCategoryAndStatusNot(
+                        restaurant,
+                        Category.valueOf(category.toUpperCase()),
+                        MealStatus.DELETE,
+                        page
+                );
 
     }
 

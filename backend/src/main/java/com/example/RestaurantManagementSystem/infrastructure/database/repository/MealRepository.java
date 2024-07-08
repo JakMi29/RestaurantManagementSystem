@@ -52,9 +52,26 @@ public class MealRepository implements MealDAO {
             MealStatus mealStatus,
             Pageable pageable
     ) {
+        System.out.println("dupa");
+
         RestaurantEntity restaurantEntity = restaurantMapper.map(restaurant);
         return repository
-                .findAllByRestaurantAndCategoryAndStatusNot(restaurantEntity, category, mealStatus,pageable)
+                .findAllByRestaurantAndCategoryAndStatusNot(restaurantEntity, category, mealStatus, pageable)
+                .map(meaLMapper::map);
+    }
+
+    @Override
+    public Page<Meal> findAllByRestaurantAndCategoryAndStatusNotAndSearchTerms
+            (Restaurant restaurant,
+             Category category,
+             MealStatus mealStatus,
+             Pageable pageable,
+             String searchTerms
+            ) {
+        RestaurantEntity restaurantEntity = restaurantMapper.map(restaurant);
+        return repository
+                .findAllByRestaurantAndCategoryAndStatusNotAndNameContaining
+                        (restaurantEntity, category, mealStatus, pageable, searchTerms)
                 .map(meaLMapper::map);
     }
 

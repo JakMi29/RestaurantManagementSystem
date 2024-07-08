@@ -35,20 +35,17 @@ function MealsPage() {
     }
 
     const handleSearchChange = (event) => {
-        setSearchTerm(event.target.value);
+        const search=event.target.value
+        setSearchTerm(search);
+        navigate(`/meals?category=${currentCategory}&pageNumber=0&pageSize=10&searchTerm=${search}`);
     };
 
-    const handleSearchSubmit = (event) => {
-        event.preventDefault();
-        setPageNumber(0);
-        navigate(`/meals?category=${currentCategory}&pageNumber=0&pageSize=10&search=${searchTerm}`);
-    };
 
     return (
         <MealPageContextProvider>
             <MealForm />
             <MealCategoryContainer currentCategory={currentCategory} />
-            <form style={{ marginTop: "20px", right:"0px" }} onSubmit={handleSearchSubmit}>
+            <form style={{ marginTop: "20px", right:"0px" }}>
                 <input
                     type="text"
                     value={searchTerm}
@@ -95,10 +92,10 @@ function MealsPage() {
 }
 export default MealsPage;
 
-async function loadMeals(category, pageNumber, pageSize) {
+async function loadMeals(category, pageNumber, pageSize,searchTerm) {
     const token = getAuthToken();
 
-    const response = await fetch(`http://localhost:8080/api/admin/meals?restaurantName=Italiano&category=${category}&pageNumber=${pageNumber}&pageSize=${pageSize}`, {
+    const response = await fetch(`http://localhost:8080/api/admin/meals?restaurantName=Italiano&category=${category}&pageNumber=${pageNumber}&pageSize=${pageSize}${searchTerm ? `&searchTerm=${searchTerm}` : ''}`, {
         headers: {
             'Authorization': 'Bearer ' + token
         }
@@ -121,8 +118,9 @@ export async function loader({ request }) {
     const url = new URL(request.url);
     const category = url.searchParams.get("category");
     const pageNumber = url.searchParams.get("pageNumber");
+    const searchTerm = url.searchParams.get("searchTerm");
     const pageSize = 10;
     return defer({
-        meals: await loadMeals(category, pageNumber, pageSize),
+        meals: await loadMeals(category, pageNumber, pageSize,searchTerm),
     });
 }

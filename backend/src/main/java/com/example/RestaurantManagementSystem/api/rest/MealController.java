@@ -1,7 +1,6 @@
 package com.example.RestaurantManagementSystem.api.rest;
 
 import com.example.RestaurantManagementSystem.api.rest.request.AddMealRequest;
-import com.example.RestaurantManagementSystem.api.rest.response.MealPageResponse;
 import com.example.RestaurantManagementSystem.business.MealPaginationService;
 import com.example.RestaurantManagementSystem.business.MealService;
 import com.example.RestaurantManagementSystem.domain.Meal;
@@ -20,6 +19,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @RestController
@@ -50,9 +50,11 @@ public class MealController {
             @RequestParam String restaurantName,
             @RequestParam String category,
             @RequestParam Integer pageNumber,
-            @RequestParam Integer pageSize
+            @RequestParam Integer pageSize,
+            @RequestParam(required = false) String searchTerm
     ) {
-        return ResponseEntity.ok(mealPaginationService.findAllByCategory(restaurantName, category, pageNumber, pageSize));
+        return ResponseEntity.ok(mealPaginationService
+                .findAllByCategory(restaurantName, category, pageNumber, pageSize, searchTerm));
     }
 
     @GetMapping("/image")
