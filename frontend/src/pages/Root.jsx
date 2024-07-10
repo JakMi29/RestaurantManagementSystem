@@ -50,7 +50,7 @@ function RootLayout() {
           {isOpen && <Sidebar />}
         </>
       )}
-      <MessageModal open={messageContext.message !== ''} />
+      <MessageModal/>
       <div className="page">
         <Outlet />
       </div>

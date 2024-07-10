@@ -6,7 +6,7 @@ import { Suspense, useEffect, useState } from "react";
 import CircularProgress from '@mui/material/CircularProgress';
 import MealList from "../../components/meals/MealList";
 import { MealPageContextProvider } from "../../store/MealPageContext";
-import MealForm from "../../components/meals/MealForm";
+import MealModal from "../../components/meals/MealForm";
 function MealsPage() {
     const { meals } = useLoaderData();
     const location = useLocation();
@@ -16,9 +16,9 @@ function MealsPage() {
     const [searchTerm, setSearchTerm] = useState(queryParams.get('search') || '');
     const navigate = useNavigate()
 
-    useEffect(()=>{
+    useEffect(() => {
         setPageNumber(0);
-    },[currentCategory])
+    }, [currentCategory])
 
     const handleNextPage = () => {
         const page = pageNumber + 1;
@@ -35,26 +35,28 @@ function MealsPage() {
     }
 
     const handleSearchChange = (event) => {
-        const search=event.target.value
+        const search = event.target.value
         setSearchTerm(search);
-        navigate(`/meals?category=${currentCategory}&pageNumber=0&pageSize=10&searchTerm=${search}`);
+        search === "" ? navigate(`/meals?category=${currentCategory}&pageNumber=0&pageSize=10`) :
+            navigate(`/meals?category=${currentCategory}&pageNumber=0&pageSize=10&searchTerm=${search}`);
     };
 
 
     return (
         <MealPageContextProvider>
-            <MealForm />
+            <MealModal />
             <MealCategoryContainer currentCategory={currentCategory} />
-            <form style={{ marginTop: "20px", right:"0px" }}>
-                <input
-                    type="text"
-                    value={searchTerm}
-                    onChange={handleSearchChange}
-                    placeholder="Search for meals..."
-                    className={classes.searchInput}
-                />
-                <button type="submit" className={classes.searchButton}>Search</button>
-            </form>
+            <div style={{ display: "flex", justifyContent: "flex-end" }}>
+                <form style={{ marginTop: "20px", marginLeft: "auto" }}>
+                    <input
+                        type="text"
+                        value={searchTerm}
+                        onChange={handleSearchChange}
+                        placeholder="Search for meals..."
+                        className={classes.searchInput}
+                    />
+                </form>
+            </div>
             <Suspense fallback={<p style={{ textAlign: 'center' }}><CircularProgress /></p>}>
                 <Await resolve={meals}>
                     {(loadedMeals) => (
@@ -92,7 +94,7 @@ function MealsPage() {
 }
 export default MealsPage;
 
-async function loadMeals(category, pageNumber, pageSize,searchTerm) {
+async function loadMeals(category, pageNumber, pageSize, searchTerm) {
     const token = getAuthToken();
 
     const response = await fetch(`http://localhost:8080/api/admin/meals?restaurantName=Italiano&category=${category}&pageNumber=${pageNumber}&pageSize=${pageSize}${searchTerm ? `&searchTerm=${searchTerm}` : ''}`, {
@@ -121,6 +123,6 @@ export async function loader({ request }) {
     const searchTerm = url.searchParams.get("searchTerm");
     const pageSize = 10;
     return defer({
-        meals: await loadMeals(category, pageNumber, pageSize,searchTerm),
+        meals: await loadMeals(category, pageNumber, pageSize, searchTerm),
     });
 }

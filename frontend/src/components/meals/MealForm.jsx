@@ -1,98 +1,124 @@
-import { Form, json, useActionData, useNavigation } from 'react-router-dom';
+import { Form, json, useActionData } from 'react-router-dom';
 import classes from '../Form.module.css';
 import { getAuthToken } from '../../util/auth';
-import MealModal from '../ui/MealModal';
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import MealPageContext from '../../store/MealPageContext';
+import MessageContext from '../../store/MessageContext';
 
 
-function MealForm() {
-  const navigation = useNavigation();
-  const mealPageCtx=useContext(MealPageContext);
-  const [error, setError] = useState(true);
-  const isSubmitting = navigation.state === 'submitting';
-  const method=(mealPageCtx.progress==='create'?'post':'patch');
-  const meal=mealPageCtx.meal;
+function MealModal() {
+  const mealPageCtx = useContext(MealPageContext);
+  const [error, setError] = useState(false);
+  const method = (mealPageCtx.progress === 'create' ? 'post' : 'patch');
+  const meal = mealPageCtx.meal;
   const data = useActionData();
   function handleChange() {
     setError(false);
   }
 
+  const dialog = useRef();
+  const messageCtx = useContext(MessageContext);
+
+  useEffect(() => {
+    if (data) {
+      setError(true);
+    } else {
+      setError(false);
+    }
+  }, [data]);
+
+  useEffect(() => {
+    const modal = dialog.current;
+    if (mealPageCtx.progress !== '') {
+      modal.showModal();
+    } else {
+      modal.close();
+    }
+    return () => {
+      modal.close();
+    };
+  }, [mealPageCtx.progress]);
+
   return (
-    <MealModal open={mealPageCtx.progress==='create'} onClose={()=>{mealPageCtx.hide}}>
-          <Form method={method} className={classes.form} encType="multipart/form-data">
-            <h1>{meal ? "Edit meal" : "Add new meal"}</h1>
-            {(data?.errors && error) && (<p>
-            {data}
-          </p>)}
-            <div className={classes.inputContainer}>
-              <label htmlFor="name">Name</label>
-              <input
-                id="name"
-                type="text"
-                name="name"
-                required
-                defaultValue={meal ? meal.name : ''}
-              />
-            </div>
-            <div className={classes.inputContainer}>
-              <label htmlFor="category">Category</label>
-              <select
-                id="category"
-                name="category"
-                defaultValue={meal ? meal.category : ''}
-                required
-              >
-                <option value="APPETIZER">Appetizer</option>
-                <option value="MAIN_DISH">Main Dish</option>
-                <option value="SOUP">Soup</option>
-                <option value="DRINK">Drink</option>
-                <option value="DESSERT">Dessert</option>
-                <option value="ALCOHOLIC_DRINK">Alcoholic Drink</option>
-              </select>
-            </div>
-            <div className={classes.inputContainer}>
-              <label htmlFor="image">Image</label>
-              <input
-                id="image"
-                type="file"
-                name="image"
-                required
-              />
-            </div>
-            <div className={classes.inputContainer}>
-              <label htmlFor="price">Price</label>
-              <input
-                id="price"
-                name="price"
-                required
-                defaultValue={meal ? meal.price : ''}
-              />
-            </div>
-            <div className={classes.inputContainer}>
-              <label htmlFor="description">Description</label>
-              <textarea
-                id="description"
-                name="description"
-                rows="5"
-                required
-                defaultValue={meal ? meal.description : ''}
-              />
-            </div>
-            <div className={classes.actions}>
-              <button onClick={mealPageCtx.hide} className={classes.cancelButton}>
-                Cancel
-              </button>
-              <button type="submit" className={classes.actionButton} disabled={isSubmitting} onClick={handleChange}>
-                {isSubmitting ? 'Submitting...' : (method === 'post' ? 'create' : 'Save')}
-              </button>
-            </div>
-          </Form>
-    </MealModal>
+    <dialog ref={dialog} className="modal-dialog">
+      <Form method={method} className={classes.form} encType="multipart/form-data">
+        <h1>{meal ? "Edit meal" : "Add new meal"}</h1>
+        {error && (
+            <p>{data.message}</p>
+          )}
+        <div className={classes.inputContainer}>
+          <label htmlFor="name">Name</label>
+          <input
+            id="name"
+            type="text"
+            name="name"
+            required
+            defaultValue={meal ? meal.name : ''}
+            onChange={handleChange}
+          />
+        </div>
+        <div className={classes.inputContainer}>
+          <label htmlFor="category">Category</label>
+          <select
+            id="category"
+            name="category"
+            defaultValue={meal ? meal.category : ''}
+            required
+            onChange={handleChange}
+          >
+            <option value="APPETIZER">Appetizer</option>
+            <option value="MAIN_DISH">Main Dish</option>
+            <option value="SOUP">Soup</option>
+            <option value="DRINK">Drink</option>
+            <option value="DESSERT">Dessert</option>
+            <option value="ALCOHOLIC_DRINK">Alcoholic Drink</option>
+          </select>
+        </div>
+        <div className={classes.inputContainer}>
+          <label htmlFor="image">Image</label>
+          <input
+            id="image"
+            type="file"
+            name="image"
+            required
+            onChange={handleChange}
+          />
+        </div>
+        <div className={classes.inputContainer}>
+          <label htmlFor="price">Price</label>
+          <input
+            id="price"
+            name="price"
+            required
+            defaultValue={meal ? meal.price : ''}
+            onChange={handleChange}
+          />
+        </div>
+        <div className={classes.inputContainer}>
+          <label htmlFor="description">Description</label>
+          <textarea
+            id="description"
+            name="description"
+            rows="5"
+            required
+            defaultValue={meal ? meal.description : ''}
+            onChange={handleChange}
+          />
+        </div>
+        <div className={classes.actions}>
+          <button onClick={mealPageCtx.hide} className={classes.cancelButton}>
+            Cancel
+          </button>
+          <button type="submit" className={classes.actionButton} onClick={handleChange}>
+            {method === 'post' ? 'Create' : 'Save'}
+          </button>
+        </div>
+      </Form>
+    </dialog>
   );
 }
 
-export default MealForm;
+export default MealModal;
 
 
 export async function action({ request }) {

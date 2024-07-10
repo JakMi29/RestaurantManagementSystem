@@ -34,16 +34,19 @@ public class GlobalExceptionHandler {
         String message ="Invalid email or password!";
         ErrorResponse response=ErrorResponse.builder()
                 .message(message)
-                .code("dupa")
+                .code(HttpStatus.UNAUTHORIZED.toString())
                 .build();
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
     }
 
     @ExceptionHandler(ObjectAlreadyExist.class)
-    public ResponseEntity<String> handleUserAlreadyExistException(Exception ex) {
-        log.error(ex.getMessage());
+    public ResponseEntity<ErrorResponse> handleUserAlreadyExistException(Exception ex) {
         String message = String.format(ex.getMessage());
-        return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
+        ErrorResponse response=ErrorResponse.builder()
+                .message(message)
+                .code(HttpStatus.UNAUTHORIZED.toString())
+                .build();
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(NotFoundException.class)

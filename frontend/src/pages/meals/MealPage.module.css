@@ -32,16 +32,10 @@
 .mealsContainer {
     margin-top: 10px;
     display: flex;
-    justify-content: center; 
     flex-wrap: wrap;
     gap: 27px;
     overflow: hide;
     position: relative;
-}
-
-.mealsOfDayContainer {
-    background-color: #f7f7f7;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 .meal {
@@ -163,4 +157,14 @@
 .editButton:hover {
     background-color: rgb(79, 156, 109);
     color: rgb(249, 249, 249);
+}
+
+.newMealButton{
+    margin-left: auto;
+    background-color: rgba(14, 185, 88, 0.2);
+    color: rgb(249, 249, 249);
+}
+
+.newMealButton:hover{
+    background-color: rgb(79, 156, 109);
 }

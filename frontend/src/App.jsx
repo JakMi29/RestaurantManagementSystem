@@ -14,8 +14,6 @@ import ErrorPage from './pages/ErrorPage';
 import MealPage from './pages/meals/MealPage';
 import MealsRootLayout from './pages/meals/MealRootLayout';
 import MealsPage, { loader as mealsLoader } from './pages/meals/MealsPage';
-import { loader as mealLoader } from './pages/meals/EditMealPage';
-import EditMealPage from './pages/meals/EditMealPage';
 import { MessageContextProvider } from './store/MessageContext';
 
 
@@ -44,19 +42,9 @@ const router = createBrowserRouter([
             action: mealAction,
           },
           {
-            path: 'new',
-            element: <MealPage />,
-          },
-          {
             path: 'details',
             element: <MealPage />,
             loader: mealAction,
-          },
-          {
-            path: 'edit',
-            element: <EditMealPage />,
-            loader: mealLoader,
-            action: mealAction,
           },
         ],
       },
