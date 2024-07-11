@@ -1,17 +1,15 @@
 import { Outlet, useLoaderData, useSubmit } from "react-router-dom";
 import PageHeader from "../components/PageHeader";
 import Sidebar from "../components/SideBar";
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { getTokenDuration } from "../util/auth";
 import ArrowBackIosOutlinedIcon from '@mui/icons-material/ArrowBackIosOutlined';
 import ArrowForwardIosOutlinedIcon from '@mui/icons-material/ArrowForwardIosOutlined';
 import MessageModal from "../components/ui/MessageModal";
-import MessageContext from "../store/MessageContext";
 function RootLayout() {
   const token = useLoaderData();
   const submit = useSubmit();
   const [isOpen, setIsOpen] = useState(false);
-  const messageContext = useContext(MessageContext)
   const toggleSidebar = () => {
     setIsOpen(!isOpen);
   };

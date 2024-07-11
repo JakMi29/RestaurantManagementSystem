@@ -1,31 +1,40 @@
 import { Form, json, useActionData } from 'react-router-dom';
 import classes from '../Form.module.css';
-import { getAuthToken } from '../../util/auth';
 import { useContext, useEffect, useRef, useState } from 'react';
 import MealPageContext from '../../store/MealPageContext';
 import MessageContext from '../../store/MessageContext';
-
+import { getAuthToken } from '../../util/auth';
 
 function MealModal() {
   const mealPageCtx = useContext(MealPageContext);
+  const messageCtx = useContext(MessageContext);
   const [error, setError] = useState(false);
   const method = (mealPageCtx.progress === 'create' ? 'post' : 'patch');
   const meal = mealPageCtx.meal;
   const data = useActionData();
+  const formRef = useRef();
+  const dialog = useRef();
+
   function handleChange() {
     setError(false);
   }
 
-  const dialog = useRef();
-  const messageCtx = useContext(MessageContext);
+  function cancel() {
+    mealPageCtx.hide();
+    formRef.current.reset();
+  }
 
   useEffect(() => {
     if (data) {
-      setError(true);
-    } else {
-      setError(false);
+      if (data.success) {
+        mealPageCtx.hide();
+        messageCtx.showMessage("Meal added successfully", 'info');
+        formRef.current.reset();
+      } else if (data.error) {
+        setError(true);
+      }
     }
-  }, [data]);
+  }, [data, mealPageCtx, messageCtx]);
 
   useEffect(() => {
     const modal = dialog.current;
@@ -33,6 +42,7 @@ function MealModal() {
       modal.showModal();
     } else {
       modal.close();
+      formRef.current.reset();
     }
     return () => {
       modal.close();
@@ -41,11 +51,11 @@ function MealModal() {
 
   return (
     <dialog ref={dialog} className="modal-dialog">
-      <Form method={method} className={classes.form} encType="multipart/form-data">
+      <Form ref={formRef} method={method} className={classes.form} encType="multipart/form-data">
         <h1>{meal ? "Edit meal" : "Add new meal"}</h1>
         {error && (
-            <p>{data.message}</p>
-          )}
+          <p>{data.message}</p>
+        )}
         <div className={classes.inputContainer}>
           <label htmlFor="name">Name</label>
           <input
@@ -89,6 +99,7 @@ function MealModal() {
           <input
             id="price"
             name="price"
+            type="number"
             required
             defaultValue={meal ? meal.price : ''}
             onChange={handleChange}
@@ -106,7 +117,7 @@ function MealModal() {
           />
         </div>
         <div className={classes.actions}>
-          <button onClick={mealPageCtx.hide} className={classes.cancelButton}>
+          <button type="button" onClick={cancel} className={classes.cancelButton}>
             Cancel
           </button>
           <button type="submit" className={classes.actionButton} onClick={handleChange}>

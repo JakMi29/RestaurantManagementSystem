@@ -1,6 +1,6 @@
 package com.example.RestaurantManagementSystem.api.rest;
 
-import com.example.RestaurantManagementSystem.api.rest.response.ErrorResponse;
+import com.example.RestaurantManagementSystem.api.rest.response.Response;
 import com.example.RestaurantManagementSystem.domain.exception.NotFoundException;
 import com.example.RestaurantManagementSystem.domain.exception.ObjectAlreadyExist;
 import lombok.extern.slf4j.Slf4j;
@@ -19,20 +19,20 @@ import java.util.Optional;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorResponse> handleException(Exception ex) {
+    public ResponseEntity<Response> handleException(Exception ex) {
         log.error(ex.getMessage());
         String message = String.format("Other exception occurred: %s", ex.getMessage());
-        ErrorResponse response=ErrorResponse.builder()
+        Response response= Response.builder()
                 .message(message)
                 .code(HttpStatus.UNAUTHORIZED.toString())
                 .build();
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
     }
     @ExceptionHandler(BadCredentialsException.class)
-    public ResponseEntity<ErrorResponse> handleException(BadCredentialsException ex) {
+    public ResponseEntity<Response> handleException(BadCredentialsException ex) {
         log.error(ex.getMessage());
         String message ="Invalid email or password!";
-        ErrorResponse response=ErrorResponse.builder()
+        Response response= Response.builder()
                 .message(message)
                 .code(HttpStatus.UNAUTHORIZED.toString())
                 .build();
@@ -40,9 +40,9 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(ObjectAlreadyExist.class)
-    public ResponseEntity<ErrorResponse> handleUserAlreadyExistException(Exception ex) {
+    public ResponseEntity<Response> handleUserAlreadyExistException(Exception ex) {
         String message = String.format(ex.getMessage());
-        ErrorResponse response=ErrorResponse.builder()
+        Response response= Response.builder()
                 .message(message)
                 .code(HttpStatus.UNAUTHORIZED.toString())
                 .build();

@@ -2,7 +2,7 @@ import { createContext, useState } from 'react';
 const MealPageContext = createContext({
   progress: '',
   meal:undefined,
-  setMeal:()=>{},
+  editMeal:()=>{},
   edit: () => {},
   create: () => {},
   hide: () => {},
@@ -11,31 +11,31 @@ const MealPageContext = createContext({
 // eslint-disable-next-line react/prop-types
 export function MealPageContextProvider({ children }) {
   const [mealPage, setMealPage] = useState('');
+  const [meal, setMeal] = useState('');
 
-  function edit() {
+  const edit = () => {
     setMealPage('edit');
-  }
+  };
 
-  function create() {
+  const create = () => {
     setMealPage('create');
-  }
+  };
 
-  function hide() {
+  const hide = () => {
     setMealPage('');
-  }
+  };
 
-  function setMeal(meal) {
+  const editMeal=(meal)=>{
     setMeal(meal);
   }
 
-  
-
   const mealPageCtx = {
     progress: mealPage,
-    setMeal,
-    edit,
-    create,
-    hide,
+    meal:meal,
+    editMeal: editMeal,
+    edit: edit,
+    create: create,
+    hide: hide,
   };
 
   return (
