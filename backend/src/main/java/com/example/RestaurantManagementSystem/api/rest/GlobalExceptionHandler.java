@@ -44,7 +44,7 @@ public class GlobalExceptionHandler {
         String message = String.format(ex.getMessage());
         Response response= Response.builder()
                 .message(message)
-                .code(HttpStatus.UNAUTHORIZED.toString())
+                .code(HttpStatus.BAD_REQUEST.toString())
                 .build();
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }

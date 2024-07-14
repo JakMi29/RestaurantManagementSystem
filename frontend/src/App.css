@@ -1,5 +1,6 @@
 body {
   margin: 0;
+  background-color: #f7f7f7;
   font-family: Arial, sans-serif;
 }
 
@@ -9,6 +10,7 @@ button{
   font-size: 16px;
   border: none;
   text-decoration: none;
+  color: rgb(249, 249, 249);
 }
 
 .header{
@@ -67,18 +69,11 @@ button{
     margin: 80px auto 0 auto;
     padding: 0 80px;
     padding-top: 10px;
-    background-color: rgba(244, 244, 244, 0.613);
-    box-shadow: 1px 0 1px rgba(0, 0, 0, 0.1);
     box-sizing: border-box;
     position: relative;
+    justify-content: center; 
 }
-.page.button{
-    padding: 10px 20px;
-  border-radius: 4px;
-  font-size: 16px;
-  border: none;
-  text-decoration: none;
-}
+
 .side-bar{
   top: 80px;
   position: fixed;
@@ -94,7 +89,7 @@ button{
 
 .paginationContainer {
   position: relative;
-  height: 50px; /* Adjust height as needed */
+  height: 50px; 
 }
 
 .side-bar .text{

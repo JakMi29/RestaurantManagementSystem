@@ -1,6 +1,7 @@
 package com.example.RestaurantManagementSystem.api.auth;
 
 import com.example.RestaurantManagementSystem.business.RestaurantOwnerService;
+import com.example.RestaurantManagementSystem.domain.exception.NotFoundException;
 import com.example.RestaurantManagementSystem.domain.exception.ObjectAlreadyExist;
 import com.example.RestaurantManagementSystem.infrastructure.security.JwtService;
 import com.example.RestaurantManagementSystem.infrastructure.security.Role;
@@ -39,6 +40,7 @@ public class AuthenticationService {
         var jwtToken = jwtService.generateToken(user);
         return AuthenticationResponse.builder()
                 .token(jwtToken)
+                .role(user.getRole())
                 .build();
     }
 
@@ -51,10 +53,11 @@ public class AuthenticationService {
                 )
         );
         var user = repository.findByEmail(request.getEmail())
-                .orElseThrow();
+                .orElseThrow(() -> new NotFoundException("Can not found user with this email"));
         var jwtToken = jwtService.generateToken(user);
         return AuthenticationResponse.builder()
                 .token(jwtToken)
+                .role(user.getRole())
                 .build();
     }
 
@@ -65,7 +68,7 @@ public class AuthenticationService {
                 .phone(request.getPhone())
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
-                .role(Role.ADMIN)
+                .role(Role.valueOf(request.getRole()))
                 .build();
     }
 

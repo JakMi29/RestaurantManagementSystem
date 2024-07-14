@@ -8,13 +8,14 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @AllArgsConstructor
-public class RestaurantService  {
+public class RestaurantService {
     private final RestaurantDAO restaurantDAO;
 
-@Transactional
-public Restaurant findByName(String name){
-    return restaurantDAO.findByName(name);
-}
+    @Transactional
+    public Restaurant findByName(String name) {
+        return restaurantDAO.findByName(name);
+    }
+
     @Transactional
     public Restaurant createRestaurant(Restaurant restaurant) {
         return restaurantDAO.createRestaurant(restaurant);

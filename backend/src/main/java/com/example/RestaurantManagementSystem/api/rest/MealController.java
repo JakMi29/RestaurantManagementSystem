@@ -1,6 +1,7 @@
 package com.example.RestaurantManagementSystem.api.rest;
 
 import com.example.RestaurantManagementSystem.api.rest.request.AddMealRequest;
+import com.example.RestaurantManagementSystem.api.rest.response.Response;
 import com.example.RestaurantManagementSystem.business.MealPaginationService;
 import com.example.RestaurantManagementSystem.business.MealService;
 import com.example.RestaurantManagementSystem.domain.Meal;
@@ -18,8 +19,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.List;
-import java.util.Optional;
 
 @Slf4j
 @RestController
@@ -30,19 +29,18 @@ public class MealController {
     private final MealPaginationService mealPaginationService;
 
     @PostMapping(value = "/meal", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<String> addMeal(
+    public ResponseEntity<Response> addMeal(
             @Valid @RequestPart("meal") AddMealRequest request,
             @RequestPart("image") MultipartFile image) {
-        mealService.addMeal(request, image);
-        return ResponseEntity.ok("test");
+        return ResponseEntity.ok(mealService.addMeal(request, image));
     }
 
     @PatchMapping(value = "/meal", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<String> updateMeal(
-            @Valid @RequestPart("meal") AddMealRequest request,
-            @RequestPart("image") MultipartFile image) {
+    public ResponseEntity<Response> updateMeal(
+            @RequestPart("meal") AddMealRequest request,
+            @RequestPart(value = "image", required = false) MultipartFile image) {
         mealService.updateMeal(request, image);
-        return ResponseEntity.ok("test");
+        return ResponseEntity.ok(mealService.updateMeal(request, image));
     }
 
     @GetMapping("/meals")
@@ -71,8 +69,8 @@ public class MealController {
 
     @PutMapping("/meal")
     public ResponseEntity<Object> deleteMeal(@RequestParam String restaurantName, @RequestParam String name) {
-        mealService.deleteMeal(name,restaurantName);
-        return ResponseEntity.ok().build();
+        mealService.deleteMeal(name, restaurantName);
+        return ResponseEntity.ok(mealService.deleteMeal(name, restaurantName));
     }
 
     @PatchMapping("/meal/mealOfTheDay")

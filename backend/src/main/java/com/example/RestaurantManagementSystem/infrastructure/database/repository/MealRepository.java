@@ -52,8 +52,6 @@ public class MealRepository implements MealDAO {
             MealStatus mealStatus,
             Pageable pageable
     ) {
-        System.out.println("dupa");
-
         RestaurantEntity restaurantEntity = restaurantMapper.map(restaurant);
         return repository
                 .findAllByRestaurantAndCategoryAndStatusNot(restaurantEntity, category, mealStatus, pageable)

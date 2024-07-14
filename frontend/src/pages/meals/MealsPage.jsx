@@ -43,53 +43,55 @@ function MealsPage() {
 
 
     return (
-        <MealPageContextProvider>
-            <MealModal />
-            <MealCategoryContainer currentCategory={currentCategory} />
-            <div style={{ display: "flex", justifyContent: "flex-end" }}>
-                <form style={{ marginTop: "20px", marginLeft: "auto" }}>
-                    <input
-                        type="text"
-                        value={searchTerm}
-                        onChange={handleSearchChange}
-                        placeholder="Search for meals..."
-                        className={classes.searchInput}
-                    />
-                </form>
-            </div>
-            <Suspense fallback={<p style={{ textAlign: 'center' }}><CircularProgress /></p>}>
-                <Await resolve={meals}>
-                    {(loadedMeals) => (
-                        <>
-                            <div className={classes.mealsContainer}>
-                                <MealList meals={loadedMeals.content} />
-                            </div>
-                            <div className={classes.paginationContainer}>
-                                {!loadedMeals.first && (
-                                    <button
-                                        className={classes.categoryButton}
-                                        style={{ position: "absolute", left: "80px", bottom: "30px" }}
-                                        onClick={handlePreviousPage}
-                                        disabled={loadedMeals.first}
-                                    >
-                                        Previous
-                                    </button>
-                                )}
-                                {!loadedMeals.last && (
-                                    <button
-                                        className={classes.categoryButton}
-                                        style={{ position: "absolute", right: "80px", bottom: "30px" }}
-                                        onClick={handleNextPage}
-                                    >
-                                        Next
-                                    </button>
-                                )}
-                            </div>
-                        </>
-                    )}
-                </Await>
-            </Suspense>
-        </MealPageContextProvider>
+        <div className={classes.mealPage}>
+            <MealPageContextProvider>
+                <MealModal />
+                <MealCategoryContainer currentCategory={currentCategory} />
+                <div style={{ display: "flex", justifyContent: "flex-end" }}>
+                    <form style={{ marginTop: "20px", marginLeft: "auto" }}>
+                        <input
+                            type="text"
+                            value={searchTerm}
+                            onChange={handleSearchChange}
+                            placeholder="Search for meals..."
+                            className={classes.searchInput}
+                        />
+                    </form>
+                </div>
+                <Suspense fallback={<p style={{ textAlign: 'center' }}><CircularProgress /></p>}>
+                    <Await resolve={meals}>
+                        {(loadedMeals) => (
+                            <>
+                                <div className={classes.mealsContainer}>
+                                    <MealList meals={loadedMeals.content} />
+                                </div>
+                                <div className={classes.paginationContainer}>
+                                    {!loadedMeals.first && (
+                                        <button
+                                            className={classes.categoryButton}
+                                            style={{ position: "absolute", left: "80px", bottom: "30px" }}
+                                            onClick={handlePreviousPage}
+                                            disabled={loadedMeals.first}
+                                        >
+                                            Previous
+                                        </button>
+                                    )}
+                                    {!loadedMeals.last && (
+                                        <button
+                                            className={classes.categoryButton}
+                                            style={{ position: "absolute", right: "80px", bottom: "30px" }}
+                                            onClick={handleNextPage}
+                                        >
+                                            Next
+                                        </button>
+                                    )}
+                                </div>
+                            </>
+                        )}
+                    </Await>
+                </Suspense>
+            </MealPageContextProvider>
+        </div>
     );
 }
 export default MealsPage;

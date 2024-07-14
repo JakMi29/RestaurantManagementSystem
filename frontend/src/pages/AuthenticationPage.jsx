@@ -54,8 +54,10 @@ export async function action({ request }) {
 
   const resData = await response.json();
   const token = resData.token;
+  const role = resData.role;
   
   localStorage.setItem('token', token);
+  localStorage.setItem('role', role);
   const expiration = new Date();
   expiration.setMinutes(expiration.getMinutes() + 15);
   localStorage.setItem('expiration', expiration.toISOString());

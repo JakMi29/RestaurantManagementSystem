@@ -1,5 +1,6 @@
 package com.example.RestaurantManagementSystem.api.auth;
 
+import com.example.RestaurantManagementSystem.infrastructure.security.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,4 +12,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class AuthenticationResponse {
     private String token;
+    private Role role;
 }

@@ -1,3 +1,7 @@
+.mealPage{
+    margin: 0 auto 0 auto;
+}
+
 .categoryContainer {
     display: flex;
     gap: 5px;
@@ -90,9 +94,9 @@
 .mealImage {
     padding-top: 5px;
     height: 150px;
-    overflow: hidden;
     border-top-left-radius: 4px;
     border-top-right-radius: 4px;
+    overflow: hidden;
 }
 
 .mealImage img {
@@ -140,29 +144,24 @@
 
 .deleteButton {
     background-color: rgba(255, 0, 0, 0.2);
-    color: rgb(249, 249, 249);
     font-size: 16px;
 }
 
 .deleteButton:hover {
     background-color: rgb(237, 14, 14);
-    color: rgb(249, 249, 249);
 }
 
 .editButton {
     background-color: rgba(14, 185, 88, 0.2);
-    color: rgb(249, 249, 249);
 }
 
 .editButton:hover {
     background-color: rgb(79, 156, 109);
-    color: rgb(249, 249, 249);
 }
 
 .newMealButton{
     margin-left: auto;
     background-color: rgba(14, 185, 88, 0.2);
-    color: rgb(249, 249, 249);
 }
 
 .newMealButton:hover{

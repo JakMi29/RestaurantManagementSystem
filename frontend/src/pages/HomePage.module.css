@@ -5,8 +5,7 @@
 .container{
     background-color: #f7f7f7;
     border-radius: 8px;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-    padding: 40px;
+    padding-top: 150px;
     color: #3c3cd3;
 }
 .images{

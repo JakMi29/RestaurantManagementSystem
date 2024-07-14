@@ -15,7 +15,6 @@ function AuthForm() {
   const isLogin = searchParams.get('mode') === 'login';
 
   useEffect(() => {
-    console.log(data)
     if (data) {
       setError(true);
     } else {

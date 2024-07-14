@@ -23,6 +23,7 @@ export function MealPageContextProvider({ children }) {
 
   const hide = () => {
     setMealPage('');
+    setMeal(null);
   };
 
   const editMeal=(meal)=>{

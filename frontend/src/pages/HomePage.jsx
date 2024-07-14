@@ -8,7 +8,7 @@ function HomePage() {
   return (
         <div className={classes.content}>
           <div className={classes.container}>
-          <h1>Welcome in our management system</h1>
+          <h1>Manage your entire restaurant in one application</h1>
           <div className={classes.images}>
             <RestaurantMenuOutlinedIcon sx={{ fontSize: 150 }} />
             <GroupOutlinedIcon sx={{ fontSize: 150 }}  />

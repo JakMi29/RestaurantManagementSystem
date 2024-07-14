@@ -19,30 +19,30 @@
 
 .cancelButton {
     background-color: rgba(255, 0, 0, 0.2);
+    color: rgb(249, 249, 249);
     font-size: 16px;
 }
 
 .cancelButton:hover {
     background-color: rgb(237, 14, 14);
-    color: rgb(249, 249, 249);
 }
 
 .confirmButton {
     background-color: rgba(14, 185, 88, 0.2);
+    color: rgb(249, 249, 249);
     font-size: 16px;
 }
 
 .confirmButton:hover {
     background-color: rgb(79, 156, 109);
-    color: rgb(249, 249, 249);
 }
 
 .okButton {
     background-color:rgb(60, 60, 211);
+    color: rgb(249, 249, 249);
     font-size: 16px;
 }
 
 .okButton:hover {
     background-color:rgb(70, 70, 149);
-    color: rgb(249, 249, 249);
 }
