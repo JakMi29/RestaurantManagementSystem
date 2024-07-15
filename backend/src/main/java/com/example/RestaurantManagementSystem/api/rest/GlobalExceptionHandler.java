@@ -24,7 +24,7 @@ public class GlobalExceptionHandler {
         String message = String.format("Other exception occurred: %s", ex.getMessage());
         Response response= Response.builder()
                 .message(message)
-                .code(HttpStatus.UNAUTHORIZED.toString())
+                .code(HttpStatus.UNAUTHORIZED.value())
                 .build();
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
     }
@@ -34,7 +34,7 @@ public class GlobalExceptionHandler {
         String message ="Invalid email or password!";
         Response response= Response.builder()
                 .message(message)
-                .code(HttpStatus.UNAUTHORIZED.toString())
+                .code(HttpStatus.UNAUTHORIZED.value())
                 .build();
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
     }
@@ -44,7 +44,7 @@ public class GlobalExceptionHandler {
         String message = String.format(ex.getMessage());
         Response response= Response.builder()
                 .message(message)
-                .code(HttpStatus.BAD_REQUEST.toString())
+                .code(HttpStatus.BAD_REQUEST.value())
                 .build();
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }

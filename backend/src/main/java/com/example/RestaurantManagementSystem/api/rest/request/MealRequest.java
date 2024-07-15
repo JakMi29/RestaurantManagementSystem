@@ -12,7 +12,7 @@ import org.springframework.validation.annotation.Validated;
 @Validated
 @AllArgsConstructor
 @NoArgsConstructor
-public class AddMealRequest {
+public class MealRequest {
     @NotBlank
     private String restaurantName;
     @NotBlank

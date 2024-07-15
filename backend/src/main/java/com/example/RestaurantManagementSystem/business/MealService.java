@@ -1,6 +1,6 @@
 package com.example.RestaurantManagementSystem.business;
 
-import com.example.RestaurantManagementSystem.api.rest.request.AddMealRequest;
+import com.example.RestaurantManagementSystem.api.rest.request.MealRequest;
 import com.example.RestaurantManagementSystem.api.rest.response.Response;
 import com.example.RestaurantManagementSystem.business.dao.MealDAO;
 import com.example.RestaurantManagementSystem.domain.Category;
@@ -39,7 +39,7 @@ public class MealService {
     private final RestaurantService restaurantService;
 
     @Transactional
-    public Response addMeal(AddMealRequest request, MultipartFile image) {
+    public Response addMeal(MealRequest request, MultipartFile image) {
         Meal meal = buildMeal(request);
         Restaurant restaurant = restaurantService.findByName(request.getRestaurantName());
         List<Meal> meals = mealDAO.findAllByRestaurant(restaurant);
@@ -56,12 +56,12 @@ public class MealService {
         }
         log.info("Successful add meal: [%s]".formatted(meal.getName()));
         return Response.builder()
-                .code(HttpStatus.OK.toString())
-                .message(("Meal [%s] added successfully.".formatted(meal.getName())))
+                .code(HttpStatus.OK.value())
+                .message(("Meal %s added successfully.".formatted(meal.getName())))
                 .build();
     }
 
-    private Meal buildMeal(AddMealRequest request) {
+    private Meal buildMeal(MealRequest request) {
         return Meal.builder()
                 .name(request.getName())
                 .description(request.getDescription())
@@ -79,8 +79,8 @@ public class MealService {
         mealDAO.updateMeal(meal.withMealStatus(MealStatus.DELETE));
         log.info("Successful deleted meal: [%s]".formatted(mealName));
         return Response.builder()
-                .code(HttpStatus.OK.toString())
-                .message(("Meal [%s] deleted successfully.".formatted(meal.getName())))
+                .code(HttpStatus.OK.value())
+                .message(("Meal %s deleted successfully.".formatted(meal.getName())))
                 .build();
     }
 
@@ -133,7 +133,7 @@ public class MealService {
     }
 
     @Transactional
-    public Response updateMeal(AddMealRequest request, MultipartFile image) {
+    public Response updateMeal(MealRequest request, MultipartFile image) {
         Restaurant restaurant = restaurantService.findByName(request.getRestaurantName());
         Meal mealToUpdate = mealDAO.findByNameAndRestaurant(request.getOldName(), restaurant)
                 .withCategory(Category.valueOf(request.getCategory()))
@@ -157,8 +157,8 @@ public class MealService {
             throw new ObjectAlreadyExist("Meal with this name already exist!");
         }
         return Response.builder()
-                .code(HttpStatus.OK.toString())
-                .message(("Meal [%s] updated successfully.".formatted(mealToUpdate.getName())))
+                .code(HttpStatus.OK.value())
+                .message(("Meal %s updated successfully.".formatted(mealToUpdate.getName())))
                 .build();
 
     }

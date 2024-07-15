@@ -52,27 +52,21 @@ function MealModal() {
   function cancel() {
     mealPageCtx.hide();
     formRef.current.reset();
+    setError(false);
     setPreview(meal ? meal.image : '');
   }
 
   useEffect(() => {
     if (data) {
-      if (data.success) {
+      if (data.code === 200) {
         mealPageCtx.hide();
-        messageCtx.showMessage("Meal added successfully", 'info');
+        messageCtx.showMessage(data.message, 'info');
         formRef.current.reset();
         setPreview('');
-      } else if (data.error) {
+        setError(false);
+      } else {
         setError(true);
       }
-    }
-  }, [data]);
-
-  useEffect(() => {
-    if (data) {
-      setError(true);
-    } else {
-      setError(false);
     }
   }, [data]);
 
@@ -101,7 +95,6 @@ function MealModal() {
             id="oldName"
             type="text"
             name="oldName"
-            required
             defaultValue={meal ? meal.name : ''}
             onChange={handleChange}
           />
@@ -122,16 +115,16 @@ function MealModal() {
           <select
             id="category"
             name="category"
-            defaultValue={''}
+            defaultValue={meal ? meal.category : ''}
             required
             onChange={handleChange}
           >
-            <option value="APPETIZER" selected={meal && meal.category === 'APPETIZER'}>Appetizer</option>
-            <option value="MAIN_DISH" selected={meal && meal.category === 'MAIN_DISH'}>Main Dish</option>
-            <option value="SOUP" selected={meal && meal.category === 'SOUP'}>Soup</option>
-            <option value="DRINK" selected={meal && meal.category === 'DRINK'}>Drink</option>
-            <option value="DESSERT" selected={meal && meal.category === 'DESSERT'}>Dessert</option>
-            <option value="ALCOHOLIC_DRINK" selected={meal && meal.category === 'ALCOHOLIC_DRINK'}>Alcoholic Drink</option>
+            <option value='APPETIZER'>Appetizer</option>
+            <option value='MAIN_DISH'>Main Dish</option>
+            <option value='SOUP'>Soup</option>
+            <option value='DRINK'>Drink</option>
+            <option value='DESSERT'>Dessert</option>
+            <option value='ALCOHOLIC_DRINK'>Alcoholic Drink</option>
           </select>
         </div>
         <div className={classes.inputContainer}>
@@ -203,7 +196,6 @@ export default MealModal;
 
 export async function action({ request }) {
   const method = request.method;
-  console.log(method)
   const data = await request.formData();
   const mealData = {
     name: data.get('name'),
@@ -213,7 +205,7 @@ export async function action({ request }) {
     restaurantName: "Italiano",
     oldName: data.get('oldName')
   };
-  console.log([JSON.stringify(mealData)])
+  console.log(mealData)
   const formData = new FormData();
   const mealBlob = new Blob([JSON.stringify(mealData)], { type: 'application/json' });
 
@@ -236,11 +228,10 @@ export async function action({ request }) {
   if (response.status === 400) {
     return response;
   }
-  console.log(response)
 
   if (!response.ok) {
     throw json({ message: 'Could not save meal.' }, { status: 500 });
   }
 
-  return { success: true };
+  return response;
 }

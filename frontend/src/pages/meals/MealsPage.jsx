@@ -113,7 +113,6 @@ async function loadMeals(category, pageNumber, pageSize, searchTerm) {
         );
     } else {
         const resData = await response.json();
-        console.log(resData)
         return resData;
     }
 }

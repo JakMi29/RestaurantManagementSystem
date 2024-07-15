@@ -1,6 +1,6 @@
 package com.example.RestaurantManagementSystem.api.rest;
 
-import com.example.RestaurantManagementSystem.api.rest.request.AddMealRequest;
+import com.example.RestaurantManagementSystem.api.rest.request.MealRequest;
 import com.example.RestaurantManagementSystem.api.rest.response.Response;
 import com.example.RestaurantManagementSystem.business.MealPaginationService;
 import com.example.RestaurantManagementSystem.business.MealService;
@@ -30,16 +30,15 @@ public class MealController {
 
     @PostMapping(value = "/meal", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<Response> addMeal(
-            @Valid @RequestPart("meal") AddMealRequest request,
+            @Valid @RequestPart("meal") MealRequest request,
             @RequestPart("image") MultipartFile image) {
         return ResponseEntity.ok(mealService.addMeal(request, image));
     }
 
     @PatchMapping(value = "/meal", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<Response> updateMeal(
-            @RequestPart("meal") AddMealRequest request,
+            @RequestPart("meal") MealRequest request,
             @RequestPart(value = "image", required = false) MultipartFile image) {
-        mealService.updateMeal(request, image);
         return ResponseEntity.ok(mealService.updateMeal(request, image));
     }
 
