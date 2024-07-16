@@ -1,6 +1,9 @@
 INSERT INTO restaurant(name, restaurant_owner_id)
 VALUES
 ('Italiano',1);
+INSERT INTO waiter(email, restaurant_id)
+VALUES
+('waiterAdam@gmail.com',1);
 
 INSERT INTO meal (name, description, category, status, price, restaurant_id, image, meal_of_the_day)
 VALUES
@@ -105,3 +108,6 @@ VALUES
     ('Eggplant Parmesan', 'Breaded eggplant with tomato sauce and cheese', 'MAIN_DISH', 'ACTIVE', 13.99, 1, 'https://t4.ftcdn.net/jpg/01/88/91/59/240_F_188915942_7imsdpiJTSvbN2JGtrfNkOrQsOb8hOie.jpg', FALSE),
     ('Linguine alle Vongole', 'Linguine with clams', 'MAIN_DISH', 'ACTIVE', 15.99, 1, 'https://t4.ftcdn.net/jpg/05/34/30/49/240_F_534304978_YHfU0fRQkhLrq8eFcq0IljaVzVakLVnw.jpg', FALSE),
     ('Pappardelle al Cinghiale', 'Pasta with wild boar ragu', 'MAIN_DISH', 'ACTIVE', 16.99, 1, 'https://t4.ftcdn.net/jpg/06/86/06/73/360_F_686067390_C0qRc1KKsHtUW3996zFNAiWG7M34fUr5.jpg', FALSE);
+
+
+

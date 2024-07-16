@@ -25,7 +25,7 @@ public class TableEntity {
     @Column(name="status")
     private TableStatus status;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "restaurant_id")
     private RestaurantEntity restaurant;
 }

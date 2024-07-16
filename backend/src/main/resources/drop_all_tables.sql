@@ -1,10 +1,9 @@
-DROP TABLE meal;
-DROP TABLE waiter;
-DROP TABLE restaurant;
-DROP TABLE  restaurant_owner;
 DROP TABLE _user;
 DROP TABLE order_meal;
 DROP TABLE _order;
 DROP TABLE _table;
 DROP TABLE meal;
+DROP TABLE waiter;
+DROP TABLE restaurant;
+DROP TABLE  restaurant_owner;
 DROP TABLE flyway_schema_history

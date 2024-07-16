@@ -1,5 +1,6 @@
 package com.example.RestaurantManagementSystem.infrastructure.database.entity;
 
+import com.example.RestaurantManagementSystem.domain.OrderMealStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -17,7 +18,7 @@ public class OrderMealEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private Integer orderMealId;
+    private Integer id;
 
     @Column(name = "quantity")
     private Integer quantity;
@@ -25,9 +26,14 @@ public class OrderMealEntity {
     @Column(name = "price")
     private BigDecimal price;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name="status")
+    private OrderMealStatus status;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_id")
     private OrderEntity order;
+
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "meal_id")

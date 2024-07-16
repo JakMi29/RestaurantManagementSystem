@@ -1,6 +1,6 @@
 package com.example.RestaurantManagementSystem.infrastructure.security;
 
 public enum Role {
-    USER,
+    WAITER,
     ADMIN
 }

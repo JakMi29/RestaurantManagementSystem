@@ -1,7 +1,6 @@
 package com.example.RestaurantManagementSystem.infrastructure.database.entity;
 
 import com.example.RestaurantManagementSystem.domain.OrderStatus;
-import com.example.RestaurantManagementSystem.domain.TableStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -21,13 +20,13 @@ public class OrderEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "order_id")
-    private Integer orderId;
+    private Integer id;
 
     @Column(name = "price")
     private BigDecimal price;
 
     @Column(name = "order_number")
-    private String orderNumber;
+    private String number;
 
     @Enumerated(EnumType.STRING)
     @Column(name="status")
@@ -49,7 +48,7 @@ public class OrderEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "waiter_id")
-    private WaiterEntity customer;
+    private WaiterEntity waiter;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "order", cascade = CascadeType.ALL)
     private Set<OrderMealEntity> orderMeals;

@@ -5,10 +5,11 @@ import { useNavigate } from 'react-router-dom';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import MealPageContext from '../../store/MealPageContext';
 
-function Meal({meal}) {
+function Meal({ meal }) {
     const messageCtx = useContext(MessageContext);
     const mealPageCtx = useContext(MealPageContext);
     const navigate = useNavigate()
+    const admin = localStorage.getItem('role') === 'ADMIN';
 
     const handleConfirmAction = () => {
         messageCtx.showMessage('Are you sure you want to remove the meal?', 'confirmation', (confirmed) => {
@@ -61,9 +62,15 @@ function Meal({meal}) {
 
     return (
         <div className={classes.meal} >
-            <div className={meal.mealOfTheDay ? classes.mealOfDayTrue : classes.mealOfDayFalse}>
-                <FavoriteIcon sx={{ fontSize: 30 }} onClick={handleMealofTheDay} />
-            </div>
+            {admin ? (
+                <div className={meal.mealOfTheDay ? classes.mealOfDayTrue : classes.mealOfDayFalse}>
+                    <FavoriteIcon sx={{ fontSize: 30 }} onClick={handleMealofTheDay} />
+                </div>
+            ) : (
+                meal.mealOfTheDay && <div className={classes.mealOfDay}>
+                    <FavoriteIcon sx={{ fontSize: 30 }} />
+                </div>
+            )}
             <div className={classes.mealImage}>
                 <img src={meal.image} />
             </div>
@@ -73,10 +80,12 @@ function Meal({meal}) {
                     <p>{meal.price} usd</p>
                     <p>{meal.description}</p>
                 </div>
-                <div className={classes.actions}>
-                    <button className={classes.editButton} onClick={handleEditButton}>Edit</button>
-                    <button className={classes.deleteButton} onClick={handleConfirmAction}>Delete</button>
-                </div>
+                {admin && (
+                    <div className={classes.actions}>
+                        <button className={classes.editButton} onClick={handleEditButton}>Edit</button>
+                        <button className={classes.deleteButton} onClick={handleConfirmAction}>Delete</button>
+                    </div>
+                )}
             </div>
         </div>
     )

@@ -2,6 +2,7 @@ import MenuItem from "./MenuItem";
 import LeaderboardOutlinedIcon from '@mui/icons-material/LeaderboardOutlined';
 import RestaurantMenuOutlinedIcon from '@mui/icons-material/RestaurantMenuOutlined';
 import TableBarOutlinedIcon from '@mui/icons-material/TableBarOutlined';
+import GroupOutlinedIcon from '@mui/icons-material/GroupOutlined';
 
 function Sidebar() {
 
@@ -15,15 +16,24 @@ function Sidebar() {
           icon={<RestaurantMenuOutlinedIcon />}
         />
         <MenuItem
-          text="Statistics"
-          link="/statistics"
-          icon={<LeaderboardOutlinedIcon />}
-        />
-        <MenuItem
           text="Restaurant"
           link="/restaurant"
           icon={<TableBarOutlinedIcon />}
         />
+        {localStorage.getItem('role') === 'ADMIN' && (
+          <>
+            <MenuItem
+              text="Statistics"
+              link="/statistics"
+              icon={<LeaderboardOutlinedIcon />}
+            />
+            <MenuItem
+              text="employees"
+              link="/employees"
+              icon={<GroupOutlinedIcon />}
+            />
+          </>
+        )}
       </div>
     </div>
   );

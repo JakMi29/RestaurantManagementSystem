@@ -72,6 +72,17 @@
     opacity: 1;
 }
 
+.mealOfDay {
+    position: absolute;
+    top: -15px;
+    right: -15px;
+    z-index: 10;
+    padding: 0;
+    color: rgb(60, 60, 211);
+    transition: opacity 0.3s ease;
+    opacity: 1;
+}
+
 .mealOfDayTrue {
     position: absolute;
     top: -15px;
