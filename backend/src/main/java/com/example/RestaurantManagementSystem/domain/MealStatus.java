@@ -1,7 +1,7 @@
 package com.example.RestaurantManagementSystem.domain;
 
 public enum MealStatus {
-    READY,
+    ACTIVE,
     UNAVAILABLE,
     DELETE
 }

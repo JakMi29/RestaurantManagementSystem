@@ -3,7 +3,7 @@ import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import RootLayout from './pages/Root';
 import HomePage from './pages/HomePage';
 import StatisticPage from './pages/StatisticsPage';
-import RestaurantPage from './pages/RestaurantPage';
+import RestaurantPage, { loader as tableLoader } from './pages/restaurant/RestaurantPage';
 import AuthenticationPage, {
   action as authAction,
 } from './pages/AuthenticationPage';
@@ -51,6 +51,7 @@ const router = createBrowserRouter([
       {
         path: 'restaurant',
         element: <RestaurantPage />,
+        loader: tableLoader,
       },
       {
         path: 'auth',

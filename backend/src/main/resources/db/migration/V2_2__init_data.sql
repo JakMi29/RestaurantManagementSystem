@@ -109,5 +109,9 @@ VALUES
     ('Linguine alle Vongole', 'Linguine with clams', 'MAIN_DISH', 'ACTIVE', 15.99, 1, 'https://t4.ftcdn.net/jpg/05/34/30/49/240_F_534304978_YHfU0fRQkhLrq8eFcq0IljaVzVakLVnw.jpg', FALSE),
     ('Pappardelle al Cinghiale', 'Pasta with wild boar ragu', 'MAIN_DISH', 'ACTIVE', 16.99, 1, 'https://t4.ftcdn.net/jpg/06/86/06/73/360_F_686067390_C0qRc1KKsHtUW3996zFNAiWG7M34fUr5.jpg', FALSE);
 
-
+INSERT INTO _table(name, status, restaurant_id)
+VALUES
+('table 1','READY',1),
+('table 2','BUSY',1),
+('table 2','DIRTY',1);
 

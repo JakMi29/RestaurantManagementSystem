@@ -15,18 +15,4 @@ public interface OrderJpaRepository extends JpaRepository<OrderEntity,Integer> {
 
     List<MealEntity> findAllByRestaurant(RestaurantEntity restaurant);
 
-    Page<MealEntity> findAllByRestaurantAndCategoryAndStatusNot(
-            RestaurantEntity restaurant,
-            Category category,
-            MealStatus status,
-            Pageable pageable);
-
-    Page<MealEntity> findAllByRestaurantAndCategoryAndStatusNotAndNameContaining(
-            RestaurantEntity restaurant,
-            Category category,
-            MealStatus status,
-            Pageable pageable,
-            String searchTerms);
-
-    MealEntity findByNameAndRestaurant(String name, RestaurantEntity restaurantEntity);
 }

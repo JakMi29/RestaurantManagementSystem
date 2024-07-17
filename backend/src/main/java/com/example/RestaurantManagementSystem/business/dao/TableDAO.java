@@ -6,8 +6,10 @@ import com.example.RestaurantManagementSystem.domain.Table;
 import java.util.List;
 
 public interface TableDAO {
-    Table createMeal(Table table);
+    Table createTable(Table table);
 
     List<Table> findAllByRestaurant(Restaurant restaurant);
+
+    Table findByNameAndRestaurant(String name, Restaurant restaurant);
 }
 

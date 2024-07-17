@@ -25,7 +25,7 @@ public class TableRepository implements TableDAO {
     private final RestaurantEntityMapper restaurantEntityMapper;
 
     @Override
-    public Table createMeal(Table table) {
+    public Table createTable(Table table) {
         return tableEntityMapper.map(repository.save(tableEntityMapper.map(table)));
     }
 

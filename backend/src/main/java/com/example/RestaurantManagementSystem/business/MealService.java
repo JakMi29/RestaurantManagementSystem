@@ -40,12 +40,13 @@ public class MealService {
 
     @Transactional
     public Response addMeal(MealRequest request, MultipartFile image) {
-        Meal meal = buildMeal(request);
         Restaurant restaurant = restaurantService.findByName(request.getRestaurantName());
         List<Meal> meals = mealDAO.findAllByRestaurant(restaurant);
         Optional<Meal> existingMeal = meals.stream()
-                .filter(c -> c.getName().equals(meal.getName()))
+                .filter(c -> c.getName().equals(request.getName()))
                 .findFirst();
+
+        Meal meal = buildMeal(request);
 
         if (existingMeal.isEmpty()) {
             mealDAO.createMeal(meal
