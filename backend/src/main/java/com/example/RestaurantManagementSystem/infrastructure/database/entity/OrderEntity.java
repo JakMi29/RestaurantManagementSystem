@@ -50,6 +50,6 @@ public class OrderEntity {
     @JoinColumn(name = "waiter_id")
     private WaiterEntity waiter;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "order", cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "order", cascade = CascadeType.PERSIST)
     private Set<OrderMealEntity> orderMeals;
 }

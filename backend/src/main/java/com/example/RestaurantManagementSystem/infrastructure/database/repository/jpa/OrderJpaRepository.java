@@ -2,6 +2,7 @@ package com.example.RestaurantManagementSystem.infrastructure.database.repositor
 
 import com.example.RestaurantManagementSystem.domain.Category;
 import com.example.RestaurantManagementSystem.domain.MealStatus;
+import com.example.RestaurantManagementSystem.domain.Order;
 import com.example.RestaurantManagementSystem.infrastructure.database.entity.MealEntity;
 import com.example.RestaurantManagementSystem.infrastructure.database.entity.OrderEntity;
 import com.example.RestaurantManagementSystem.infrastructure.database.entity.RestaurantEntity;
@@ -15,4 +16,5 @@ public interface OrderJpaRepository extends JpaRepository<OrderEntity,Integer> {
 
     List<MealEntity> findAllByRestaurant(RestaurantEntity restaurant);
 
+    OrderEntity findByNumber(String orderNumber);
 }

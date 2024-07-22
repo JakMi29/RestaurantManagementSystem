@@ -12,4 +12,5 @@ import lombok.With;
 public class Waiter {
     Integer id;
     String email;
+    Restaurant restaurant;
 }

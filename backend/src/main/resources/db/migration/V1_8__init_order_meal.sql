@@ -5,6 +5,8 @@ CREATE TABLE order_meal
     quantity            INT                 NOT NULL,
     meal_id             INT                 NOT NULL,
     price            NUMERIC(19, 2)  NOT NULL,
+    received_date_time        TIMESTAMP WITH TIME ZONE,
+    completed_date_time       TIMESTAMP WITH TIME ZONE,
      status      VARCHAR(32)     NOT NULL,
      PRIMARY KEY (id),
       CONSTRAINT fk_order_id

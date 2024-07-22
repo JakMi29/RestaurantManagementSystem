@@ -1,7 +1,11 @@
 package com.example.RestaurantManagementSystem.infrastructure.database.repository.mapper;
 
-import com.example.RestaurantManagementSystem.domain.*;
-import com.example.RestaurantManagementSystem.infrastructure.database.entity.*;
+import com.example.RestaurantManagementSystem.domain.Order;
+import com.example.RestaurantManagementSystem.domain.Restaurant;
+import com.example.RestaurantManagementSystem.domain.Waiter;
+import com.example.RestaurantManagementSystem.infrastructure.database.entity.OrderEntity;
+import com.example.RestaurantManagementSystem.infrastructure.database.entity.RestaurantEntity;
+import com.example.RestaurantManagementSystem.infrastructure.database.entity.WaiterEntity;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -26,7 +30,7 @@ public class OrderEntityMapper {
                                 .build())
                 .waiter(
                         Waiter.builder()
-                        .id(entity.getId()).build())
+                                .id(entity.getId()).build())
                 .orderMeals(entity.getOrderMeals().stream().map(orderMealEntityMapper::map).toList())
                 .build();
     }

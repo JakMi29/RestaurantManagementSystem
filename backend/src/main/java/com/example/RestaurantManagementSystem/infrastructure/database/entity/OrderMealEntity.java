@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.math.BigDecimal;
+import java.time.OffsetDateTime;
 
 @Getter
 @Setter
@@ -25,6 +26,12 @@ public class OrderMealEntity {
 
     @Column(name = "price")
     private BigDecimal price;
+
+    @Column(name = "received_date_time")
+    private OffsetDateTime receivedDateTime;
+
+    @Column(name = "completed_date_time")
+    private OffsetDateTime completedDateTime;
 
     @Enumerated(EnumType.STRING)
     @Column(name="status")

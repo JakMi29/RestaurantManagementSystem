@@ -187,4 +187,8 @@ public class MealService {
         Restaurant restaurant = restaurantService.findByName(restaurantName);
         return mealDAO.findByNameAndRestaurant(name, restaurant);
     }
+
+    public Meal findByNameAndRestaurant(String name, Restaurant restaurant) {
+        return mealDAO.findByNameAndRestaurant(name, restaurant);
+    }
 }

@@ -12,8 +12,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -25,7 +27,9 @@ public class TableService {
     @Transactional
     public List<Table> findAllTablesByRestaurant(String restaurantName) {
         Restaurant restaurant = restaurantService.findByName(restaurantName);
-        return tableDAO.findAllByRestaurant(restaurant);
+        return tableDAO.findAllByRestaurant(restaurant).stream()
+                .sorted(Comparator.comparing(Table::getName))
+                .toList();
     }
 
     @Transactional
@@ -54,9 +58,17 @@ public class TableService {
                 .build();
     }
 
-    public Response changeStatus( String restaurantName,String tableName) {
+    public Response changeStatus(String tableName, String restaurantName) {
         Restaurant restaurant = restaurantService.findByName(restaurantName);
-        Table table=tableDAO.findByNameAndRestaurant(tableName,restaurant);
+        Table table = tableDAO.findByNameAndRestaurant(tableName, restaurant);
+
+        tableDAO.updateTable(table.withStatus(
+                switch (table.getStatus()) {
+                    case READY -> TableStatus.BUSY;
+                    case BUSY -> TableStatus.DIRTY;
+                    case DIRTY -> TableStatus.READY;
+                }));
+
         return Response.builder()
                 .code(HttpStatus.OK.value())
                 .message("Successfully change table status")

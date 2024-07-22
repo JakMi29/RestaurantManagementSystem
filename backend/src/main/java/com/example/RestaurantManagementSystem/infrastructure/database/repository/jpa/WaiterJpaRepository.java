@@ -6,4 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface WaiterJpaRepository extends JpaRepository<WaiterEntity,Integer> {
 
+    WaiterEntity findByEmail(String email);
+
 }

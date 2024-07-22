@@ -1,8 +1,7 @@
 package com.example.RestaurantManagementSystem.domain;
 
 public enum OrderMealStatus {
-    PREPARED,
+    PREPARING,
     READY,
     RELEASED,
-    TO_TAKE
 }

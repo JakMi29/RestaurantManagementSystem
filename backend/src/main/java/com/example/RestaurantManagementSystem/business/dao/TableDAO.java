@@ -7,6 +7,7 @@ import java.util.List;
 
 public interface TableDAO {
     Table createTable(Table table);
+    Table updateTable(Table table);
 
     List<Table> findAllByRestaurant(Restaurant restaurant);
 

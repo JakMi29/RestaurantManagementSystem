@@ -22,7 +22,7 @@ public class TableController {
         return ResponseEntity.ok(tableService.findAllTablesByRestaurant(restaurantName));
     }
 
-    @PatchMapping
+    @PatchMapping("/tables")
     public Response changeStatus(@RequestParam String tableName, @RequestParam String restaurantName){
         return tableService.changeStatus(tableName, restaurantName);
     }

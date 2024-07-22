@@ -2,6 +2,7 @@ package com.example.RestaurantManagementSystem.infrastructure.database.repositor
 
 import com.example.RestaurantManagementSystem.domain.Category;
 import com.example.RestaurantManagementSystem.domain.MealStatus;
+import com.example.RestaurantManagementSystem.domain.Table;
 import com.example.RestaurantManagementSystem.infrastructure.database.entity.MealEntity;
 import com.example.RestaurantManagementSystem.infrastructure.database.entity.RestaurantEntity;
 import com.example.RestaurantManagementSystem.infrastructure.database.entity.TableEntity;
@@ -15,4 +16,5 @@ public interface TableJpaRepository extends JpaRepository<TableEntity,Integer> {
 
     List<TableEntity> findAllByRestaurant(RestaurantEntity restaurant);
 
+    TableEntity findByNameAndRestaurant(String name, RestaurantEntity restaurantEntity);
 }
