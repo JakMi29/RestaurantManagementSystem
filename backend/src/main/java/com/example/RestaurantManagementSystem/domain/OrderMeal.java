@@ -1,6 +1,5 @@
 package com.example.RestaurantManagementSystem.domain;
 
-import jakarta.persistence.Column;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Value;

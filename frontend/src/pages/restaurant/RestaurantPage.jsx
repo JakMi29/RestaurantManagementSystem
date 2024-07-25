@@ -6,6 +6,9 @@ import CircularProgress from '@mui/material/CircularProgress';
 import TableList from "../../components/restaurant/TableList";
 function MealsPage() {
     const { tables } = useLoaderData();
+
+
+    
     return (
         <div className={classes.restaurantPage}>
                 <Suspense fallback={<p style={{ textAlign: 'center' }}><CircularProgress /></p>}>

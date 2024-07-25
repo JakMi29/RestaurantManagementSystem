@@ -4,22 +4,20 @@ import com.example.RestaurantManagementSystem.domain.Meal;
 import com.example.RestaurantManagementSystem.domain.OrderMeal;
 import com.example.RestaurantManagementSystem.infrastructure.database.entity.MealEntity;
 import com.example.RestaurantManagementSystem.infrastructure.database.entity.OrderMealEntity;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @Component
+@AllArgsConstructor
 public class OrderMealEntityMapper {
+    private final MealEntityMapper mealEntityMapper;
     public OrderMeal map(OrderMealEntity entity) {
         return OrderMeal.builder()
                 .id(entity.getId())
                 .quantity(entity.getQuantity())
                 .price(entity.getPrice())
                 .status(entity.getStatus())
-                .meal(
-                        Meal.builder()
-                                .id(entity.getOrder().getId())
-                                .name(entity.getMeal().getName())
-                                .price(entity.getPrice())
-                                .build())
+                .meal(mealEntityMapper.map(entity.getMeal()))
                 .build();
     }
 

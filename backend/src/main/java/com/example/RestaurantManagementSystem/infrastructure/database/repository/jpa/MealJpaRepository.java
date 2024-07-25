@@ -10,9 +10,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface MealJpaRepository extends JpaRepository<MealEntity,Integer> {
+public interface MealJpaRepository extends JpaRepository<MealEntity, Integer> {
 
     List<MealEntity> findAllByRestaurant(RestaurantEntity restaurant);
+
     Page<MealEntity> findAllByRestaurantAndCategoryAndStatusNot(
             RestaurantEntity restaurant,
             Category category,

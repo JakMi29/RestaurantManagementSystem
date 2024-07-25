@@ -22,17 +22,18 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Response> handleException(Exception ex) {
         log.error(ex.getMessage());
         String message = String.format("Other exception occurred: %s", ex.getMessage());
-        Response response= Response.builder()
+        Response response = Response.builder()
                 .message(message)
                 .code(HttpStatus.UNAUTHORIZED.value())
                 .build();
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
     }
+
     @ExceptionHandler(BadCredentialsException.class)
     public ResponseEntity<Response> handleException(BadCredentialsException ex) {
         log.error(ex.getMessage());
-        String message ="Invalid email or password!";
-        Response response= Response.builder()
+        String message = "Invalid email or password!";
+        Response response = Response.builder()
                 .message(message)
                 .code(HttpStatus.UNAUTHORIZED.value())
                 .build();
@@ -42,7 +43,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ObjectAlreadyExist.class)
     public ResponseEntity<Response> handleUserAlreadyExistException(Exception ex) {
         String message = String.format(ex.getMessage());
-        Response response= Response.builder()
+        Response response = Response.builder()
                 .message(message)
                 .code(HttpStatus.BAD_REQUEST.value())
                 .build();

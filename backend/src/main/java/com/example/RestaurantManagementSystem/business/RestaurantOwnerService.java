@@ -14,9 +14,9 @@ public class RestaurantOwnerService {
     private final RestaurantService restaurantService;
 
     @Transactional
-    public void createRestaurantOwner(String email,String restaurantName){
-        RestaurantOwner restaurantOwner=restaurantOwnerDAO.createRestaurantOwner(email);
-        Restaurant restaurant=Restaurant.builder()
+    public void createRestaurantOwner(String email, String restaurantName) {
+        RestaurantOwner restaurantOwner = restaurantOwnerDAO.createRestaurantOwner(email);
+        Restaurant restaurant = Restaurant.builder()
                 .name(restaurantName)
                 .restaurantOwner(restaurantOwner)
                 .build();

@@ -1,5 +1,6 @@
 package com.example.RestaurantManagementSystem.api.dto;
 
+import com.example.RestaurantManagementSystem.domain.Category;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -9,12 +10,9 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class MealDTO {
-    String name;
-    String category;
+public class OrderMealDTO {
     String price;
-    String description;
+    MealDTO meal;
+    Integer quantity;
     String status;
-    String image;
-    boolean mealOfTheDay;
 }

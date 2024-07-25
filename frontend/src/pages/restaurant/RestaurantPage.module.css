@@ -1,5 +1,5 @@
-.restaurantPage{
-    margin: 0 auto 0 auto;
+.restaurantPage {
+    margin: 0 auto;
 }
 
 .tablesContainer {
@@ -7,7 +7,7 @@
     display: flex;
     flex-wrap: wrap;
     gap: 27px;
-    overflow: hide;
+    overflow: hidden;
     position: relative;
 }
 
@@ -16,34 +16,85 @@
     flex-direction: column;
     align-items: center;
     width: 330px;
-    height: 290px;
+    height: 400px;
     background-color: #f7f7f7;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
     border-radius: 4px;
     position: relative;
 }
 
+.header {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 15px;
+    font-size: 1.2em;
+}
+
 .contentContainer {
-    flex: 1;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-    padding: 10px;
+    justify-content: center;
+    width: 100%;
+    height: 350px;
+}
+
+.iconContainer {
+    display: flex;
+    padding-top: 50px;
+    align-items: center;
+    justify-content: center;
 }
 
 .actions {
     display: flex;
     justify-content: space-between;
-    gap: 140px;
     margin-top: auto;
-    margin-bottom: 10px;
+    flex-direction: row-reverse;
+    padding: 10px;
 }
 
-.deleteButton {
+.cancelButton {
     background-color: rgba(255, 0, 0, 0.2);
-    font-size: 16px;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
 }
 
-.deleteButton:hover {
+.cancelButton:hover {
     background-color: rgb(237, 14, 14);
+}
+
+.editButton {
+    background-color: rgba(14, 185, 88, 0.2);
+}
+
+.editButton:hover {
+    background-color: rgb(79, 156, 109);
+}
+
+.clear {
+    background-color: rgba(255, 224, 99, 0.5);
+}
+
+.clear:hover {
+    background-color: rgb(255, 223, 99);
+}
+
+.complete {
+    background-color: rgba(14, 185, 88, 0.2);
+}
+
+.complete:hover {
+    background-color: rgb(79, 156, 109);
+}
+
+.occupy {
+    background-color: rgb(60, 60, 211, 0.2);
+
+}
+
+.occupy:hover {
+    background-color: rgb(60, 60, 211)
 }

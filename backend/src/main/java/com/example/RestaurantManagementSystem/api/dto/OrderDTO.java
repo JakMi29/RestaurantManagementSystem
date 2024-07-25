@@ -5,16 +5,16 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class MealDTO {
-    String name;
-    String category;
-    String price;
-    String description;
+public class OrderDTO {
+    String number;
     String status;
-    String image;
-    boolean mealOfTheDay;
+    WaiterDTO waiter;
+    String price;
+    List<OrderMealDTO> meals;
 }

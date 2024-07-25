@@ -6,13 +6,14 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class RestaurantOwnerMapper {
-    public RestaurantOwner map(RestaurantOwnerEntity entity){
+    public RestaurantOwner map(RestaurantOwnerEntity entity) {
         return RestaurantOwner.builder()
                 .id(entity.getId())
                 .email(entity.getEmail())
                 .build();
     }
-    public RestaurantOwnerEntity map(RestaurantOwner restaurantOwner){
+
+    public RestaurantOwnerEntity map(RestaurantOwner restaurantOwner) {
         return RestaurantOwnerEntity.builder()
                 .id(restaurantOwner.getId())
                 .email(restaurantOwner.getEmail())

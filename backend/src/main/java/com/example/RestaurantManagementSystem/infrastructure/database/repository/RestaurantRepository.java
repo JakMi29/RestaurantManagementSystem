@@ -16,7 +16,7 @@ public class RestaurantRepository implements RestaurantDAO {
 
     @Override
     public Restaurant createRestaurant(Restaurant restaurant) {
-        RestaurantEntity entity=mapper.map(restaurant);
+        RestaurantEntity entity = mapper.map(restaurant);
         return mapper.map(entity);
     }
 

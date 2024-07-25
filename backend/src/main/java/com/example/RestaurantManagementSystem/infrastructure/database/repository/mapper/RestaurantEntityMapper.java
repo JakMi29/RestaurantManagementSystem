@@ -8,28 +8,17 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class RestaurantEntityMapper {
-    public Restaurant map(RestaurantEntity entity){
+    public Restaurant map(RestaurantEntity entity) {
         return Restaurant.builder()
                 .id(entity.getId())
                 .name(entity.getName())
-                .restaurantOwner(
-                        RestaurantOwner
-                                .builder()
-                                .id(entity.getRestaurantOwner().getId())
-                                .email(entity.getRestaurantOwner().getEmail())
-                                .build())
                 .build();
     }
-    public RestaurantEntity map(Restaurant restaurant){
+
+    public RestaurantEntity map(Restaurant restaurant) {
         return RestaurantEntity.builder()
                 .name(restaurant.getName())
                 .id(restaurant.getId())
-                .restaurantOwner(
-                        RestaurantOwnerEntity
-                                .builder()
-                                .id(restaurant.getRestaurantOwner().getId())
-                                .email(restaurant.getRestaurantOwner().getEmail())
-                                .build())
                 .build();
     }
 }

@@ -15,7 +15,7 @@ public class Meal {
     Integer id;
     String name;
     Category category;
-    MealStatus mealStatus;
+    MealStatus status;
     BigDecimal price;
     String description;
     String image;

@@ -11,15 +11,17 @@ import java.util.List;
 
 public interface MealDAO {
     Meal createMeal(Meal meal);
+
     Meal updateMeal(Meal meal);
+
     List<Meal> findAllByRestaurant(Restaurant restaurant);
 
     Page<Meal> findAllByRestaurantAndCategoryAndStatusNot(
-            Restaurant restaurant, Category category,  MealStatus mealStatus, Pageable pageable
+            Restaurant restaurant, Category category, MealStatus mealStatus, Pageable pageable
     );
 
     Page<Meal> findAllByRestaurantAndCategoryAndStatusNotAndSearchTerms(
-            Restaurant restaurant, Category category,  MealStatus mealStatus, Pageable pageable,String searchTerms
+            Restaurant restaurant, Category category, MealStatus mealStatus, Pageable pageable, String searchTerms
     );
 
     Meal findByNameAndRestaurant(String name, Restaurant restaurant);

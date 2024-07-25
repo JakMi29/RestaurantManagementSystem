@@ -21,21 +21,21 @@ public class MealEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Integer id;
-    @Column(name="name")
+    @Column(name = "name")
     private String name;
-    @Column(name="price")
+    @Column(name = "price")
     private BigDecimal price;
-    @Column(name="image")
+    @Column(name = "image")
     private String image;
-    @Column(name="description")
+    @Column(name = "description")
     private String description;
     @Enumerated(EnumType.STRING)
-    @Column(name="category")
+    @Column(name = "category")
     private Category category;
-    @Column(name="meal_of_the_day")
+    @Column(name = "meal_of_the_day")
     private Boolean mealOfTheDay;
     @Enumerated(EnumType.STRING)
-    @Column(name="status")
+    @Column(name = "status")
     private MealStatus status;
 
     @ManyToOne(fetch = FetchType.LAZY)

@@ -12,12 +12,6 @@ public class WaiterEntityMapper {
         return Waiter.builder()
                 .id(entity.getId())
                 .email(entity.getEmail())
-                .restaurant(
-                        Restaurant
-                                .builder()
-                                .id(entity.getRestaurant().getId())
-                                .name(entity.getRestaurant().getName())
-                                .build())
                 .build();
     }
 
@@ -25,12 +19,6 @@ public class WaiterEntityMapper {
         return WaiterEntity.builder()
                 .id(waiter.getId())
                 .email(waiter.getEmail())
-                .restaurant(
-                        RestaurantEntity
-                                .builder()
-                                .id(waiter.getRestaurant().getId())
-                                .name(waiter.getRestaurant().getName())
-                                .build())
                 .build();
     }
 }

@@ -1,5 +1,7 @@
 package com.example.RestaurantManagementSystem.business;
 
+import com.example.RestaurantManagementSystem.api.dto.TableDTO;
+import com.example.RestaurantManagementSystem.api.dto.mapper.TableDTOMapper;
 import com.example.RestaurantManagementSystem.api.rest.response.Response;
 import com.example.RestaurantManagementSystem.business.dao.TableDAO;
 import com.example.RestaurantManagementSystem.domain.Restaurant;
@@ -15,13 +17,13 @@ import org.springframework.stereotype.Service;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
 @AllArgsConstructor
 public class TableService {
     private final TableDAO tableDAO;
+    private final TableDTOMapper mapper;
     private final RestaurantService restaurantService;
 
     @Transactional
@@ -73,5 +75,12 @@ public class TableService {
                 .code(HttpStatus.OK.value())
                 .message("Successfully change table status")
                 .build();
+    }
+
+    public List<TableDTO> findAllTablesByRestaurantWithActiveOrders(String restaurantName) {
+        Restaurant restaurant = restaurantService.findByName(restaurantName);
+        var d = tableDAO.findAllTablesWithActiveOrders(restaurant).stream().map(mapper::map).toList();
+        System.out.println(d);
+        return d;
     }
 }

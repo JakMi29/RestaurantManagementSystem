@@ -19,7 +19,7 @@ public class OrderEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "order_id")
+    @Column(name = "id")
     private Integer id;
 
     @Column(name = "price")
@@ -29,7 +29,7 @@ public class OrderEntity {
     private String number;
 
     @Enumerated(EnumType.STRING)
-    @Column(name="status")
+    @Column(name = "status")
     private OrderStatus status;
 
     @Column(name = "received_date_time")

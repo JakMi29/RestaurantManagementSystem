@@ -34,7 +34,7 @@ public class OrderMealEntity {
     private OffsetDateTime completedDateTime;
 
     @Enumerated(EnumType.STRING)
-    @Column(name="status")
+    @Column(name = "status")
     private OrderMealStatus status;
 
     @ManyToOne(fetch = FetchType.LAZY)

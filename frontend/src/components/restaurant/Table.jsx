@@ -1,42 +1,115 @@
+import { useNavigate } from 'react-router-dom';
 import classes from '../../pages/restaurant/RestaurantPage.module.css';
-
+import MessageContext from '../../store/MessageContext';
+import { useContext } from 'react';
+import CleanHandsIcon from '@mui/icons-material/CleanHands';
+import TableRestaurantIcon from '@mui/icons-material/TableRestaurant';
 
 function Table({ table }) {
     const admin = localStorage.getItem('role') === 'ADMIN';
+    const messageCtx = useContext(MessageContext);
+    const navigate = useNavigate();
     const status = table.status;
-
-    const getStatusProps = () => {
-        switch (status) {
-            case 'READY':
-                return { label: 'Occupied    ', color: 'blue' };
-            case 'BUSY':
-                return { label: 'Complete', color: 'green' };
-            case 'DIRTY':
-                return { label: 'Clear', color: 'red' };
-            default:
-                return { label: 'Unknown', color: 'gray' };
-        }
-    };
-
-    const { label, color } = getStatusProps();
+    let content;
 
     const handleChangeStatus = () => {
+        fetch(`http://localhost:8080/api/admin/tables?tableName=${table.name}&restaurantName=${"Italiano"}`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+            .then(response => {
+                if (response.ok) {
+                    navigate('/restaurant');
+                } else {
+                    messageCtx.showMessage('Something went wrong', 'error');
+                }
+            })
+            .catch(error => {
+                console.error('An error occurred while sending the request:', error);
+            });
+            fetch(`http://localhost:8080/api/admin/tables/orders?tableName=${table.name}&restaurantName=${"Italiano"}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            }).then(response => {
+    if (!response.ok) {
+        throw new Error('Network response was not ok ' + response.statusText);
+    }
+    return response.json();  
+})
+.then(data => {
+    console.log(data);  
+})
+    };
 
+    switch (status) {
+        case 'READY':
+            content = (
+                <div className={classes.contentContainer}>
+                     <div className={classes.iconContainer}>
+                        <TableRestaurantIcon sx={{ fontSize: 150, color: 'rgba(60, 60, 211, 0.2)' }} />
+                        </div>
+                    <div className={classes.actions}>
+                        <button onClick={handleChangeStatus} className={classes.occupy}>
+                            Ocuppy
+                        </button>
+                    </div>
+                </div>
+            )
+            break;
+        case 'BUSY':
+            content = (
+                <></>
+            )
+            break;
+        case 'DIRTY':
+            content = (
+                <div className={classes.contentContainer}>
+                    <div className={classes.iconContainer}>
+                        <CleanHandsIcon sx={{ fontSize: 150, color: 'rgba(255, 224, 99, 0.5)' }} />
+                    </div>
+                    <div className={classes.actions}>
+                        <button onClick={handleChangeStatus} className={classes.clear}>
+                            Clear
+                        </button>
+                    </div>
+                </div>
+            )
+            break;
     }
 
+
     return (
-        <div className={classes.table} >
-            {table.name}
-            <div className={classes.actions}>
-                <button
-                    className={classes.editButton}
-                    style={{ backgroundColor: color }}
-                    onClick={handleChangeStatus}
-                >
-                    {label}
-                </button>
+        <div className={classes.table}>
+            <div className={classes.header}>
+                {table.name}
             </div>
+            {content}
+
         </div>
-    )
+    );
 }
+{/* <div className={classes.contentContainer}>
+<div>Number of People: {4}</div>
+<div className={classes.mealList}>
+    { }
+    {/* {table.meals.map(meal => (
+    <div key={meal.id} className={classes.mealItem}>
+        <span>{meal.name}</span>
+        <button>Served</button>
+    </div>
+))}
+</div>
+<div>Total Price: ${table.totalPrice}</div>
+<div className={classes.actions}>
+    <button onClick={handleChangeStatus} className={className}>
+        {label}
+    </button>
+    {status === 'BUSY' && <button className={classes.editButton}>Edit</button>}
+</div>
+</div> */}
+
 export default Table;

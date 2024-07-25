@@ -14,9 +14,10 @@ public class RestaurantOwnerRepository implements RestaurantOwnerDAO {
 
     private final RestaurantOwnerJpaRepository repository;
     private final RestaurantOwnerMapper mapper;
+
     @Override
     public RestaurantOwner createRestaurantOwner(String email) {
-        RestaurantOwnerEntity restaurantOwner= RestaurantOwnerEntity.builder().email(email).build();
+        RestaurantOwnerEntity restaurantOwner = RestaurantOwnerEntity.builder().email(email).build();
         return mapper.map(repository.save(restaurantOwner));
     }
 }

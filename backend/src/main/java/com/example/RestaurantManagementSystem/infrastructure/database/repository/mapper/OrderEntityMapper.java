@@ -24,13 +24,12 @@ public class OrderEntityMapper {
                 .status(entity.getStatus())
                 .receivedDateTime(entity.getReceivedDateTime())
                 .completedDateTime(entity.getCompletedDateTime())
-                .restaurant(
-                        Restaurant.builder()
-                                .id(entity.getRestaurant().getId())
-                                .build())
                 .waiter(
                         Waiter.builder()
-                                .id(entity.getId()).build())
+                                .id(entity.getWaiter().getId())
+                                .email(entity.getWaiter().getEmail())
+                                .build()
+                )
                 .orderMeals(entity.getOrderMeals().stream().map(orderMealEntityMapper::map).toList())
                 .build();
     }

@@ -4,15 +4,27 @@ import com.example.RestaurantManagementSystem.domain.Restaurant;
 import com.example.RestaurantManagementSystem.domain.Table;
 import com.example.RestaurantManagementSystem.infrastructure.database.entity.RestaurantEntity;
 import com.example.RestaurantManagementSystem.infrastructure.database.entity.TableEntity;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.Collections;
+import java.util.Optional;
+
 @Component
+@AllArgsConstructor
 public class TableEntityMapper {
+    private final OrderEntityMapper orderEntityMapper;
+
     public Table map(TableEntity entity) {
         return Table.builder()
                 .id(entity.getId())
                 .name(entity.getName())
                 .status(entity.getStatus())
+                .orders(Optional.ofNullable(entity.getOrders())
+                        .orElse(Collections.emptySet())
+                        .stream()
+                        .map(orderEntityMapper::map)
+                        .toList())
                 .restaurant(
                         Restaurant
                                 .builder()

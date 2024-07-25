@@ -69,7 +69,7 @@ public class MealService {
                 .price(new BigDecimal((request.getPrice())))
                 .category(Category.valueOf(request.getCategory()))
                 .mealOfTheDay(false)
-                .mealStatus(MealStatus.ACTIVE)
+                .status(MealStatus.ACTIVE)
                 .build();
     }
 
@@ -77,7 +77,7 @@ public class MealService {
     public Response deleteMeal(String mealName, String restaurantName) {
         Restaurant restaurant = restaurantService.findByName(restaurantName);
         Meal meal = mealDAO.findByNameAndRestaurant(mealName, restaurant);
-        mealDAO.updateMeal(meal.withMealStatus(MealStatus.DELETE));
+        mealDAO.updateMeal(meal.withStatus(MealStatus.DELETE));
         log.info("Successful deleted meal: [%s]".formatted(mealName));
         return Response.builder()
                 .code(HttpStatus.OK.value())

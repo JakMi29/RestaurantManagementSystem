@@ -5,7 +5,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Value;
 import lombok.With;
 
-import java.math.BigDecimal;
+import java.util.List;
 
 @Value
 @With
@@ -16,4 +16,5 @@ public class Table {
     String name;
     TableStatus status;
     Restaurant restaurant;
+    List<Order> orders;
 }

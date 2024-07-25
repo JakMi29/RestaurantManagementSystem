@@ -1,6 +1,7 @@
 package com.example.RestaurantManagementSystem.infrastructure.database.repository;
 
 import com.example.RestaurantManagementSystem.business.dao.TableDAO;
+import com.example.RestaurantManagementSystem.domain.OrderStatus;
 import com.example.RestaurantManagementSystem.domain.Restaurant;
 import com.example.RestaurantManagementSystem.domain.Table;
 import com.example.RestaurantManagementSystem.infrastructure.database.entity.RestaurantEntity;
@@ -39,5 +40,11 @@ public class TableRepository implements TableDAO {
     public Table findByNameAndRestaurant(String name, Restaurant restaurant) {
         RestaurantEntity restaurantEntity = restaurantEntityMapper.map(restaurant);
         return mapper.map(repository.findByNameAndRestaurant(name, restaurantEntity));
+    }
+
+    @Override
+    public List<Table> findAllTablesWithActiveOrders(Restaurant restaurant) {
+        RestaurantEntity restaurantEntity = restaurantEntityMapper.map(restaurant);
+        return repository.findTablesWithOrdersNotByStatusAndRestaurant(OrderStatus.PAID, restaurantEntity).stream().map(mapper::map).toList();
     }
 }
