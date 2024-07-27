@@ -2,6 +2,7 @@ package com.example.RestaurantManagementSystem.api.rest;
 
 import com.example.RestaurantManagementSystem.api.dto.TableDTO;
 import com.example.RestaurantManagementSystem.api.rest.response.Response;
+import com.example.RestaurantManagementSystem.business.OrderService;
 import com.example.RestaurantManagementSystem.business.TableService;
 import com.example.RestaurantManagementSystem.domain.Table;
 import lombok.AllArgsConstructor;
@@ -17,6 +18,7 @@ import java.util.List;
 @RequestMapping("/api/admin/tables")
 public class TableController {
     private final TableService tableService;
+    private final OrderService orderService;
 
     @GetMapping()
     public ResponseEntity<List<Table>> tables(@RequestParam String restaurantName) {
@@ -25,7 +27,7 @@ public class TableController {
 
     @GetMapping("/orders")
     public ResponseEntity<List<TableDTO>> tablesWithActiveOrders(@RequestParam String restaurantName) {
-        return ResponseEntity.ok(tableService.findAllTablesByRestaurantWithActiveOrders(restaurantName));
+        return ResponseEntity.ok(tableService.findTablesByRestaurant(restaurantName));
     }
 
     @PatchMapping()

@@ -77,6 +77,7 @@ public class OrderService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional
     public Response changeStatus(String orderNumber) {
         Order order = orderDAO.findByNumber(orderNumber);
         orderDAO.updateOrder(order.withStatus(
@@ -90,5 +91,10 @@ public class OrderService {
                 .code(HttpStatus.OK.value())
                 .message("Successfully change order status")
                 .build();
+    }
+
+    @Transactional
+    public Order getOrderByTableAndNotStatus(Table table, OrderStatus status) {
+        return orderDAO.findByTableAndNotByStatus(table, status);
     }
 }

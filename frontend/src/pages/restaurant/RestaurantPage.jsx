@@ -28,7 +28,7 @@ export default MealsPage;
 async function loadTables() {
     const token = getAuthToken();
 
-    const response = await fetch(`http://localhost:8080/api/admin/tables?restaurantName=Italiano`, {
+    const response = await fetch(`http://localhost:8080/api/admin/tables/orders?restaurantName=${"Italiano"}`, {
         headers: {
             'Authorization': 'Bearer ' + token
         }

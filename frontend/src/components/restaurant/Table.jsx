@@ -4,6 +4,7 @@ import MessageContext from '../../store/MessageContext';
 import { useContext } from 'react';
 import CleanHandsIcon from '@mui/icons-material/CleanHands';
 import TableRestaurantIcon from '@mui/icons-material/TableRestaurant';
+import Order from './Order';
 
 function Table({ table }) {
     const admin = localStorage.getItem('role') === 'ADMIN';
@@ -11,7 +12,6 @@ function Table({ table }) {
     const navigate = useNavigate();
     const status = table.status;
     let content;
-
     const handleChangeStatus = () => {
         fetch(`http://localhost:8080/api/admin/tables?tableName=${table.name}&restaurantName=${"Italiano"}`, {
             method: 'PATCH',
@@ -29,29 +29,15 @@ function Table({ table }) {
             .catch(error => {
                 console.error('An error occurred while sending the request:', error);
             });
-            fetch(`http://localhost:8080/api/admin/tables/orders?tableName=${table.name}&restaurantName=${"Italiano"}`, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            }).then(response => {
-    if (!response.ok) {
-        throw new Error('Network response was not ok ' + response.statusText);
-    }
-    return response.json();  
-})
-.then(data => {
-    console.log(data);  
-})
     };
 
     switch (status) {
         case 'READY':
             content = (
                 <div className={classes.contentContainer}>
-                     <div className={classes.iconContainer}>
+                    <div className={classes.iconContainer}>
                         <TableRestaurantIcon sx={{ fontSize: 150, color: 'rgba(60, 60, 211, 0.2)' }} />
-                        </div>
+                    </div>
                     <div className={classes.actions}>
                         <button onClick={handleChangeStatus} className={classes.occupy}>
                             Ocuppy
@@ -62,7 +48,9 @@ function Table({ table }) {
             break;
         case 'BUSY':
             content = (
-                <></>
+                <div className={classes.contentContainer}>
+                    {table.order ? <Order order={table.order} /> : <></>}
+                </div>
             )
             break;
         case 'DIRTY':
@@ -85,7 +73,7 @@ function Table({ table }) {
     return (
         <div className={classes.table}>
             <div className={classes.header}>
-                {table.name}
+                {table.tableName}
             </div>
             {content}
 

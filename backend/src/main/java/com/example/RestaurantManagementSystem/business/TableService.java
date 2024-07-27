@@ -4,9 +4,7 @@ import com.example.RestaurantManagementSystem.api.dto.TableDTO;
 import com.example.RestaurantManagementSystem.api.dto.mapper.TableDTOMapper;
 import com.example.RestaurantManagementSystem.api.rest.response.Response;
 import com.example.RestaurantManagementSystem.business.dao.TableDAO;
-import com.example.RestaurantManagementSystem.domain.Restaurant;
-import com.example.RestaurantManagementSystem.domain.Table;
-import com.example.RestaurantManagementSystem.domain.TableStatus;
+import com.example.RestaurantManagementSystem.domain.*;
 import com.example.RestaurantManagementSystem.domain.exception.ObjectAlreadyExist;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
@@ -17,6 +15,7 @@ import org.springframework.stereotype.Service;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -25,6 +24,7 @@ public class TableService {
     private final TableDAO tableDAO;
     private final TableDTOMapper mapper;
     private final RestaurantService restaurantService;
+    private final OrderService orderService;
 
     @Transactional
     public List<Table> findAllTablesByRestaurant(String restaurantName) {
@@ -77,10 +77,15 @@ public class TableService {
                 .build();
     }
 
-    public List<TableDTO> findAllTablesByRestaurantWithActiveOrders(String restaurantName) {
+    public List<TableDTO> findTablesByRestaurant(String restaurantName) {
         Restaurant restaurant = restaurantService.findByName(restaurantName);
-        var d = tableDAO.findAllTablesWithActiveOrders(restaurant).stream().map(mapper::map).toList();
-        System.out.println(d);
-        return d;
+
+        return tableDAO.findAllTablesWithActiveOrders(restaurant).stream()
+                .map(t -> {
+                    Order order = orderService.getOrderByTableAndNotStatus(t, OrderStatus.PAID);
+                    List<Order> orders = (order != null) ? List.of(order) : List.of();
+                    return mapper.map(t.withOrders(orders));
+                })
+                .collect(Collectors.toList());
     }
 }

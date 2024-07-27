@@ -82,13 +82,18 @@
     background-color: rgb(255, 223, 99);
 }
 
-.complete {
+.paid {
     background-color: rgba(14, 185, 88, 0.2);
 }
 
-.complete:hover {
+.paid:hover {
     background-color: rgb(79, 156, 109);
 }
+
+.paid:disabled {
+    background-color: rgba(14, 185, 88, 0.2);
+}
+
 
 .occupy {
     background-color: rgb(60, 60, 211, 0.2);
