@@ -4,6 +4,7 @@ import MessageContext from '../../store/MessageContext';
 import { useContext } from 'react';
 import CleanHandsIcon from '@mui/icons-material/CleanHands';
 import TableRestaurantIcon from '@mui/icons-material/TableRestaurant';
+import GroupsIcon from '@mui/icons-material/Groups';
 import Order from './Order';
 
 function Table({ table }) {
@@ -12,6 +13,7 @@ function Table({ table }) {
     const navigate = useNavigate();
     const status = table.status;
     let content;
+    console.log(table)
     const handleChangeStatus = () => {
         fetch(`http://localhost:8080/api/admin/tables?tableName=${table.name}&restaurantName=${"Italiano"}`, {
             method: 'PATCH',
@@ -39,7 +41,7 @@ function Table({ table }) {
                         <TableRestaurantIcon sx={{ fontSize: 150, color: 'rgba(60, 60, 211, 0.2)' }} />
                     </div>
                     <div className={classes.actions}>
-                        <button onClick={handleChangeStatus} className={classes.occupy}>
+                        <button onClick={handleChangeStatus} className={classes.blueButton}>
                             Ocuppy
                         </button>
                     </div>
@@ -49,7 +51,20 @@ function Table({ table }) {
         case 'BUSY':
             content = (
                 <div className={classes.contentContainer}>
-                    {table.order ? <Order order={table.order} /> : <></>}
+                    {table.order ? <Order order={table.order} /> : <>
+                        :<div className={classes.iconContainer}>
+                            <GroupsIcon sx={{ fontSize: 150, color: 'rgba(60, 60, 211, 0.2)' }} />
+                        </div>
+                        <div className={classes.actions}>
+                            <button
+                                onClick={handleChangeStatus}
+                                className={classes.greenButton}
+                            >
+                                Order
+                            </button>
+                        </div>
+                    </>
+                    }
                 </div>
             )
             break;
@@ -60,7 +75,7 @@ function Table({ table }) {
                         <CleanHandsIcon sx={{ fontSize: 150, color: 'rgba(255, 224, 99, 0.5)' }} />
                     </div>
                     <div className={classes.actions}>
-                        <button onClick={handleChangeStatus} className={classes.clear}>
+                        <button onClick={handleChangeStatus} className={classes.yellowButton}>
                             Clear
                         </button>
                     </div>
@@ -73,7 +88,7 @@ function Table({ table }) {
     return (
         <div className={classes.table}>
             <div className={classes.header}>
-                {table.tableName}
+                {table.name}
             </div>
             {content}
 

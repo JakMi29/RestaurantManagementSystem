@@ -12,7 +12,7 @@ import org.springframework.validation.annotation.Validated;
 @NoArgsConstructor
 @Validated
 public class TableDTO {
-    String tableName;
+    String name;
     OrderDTO order;
     String status;
 }

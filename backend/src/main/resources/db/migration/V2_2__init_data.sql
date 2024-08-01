@@ -135,6 +135,9 @@ values
 insert into order_meal (quantity,received_date_time,completed_date_time,status, order_id,price, meal_id)
 values
 (2,'2020-12-10 19:00:00',null,'PREPARING', 1,'12', 1),(1,'2020-12-10 19:00:00',null,'PREPARING', 1,'2', 2),(1,'2020-12-10 19:00:00',null,'PREPARING', 1,'2', 2),
+(2,'2020-12-10 19:00:00',null,'PREPARING', 1,'12', 1),(1,'2020-12-10 19:00:00',null,'PREPARING', 1,'2', 2),(1,'2020-12-10 19:00:00',null,'PREPARING', 1,'2', 2),
+(2,'2020-12-10 19:00:00',null,'PREPARING', 1,'12', 1),(1,'2020-12-10 19:00:00',null,'PREPARING', 1,'2', 2),(1,'2020-12-10 19:00:00',null,'PREPARING', 1,'2', 2),
+(2,'2020-12-10 19:00:00',null,'PREPARING', 1,'12', 1),(1,'2020-12-10 19:00:00',null,'PREPARING', 1,'2', 2),(1,'2020-12-10 19:00:00',null,'PREPARING', 1,'2', 2),
 (1,'2020-12-10 19:00:00',null,'PREPARING', 2,'8', 76),(1,'2020-12-10 19:00:00',null,'READY', 2,'9', 35),(1,'2020-12-10 19:00:00',null,'RELEASED', 2,'6', 8);
 
 

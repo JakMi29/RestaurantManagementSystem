@@ -20,5 +20,5 @@ public class OrderMeal {
     OffsetDateTime completedDateTime;
     Meal meal;
     BigDecimal price;
-    Order Order;
+    Order order;
 }

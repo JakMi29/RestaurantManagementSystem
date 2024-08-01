@@ -1,8 +1,10 @@
 package com.example.RestaurantManagementSystem.infrastructure.database.repository.mapper;
 
 import com.example.RestaurantManagementSystem.domain.Meal;
+import com.example.RestaurantManagementSystem.domain.Order;
 import com.example.RestaurantManagementSystem.domain.OrderMeal;
 import com.example.RestaurantManagementSystem.infrastructure.database.entity.MealEntity;
+import com.example.RestaurantManagementSystem.infrastructure.database.entity.OrderEntity;
 import com.example.RestaurantManagementSystem.infrastructure.database.entity.OrderMealEntity;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -17,6 +19,9 @@ public class OrderMealEntityMapper {
                 .quantity(entity.getQuantity())
                 .price(entity.getPrice())
                 .status(entity.getStatus())
+                .order(Order.builder()
+                        .id(entity.getOrder().getId())
+                        .build())
                 .meal(mealEntityMapper.map(entity.getMeal()))
                 .build();
     }
@@ -27,6 +32,9 @@ public class OrderMealEntityMapper {
                 .quantity(orderMeal.getQuantity())
                 .price(orderMeal.getPrice())
                 .status(orderMeal.getStatus())
+                .order(OrderEntity.builder()
+                        .id(orderMeal.getOrder().getId())
+                        .build())
                 .meal(
                         MealEntity.builder()
                                 .id(orderMeal.getMeal().getId())

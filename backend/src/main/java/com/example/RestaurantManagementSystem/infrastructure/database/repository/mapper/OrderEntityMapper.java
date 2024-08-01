@@ -2,9 +2,11 @@ package com.example.RestaurantManagementSystem.infrastructure.database.repositor
 
 import com.example.RestaurantManagementSystem.domain.Order;
 import com.example.RestaurantManagementSystem.domain.Restaurant;
+import com.example.RestaurantManagementSystem.domain.Table;
 import com.example.RestaurantManagementSystem.domain.Waiter;
 import com.example.RestaurantManagementSystem.infrastructure.database.entity.OrderEntity;
 import com.example.RestaurantManagementSystem.infrastructure.database.entity.RestaurantEntity;
+import com.example.RestaurantManagementSystem.infrastructure.database.entity.TableEntity;
 import com.example.RestaurantManagementSystem.infrastructure.database.entity.WaiterEntity;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -24,6 +26,14 @@ public class OrderEntityMapper {
                 .status(entity.getStatus())
                 .receivedDateTime(entity.getReceivedDateTime())
                 .completedDateTime(entity.getCompletedDateTime())
+                .table(
+                        Table.builder()
+                                .id(entity.getTable().getId())
+                                .build())
+                .restaurant(
+                        Restaurant.builder()
+                                .id(entity.getRestaurant().getId())
+                                .build())
                 .waiter(
                         Waiter.builder()
                                 .id(entity.getWaiter().getId())
@@ -42,13 +52,18 @@ public class OrderEntityMapper {
                 .status(order.getStatus())
                 .completedDateTime(order.getCompletedDateTime())
                 .receivedDateTime(order.getReceivedDateTime())
+                .table(
+                        TableEntity.builder()
+                                .id(order.getTable().getId())
+                                .build())
                 .restaurant(
                         RestaurantEntity.builder()
                                 .id(order.getRestaurant().getId())
                                 .build())
                 .waiter(
                         WaiterEntity.builder()
-                                .id(order.getId()).build())
+                                .id(order.getWaiter().getId())
+                                .build())
                 .orderMeals(order.getOrderMeals().stream().map(orderMealEntityMapper::map).collect(Collectors.toSet()))
                 .build();
     }

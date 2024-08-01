@@ -27,7 +27,7 @@ public class OrderController {
             @RequestParam String restaurantName,
             @RequestParam String orderNumber
     ) {
-        return ResponseEntity.ok(orderService.updateOrder(mealName, restaurantName, orderNumber));
+        return ResponseEntity.ok(orderService.updateOrder(restaurantName, mealName, orderNumber));
     }
 
     @PatchMapping("/order/status")

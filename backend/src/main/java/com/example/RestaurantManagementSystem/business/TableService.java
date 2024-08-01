@@ -86,6 +86,7 @@ public class TableService {
                     List<Order> orders = (order != null) ? List.of(order) : List.of();
                     return mapper.map(t.withOrders(orders));
                 })
+                .sorted(Comparator.comparing(TableDTO::getName))
                 .collect(Collectors.toList());
     }
 }

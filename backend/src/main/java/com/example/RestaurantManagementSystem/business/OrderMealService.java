@@ -25,7 +25,8 @@ public class OrderMealService {
         orderMealDAO.updateOrderMeal(
                 orderMeal.withStatus(
                         switch (orderMeal.getStatus()) {
-                            case PREPARING -> OrderMealStatus.RELEASED;
+                            case PREPARING -> OrderMealStatus.READY;
+                            case READY -> OrderMealStatus.RELEASED;
                             default -> {
                                 throw new RuntimeException("Invalid order meal status");
                             }

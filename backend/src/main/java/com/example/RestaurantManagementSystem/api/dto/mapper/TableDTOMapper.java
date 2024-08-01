@@ -12,7 +12,7 @@ public class TableDTOMapper {
 
     public TableDTO map(Table table) {
         return TableDTO.builder()
-                .tableName(table.getName())
+                .name(table.getName())
                 .status(table.getStatus().toString())
                 .order(table.getOrders().stream().map(orderDTOMapper::map).findFirst().orElse(null))
                 .build();
