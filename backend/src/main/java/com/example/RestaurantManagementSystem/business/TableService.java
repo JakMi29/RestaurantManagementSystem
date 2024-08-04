@@ -60,21 +60,18 @@ public class TableService {
                 .build();
     }
 
-    public Response changeStatus(String tableName, String restaurantName) {
+    public TableDTO changeStatus(String tableName, String restaurantName) {
         Restaurant restaurant = restaurantService.findByName(restaurantName);
         Table table = tableDAO.findByNameAndRestaurant(tableName, restaurant);
 
-        tableDAO.updateTable(table.withStatus(
+        return mapper.map(tableDAO.updateTable(table.withStatus(
                 switch (table.getStatus()) {
                     case READY -> TableStatus.BUSY;
                     case BUSY -> TableStatus.DIRTY;
                     case DIRTY -> TableStatus.READY;
-                }));
+                })));
 
-        return Response.builder()
-                .code(HttpStatus.OK.value())
-                .message("Successfully change table status")
-                .build();
+
     }
 
     public List<TableDTO> findTablesByRestaurant(String restaurantName) {

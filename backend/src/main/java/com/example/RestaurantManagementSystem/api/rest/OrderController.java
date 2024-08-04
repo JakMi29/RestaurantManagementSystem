@@ -30,6 +30,15 @@ public class OrderController {
         return ResponseEntity.ok(orderService.updateOrder(restaurantName, mealName, orderNumber));
     }
 
+    @PatchMapping("/order")
+    public ResponseEntity<Response> updateOrderMeal(
+            @RequestParam String mealName,
+            @RequestParam String restaurantName,
+            @RequestParam String orderNumber
+    ) {
+        return ResponseEntity.ok(orderService.updateOrder(restaurantName, mealName, orderNumber));
+    }
+
     @PatchMapping("/order/status")
     public Response changeStatus(@RequestParam String orderNumber) {
         return orderService.changeStatus(orderNumber);

@@ -5,6 +5,8 @@ import com.example.RestaurantManagementSystem.domain.Table;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.Optional;
+
 @Component
 @AllArgsConstructor
 public class TableDTOMapper {
@@ -14,7 +16,9 @@ public class TableDTOMapper {
         return TableDTO.builder()
                 .name(table.getName())
                 .status(table.getStatus().toString())
-                .order(table.getOrders().stream().map(orderDTOMapper::map).findFirst().orElse(null))
+                .order(Optional.ofNullable(table.getOrders())
+                        .map(orders -> orders.stream().map(orderDTOMapper::map).findFirst().orElse(null))
+                        .orElse(null))
                 .build();
     }
 

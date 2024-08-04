@@ -23,6 +23,11 @@
     position: relative;
 }
 
+.table.disabled {
+    opacity: 0.5;
+    pointer-events: none;
+}
+
 .header {
     width: 100%;
     display: flex;

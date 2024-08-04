@@ -7,7 +7,9 @@ import com.example.RestaurantManagementSystem.business.TableService;
 import com.example.RestaurantManagementSystem.domain.Table;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,7 +21,7 @@ import java.util.List;
 public class TableController {
     private final TableService tableService;
     private final OrderService orderService;
-
+    private SimpMessagingTemplate template;
     @GetMapping()
     public ResponseEntity<List<Table>> tables(@RequestParam String restaurantName) {
         return ResponseEntity.ok(tableService.findAllTablesByRestaurant(restaurantName));
@@ -32,6 +34,11 @@ public class TableController {
 
     @PatchMapping()
     public Response changeStatus(@RequestParam String tableName, @RequestParam String restaurantName) {
-        return tableService.changeStatus(tableName, restaurantName);
+        TableDTO table=tableService.changeStatus(tableName,restaurantName);
+        this.template.convertAndSend("/topic/tables", table);
+        return Response.builder()
+                .code(HttpStatus.OK.value())
+                .message("Successfully change table status")
+                .build();
     }
 }

@@ -55,11 +55,13 @@ export async function action({ request }) {
   const resData = await response.json();
   const token = resData.token;
   const role = resData.role;
-  
+  const email=resData.email;
+
   localStorage.setItem('token', token);
   localStorage.setItem('role', role);
+  localStorage.setItem('email', email);
   const expiration = new Date();
-  expiration.setMinutes(expiration.getMinutes() + 15);
+  expiration.setMinutes(expiration.getMinutes() + 60);
   localStorage.setItem('expiration', expiration.toISOString());
 
   return redirect('/');

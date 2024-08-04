@@ -12,8 +12,8 @@ function Table({ table }) {
     const messageCtx = useContext(MessageContext);
     const navigate = useNavigate();
     const status = table.status;
+    const disabled = table.order ? localStorage.getItem('email') !== table.order.waiter.email:false;
     let content;
-    console.log(table)
     const handleChangeStatus = () => {
         fetch(`http://localhost:8080/api/admin/tables?tableName=${table.name}&restaurantName=${"Italiano"}`, {
             method: 'PATCH',
@@ -86,12 +86,11 @@ function Table({ table }) {
 
 
     return (
-        <div className={classes.table}>
+        <div className={`${classes.table} ${disabled ? classes.disabled : ''}`}>
             <div className={classes.header}>
                 {table.name}
             </div>
             {content}
-
         </div>
     );
 }
