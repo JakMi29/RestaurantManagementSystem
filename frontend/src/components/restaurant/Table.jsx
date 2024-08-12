@@ -1,18 +1,21 @@
 import { useNavigate } from 'react-router-dom';
 import classes from '../../pages/restaurant/RestaurantPage.module.css';
 import MessageContext from '../../store/MessageContext';
-import { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import CleanHandsIcon from '@mui/icons-material/CleanHands';
 import TableRestaurantIcon from '@mui/icons-material/TableRestaurant';
 import GroupsIcon from '@mui/icons-material/Groups';
 import Order from './Order';
+import { useDispatch } from 'react-redux';
+import { orderActions } from '../../store/order-slice';
+import { getAuthToken } from '../../util/auth';
 
-function Table({ table }) {
+const Table = React.memo(({ table, order }) => {
     const admin = localStorage.getItem('role') === 'ADMIN';
     const messageCtx = useContext(MessageContext);
     const navigate = useNavigate();
     const status = table.status;
-    const disabled = table.order ? localStorage.getItem('email') !== table.order.waiter.email:false;
+    const dispatch = useDispatch();
     let content;
     const handleChangeStatus = () => {
         fetch(`http://localhost:8080/api/admin/tables?tableName=${table.name}&restaurantName=${"Italiano"}`, {
@@ -27,6 +30,37 @@ function Table({ table }) {
                 } else {
                     messageCtx.showMessage('Something went wrong', 'error');
                 }
+            })
+            .catch(error => {
+                console.error('An error occurred while sending the request:', error);
+            });
+    };
+    const craeteOrder = () => {
+        const restaurantName = localStorage.getItem('restaurantName');
+        const email = localStorage.getItem('email');
+        const token = getAuthToken();
+        fetch(`http://localhost:8080/api/admin/order`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + token
+            },
+            body: JSON.stringify({
+                tableName: table.name,
+                restaurantName: restaurantName,
+                waiterEmail: email
+            })
+        })
+            .then(response => {
+                if (response.ok) {
+                    return response.json()
+                }
+                else{
+                    messageCtx.showMessage('Something went wrong', 'error');
+                }
+            })
+            .then(data => {
+                dispatch(orderActions.editOrder({ order: data }));
             })
             .catch(error => {
                 console.error('An error occurred while sending the request:', error);
@@ -51,13 +85,13 @@ function Table({ table }) {
         case 'BUSY':
             content = (
                 <div className={classes.contentContainer}>
-                    {table.order ? <Order order={table.order} /> : <>
+                    {order ? <Order key={order.number} order={order} /> : <>
                         :<div className={classes.iconContainer}>
                             <GroupsIcon sx={{ fontSize: 150, color: 'rgba(60, 60, 211, 0.2)' }} />
                         </div>
                         <div className={classes.actions}>
                             <button
-                                onClick={handleChangeStatus}
+                                onClick={craeteOrder}
                                 className={classes.greenButton}
                             >
                                 Order
@@ -86,14 +120,15 @@ function Table({ table }) {
 
 
     return (
-        <div className={`${classes.table} ${disabled ? classes.disabled : ''}`}>
+        <div className={classes.table}>
+            {/* <div className={`${classes.table} ${disabled ? classes.disabled : ''}`}> */}
             <div className={classes.header}>
                 {table.name}
             </div>
             {content}
         </div>
     );
-}
+})
 {/* <div className={classes.contentContainer}>
 <div>Number of People: {4}</div>
 <div className={classes.mealList}>

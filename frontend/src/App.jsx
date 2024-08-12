@@ -15,6 +15,8 @@ import MealPage from './pages/meals/MealPage';
 import MealsRootLayout from './pages/meals/MealRootLayout';
 import MealsPage, { loader as mealsLoader } from './pages/meals/MealsPage';
 import { MessageContextProvider } from './store/MessageContext';
+import OrderMealsPage,{ loader as orderMealsLoader } from './pages/restaurant/MealsPage';
+import TableList from './components/restaurant/TableList';
 
 
 const router = createBrowserRouter([
@@ -51,7 +53,18 @@ const router = createBrowserRouter([
       {
         path: 'restaurant',
         element: <RestaurantPage />,
-        loader: tableLoader,
+        children: [
+          {
+            path:"orderMeals",
+            element: <OrderMealsPage />,
+            loader: orderMealsLoader,
+          },
+          {
+            path:"tables",
+            element: <TableList />,
+            loader: tableLoader,
+          },
+        ]
       },
       {
         path: 'auth',

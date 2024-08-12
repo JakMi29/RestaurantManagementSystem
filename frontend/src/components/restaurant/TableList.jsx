@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import classes from '../../pages/restaurant/RestaurantPage.module.css';
 import Table from './Table';
@@ -6,11 +6,14 @@ import { fetchData } from '../../store/tables-action'
 import { tableActions } from '../../store/table-slice'
 import SockJS from 'sockjs-client';
 import Stomp from 'stompjs';
+import { orderActions } from '../../store/order-slice';
 
 function TableList() {
   const dispatch = useDispatch();
   const [stompClient, setStompClient] = useState(null);
   const tables = useSelector((state) => state.table.tables);
+  const orders = useSelector((state) => state.order.orders);
+  const [preprocessedTables, setPreprocessedTables] = useState([]);
 
   useEffect(() => {
     dispatch(fetchData());
@@ -30,43 +33,16 @@ function TableList() {
         console.log('Connected: ' + frame);
 
         stompClient.subscribe('/topic/tables', (table) => {
-          if (table &&  table.body) {
+          if (table && table.body) {
             const updatedTable = JSON.parse(table.body);
-            console.log(updatedTable)
             dispatch(tableActions.updateTable({ table: updatedTable }));
           }
         });
 
-        setStompClient(stompClient);
-      },
-      (error) => {
-        console.error('STOMP error: ', error);
-      }
-    );
-
-    return () => {
-      if (stompClient && stompClient.connected) {
-        stompClient.disconnect();
-      }
-    };
-  }, []);
-
-  useEffect(() => {
-    const getAuthToken = () => {
-      return localStorage.getItem('token');
-    };
-
-    const socket = new SockJS('http://localhost:8080/ws');
-    const stompClient = Stomp.over(socket);
-
-    stompClient.connect(
-      { Authorization: `Bearer ${getAuthToken()}` },
-      (frame) => {
-        console.log('Connected: ' + frame);
-
-        stompClient.subscribe('/topic/tables', (table) => {
-          if (table) {
-            console.log(table.body);
+        stompClient.subscribe('/topic/orders', (order) => {
+          if (order && order.body) {
+            const updatedOrder = JSON.parse(order.body);
+            dispatch(tableActions.updateOrder({ order: updatedOrder }));
           }
         });
 
@@ -82,12 +58,37 @@ function TableList() {
         stompClient.disconnect();
       }
     };
-  }, []);
-  console.log(tables)
+  }, [dispatch]);
+
+  const getOrder = useCallback((table) => {
+    if (table.order) {
+      if (table.order.edit) {
+        const order = orders.find(order => order.number === table.order.number);
+        if (!order) {
+          dispatch(orderActions.editOrder({ order: table.order }));
+          return table.order;
+        } else {
+          return order;
+        }
+      } else {
+        return table.order;
+      }
+    }
+    return undefined;
+  }, [orders, dispatch]);
+
+  useEffect(() => {
+    const updatedTables = tables.map((table) => {
+      const order = getOrder(table);
+      return { ...table, order };
+    });
+    setPreprocessedTables(updatedTables);
+  }, [tables, getOrder]);
+
   return (
     <div className={classes.tablesContainer}>
-      {tables.map((table) => (
-        <Table key={table.name} table={table} />
+      {preprocessedTables.map((table) => (
+        <Table key={table.name} table={table} order={table.order} />
       ))}
     </div>
   );

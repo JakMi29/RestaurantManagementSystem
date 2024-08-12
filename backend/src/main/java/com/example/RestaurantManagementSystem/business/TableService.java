@@ -4,7 +4,9 @@ import com.example.RestaurantManagementSystem.api.dto.TableDTO;
 import com.example.RestaurantManagementSystem.api.dto.mapper.TableDTOMapper;
 import com.example.RestaurantManagementSystem.api.rest.response.Response;
 import com.example.RestaurantManagementSystem.business.dao.TableDAO;
-import com.example.RestaurantManagementSystem.domain.*;
+import com.example.RestaurantManagementSystem.domain.Restaurant;
+import com.example.RestaurantManagementSystem.domain.Table;
+import com.example.RestaurantManagementSystem.domain.TableStatus;
 import com.example.RestaurantManagementSystem.domain.exception.ObjectAlreadyExist;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
@@ -24,7 +26,6 @@ public class TableService {
     private final TableDAO tableDAO;
     private final TableDTOMapper mapper;
     private final RestaurantService restaurantService;
-    private final OrderService orderService;
 
     @Transactional
     public List<Table> findAllTablesByRestaurant(String restaurantName) {
@@ -78,12 +79,13 @@ public class TableService {
         Restaurant restaurant = restaurantService.findByName(restaurantName);
 
         return tableDAO.findAllTablesWithActiveOrders(restaurant).stream()
-                .map(t -> {
-                    Order order = orderService.getOrderByTableAndNotStatus(t, OrderStatus.PAID);
-                    List<Order> orders = (order != null) ? List.of(order) : List.of();
-                    return mapper.map(t.withOrders(orders));
-                })
+                .map(mapper::map)
                 .sorted(Comparator.comparing(TableDTO::getName))
                 .collect(Collectors.toList());
+    }
+
+    public Table findByNameAndRestaurant(String tableName, String restaurantName) {
+        Restaurant restaurant = restaurantService.findByName(restaurantName);
+        return tableDAO.findByNameAndRestaurant(tableName, restaurant);
     }
 }

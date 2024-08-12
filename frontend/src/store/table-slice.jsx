@@ -10,13 +10,32 @@ const tableSlice = createSlice({
       state.tables = action.payload.tables
     },
     updateTable(state, action) {
-      console.log(action)
       const updatedTable = action.payload.table;
       const index = state.tables.findIndex(table => table.name === updatedTable.name);
       if (index !== -1) {
         state.tables[index] = updatedTable;
       } else {
         state.tables.push(updatedTable);
+      }
+    },
+    createOrder(state, action) {
+      const index = state.tables.findIndex(table => table.name === action.payload.table);
+      if (index !== -1) {
+        state.tables[index].new = true;
+      }
+    },
+    confirmOrder(state, action) {
+      const index = state.tables.findIndex(table => table.name === action.payload.table);
+      if (index !== -1) {
+        state.tables[index].edit = false;
+      }
+    },
+    updateOrder(state, action) {
+      const updatedOrder = action.payload.order;
+      console.log(updatedOrder)
+      const index = state.tables.findIndex(table => table.name === updatedOrder.tableName);
+      if (index !== -1) {
+        state.tables[index].order = updatedOrder;
       }
     }
   },

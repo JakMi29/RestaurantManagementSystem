@@ -2,9 +2,12 @@ import { useNavigate } from 'react-router-dom';
 import classes from '../../pages/restaurant/RestaurantPage.module.css';
 import MessageContext from '../../store/MessageContext';
 import { useContext } from 'react';
+import { useDispatch } from 'react-redux';
+import { orderActions } from '../../store/order-slice';
 
 
 function OrderMeal({ orderMeal, orderNumber, edit }) {
+    const dispatch = useDispatch();
     const messageCtx = useContext(MessageContext);
     const navigate = useNavigate();
     let content;
@@ -18,7 +21,6 @@ function OrderMeal({ orderMeal, orderNumber, edit }) {
         })
             .then(response => {
                 if (response.ok) {
-                    messageCtx.showMessage('Meal was added as meal of the day', 'info')
                     navigate(`/restaurant`)
                 } else {
                     messageCtx.showMessage('Something gone wrong', 'error')
@@ -26,7 +28,7 @@ function OrderMeal({ orderMeal, orderNumber, edit }) {
             })
             .catch(error => {
                 console.error('Wystąpił błąd podczas wysyłania żądania:', error);
-            }); ł
+            });
     }
 
     {
@@ -35,19 +37,31 @@ function OrderMeal({ orderMeal, orderNumber, edit }) {
                 <div className={classes.orderMeal}>
                     {orderMeal.meal.name}
                     <div className={classes.orderMealActions}>
-                        <button className={classes.redButton}>-</button>
+                        <button
+                            className={classes.redButton}
+                            onClick={() => dispatch(orderActions.decreaseOrderMealQuantity({ number: orderNumber, mealName: orderMeal.meal.name }))}
+                        >-</button>
                         {orderMeal.quantity}
-                        <button className={classes.greenButton} >+</button>
+                        <button
+                            className={classes.greenButton}
+                            onClick={() => dispatch(orderActions.increaseOrderMealQuantity({ number: orderNumber, mealName: orderMeal.meal.name }))}
+                        >+</button>
                     </div>
                 </div>
             )
             :
             content = (
                 <div className={classes.orderMeal}>
-                    {orderMeal.meal.name} : {orderMeal.quantity}
-                    {orderMeal.status === 'PREPARING' && <button onClick={handleChangeOrderMealStatus} className={classes.greenButton}>Complete</button>}
-                    {orderMeal.status === 'READY' && <button onClick={handleChangeOrderMealStatus} className={classes.greenButton}>Ready</button>}
-                    {orderMeal.status === 'RELEASED' && <button onClick={handleChangeOrderMealStatus} className={classes.blueButton} disabled={true}>Released</button>}
+                    {orderMeal.meal.name}
+                    <div className={classes.orderMealActions}>
+                        <button className={classes.blueButton} disabled={true}>{orderMeal.quantity}</button>
+                        {orderMeal.status === 'PREPARING' && 
+                        <button onClick={handleChangeOrderMealStatus} className={classes.greenButton}>Complete</button>}
+                        {orderMeal.status === 'READY' &&
+                         <button onClick={handleChangeOrderMealStatus} className={classes.greenButton}>Ready</button>}
+                        {orderMeal.status === 'RELEASED' &&
+                         <button onClick={handleChangeOrderMealStatus} className={classes.blueButton} disabled={true}>Released</button>}
+                    </div>
                 </div>
             )
     }

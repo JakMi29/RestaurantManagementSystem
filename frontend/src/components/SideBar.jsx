@@ -17,7 +17,7 @@ function Sidebar() {
         />
         <MenuItem
           text="Restaurant"
-          link="/restaurant"
+          link="/restaurant/tables"
           icon={<TableBarOutlinedIcon />}
         />
         {localStorage.getItem('role') === 'ADMIN' && (

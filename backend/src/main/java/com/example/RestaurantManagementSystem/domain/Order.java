@@ -21,6 +21,8 @@ public class Order {
     OffsetDateTime completedDateTime;
     OffsetDateTime receivedDateTime;
     Restaurant restaurant;
+    Boolean edit;
+    Integer customerQuantity;
     Table table;
     Waiter waiter;
     List<OrderMeal> orderMeals;

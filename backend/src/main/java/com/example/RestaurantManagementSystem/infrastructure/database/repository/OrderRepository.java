@@ -22,13 +22,13 @@ public class OrderRepository implements OrderDAO {
     private final TableEntityMapper tableMapper;
 
     @Override
-    public void createOrder(Order order) {
-        repository.save(mapper.map(order));
+    public Order createOrder(Order order) {
+        return mapper.map(repository.save(mapper.map(order)));
     }
 
     @Override
-    public void updateOrder(Order order) {
-        repository.save(mapper.map(order));
+    public Order updateOrder(Order order) {
+        return mapper.map(repository.save(mapper.map(order)));
     }
 
     @Override

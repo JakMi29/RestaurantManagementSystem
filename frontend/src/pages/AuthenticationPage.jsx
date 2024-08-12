@@ -56,10 +56,12 @@ export async function action({ request }) {
   const token = resData.token;
   const role = resData.role;
   const email=resData.email;
+  const restaurantName=resData.restaurantName;
 
   localStorage.setItem('token', token);
   localStorage.setItem('role', role);
   localStorage.setItem('email', email);
+  localStorage.setItem('restaurantName', restaurantName);
   const expiration = new Date();
   expiration.setMinutes(expiration.getMinutes() + 60);
   localStorage.setItem('expiration', expiration.toISOString());

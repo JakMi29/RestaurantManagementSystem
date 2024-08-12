@@ -188,11 +188,7 @@ function MealModal() {
     </dialog>
   );
 }
-
-
-
-export default MealModal;
-
+ export default MealModal;
 
 export async function action({ request }) {
   const method = request.method;
@@ -205,7 +201,7 @@ export async function action({ request }) {
     restaurantName: "Italiano",
     oldName: data.get('oldName')
   };
-  console.log(mealData)
+  
   const formData = new FormData();
   const mealBlob = new Blob([JSON.stringify(mealData)], { type: 'application/json' });
 

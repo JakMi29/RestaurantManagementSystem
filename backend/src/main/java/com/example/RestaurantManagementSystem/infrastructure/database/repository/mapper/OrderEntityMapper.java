@@ -11,6 +11,8 @@ import com.example.RestaurantManagementSystem.infrastructure.database.entity.Wai
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.Collections;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Component
@@ -24,11 +26,14 @@ public class OrderEntityMapper {
                 .price(entity.getPrice())
                 .number(entity.getNumber())
                 .status(entity.getStatus())
+                .edit(entity.getEdit())
                 .receivedDateTime(entity.getReceivedDateTime())
+                .customerQuantity(entity.getCustomerQuantity())
                 .completedDateTime(entity.getCompletedDateTime())
                 .table(
                         Table.builder()
                                 .id(entity.getTable().getId())
+                                .name(entity.getTable().getName())
                                 .build())
                 .restaurant(
                         Restaurant.builder()
@@ -40,7 +45,10 @@ public class OrderEntityMapper {
                                 .email(entity.getWaiter().getEmail())
                                 .build()
                 )
-                .orderMeals(entity.getOrderMeals().stream().map(orderMealEntityMapper::map).toList())
+                .orderMeals(Optional.ofNullable(entity.getOrderMeals())
+                        .orElseGet(Collections::emptySet).
+                        stream().map(orderMealEntityMapper::map)
+                        .collect(Collectors.toList()))
                 .build();
     }
 
@@ -50,11 +58,14 @@ public class OrderEntityMapper {
                 .number(order.getNumber())
                 .price(order.getPrice())
                 .status(order.getStatus())
+                .edit(order.getEdit())
                 .completedDateTime(order.getCompletedDateTime())
                 .receivedDateTime(order.getReceivedDateTime())
+                .customerQuantity(order.getCustomerQuantity())
                 .table(
                         TableEntity.builder()
                                 .id(order.getTable().getId())
+                                .name(order.getTable().getName())
                                 .build())
                 .restaurant(
                         RestaurantEntity.builder()
@@ -64,7 +75,10 @@ public class OrderEntityMapper {
                         WaiterEntity.builder()
                                 .id(order.getWaiter().getId())
                                 .build())
-                .orderMeals(order.getOrderMeals().stream().map(orderMealEntityMapper::map).collect(Collectors.toSet()))
+                .orderMeals(Optional.ofNullable(order.getOrderMeals())
+                        .orElseGet(Collections::emptyList).
+                        stream().map(orderMealEntityMapper::map)
+                        .collect(Collectors.toSet()))
                 .build();
     }
 }

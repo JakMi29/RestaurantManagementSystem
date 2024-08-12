@@ -6,8 +6,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 
-import java.util.Map;
-
 @Data
 @Builder
 @Validated
@@ -16,6 +14,5 @@ import java.util.Map;
 public class CreateOrderRequest {
     String tableName;
     String restaurantName;
-    String email;
-    Map<String, Integer> meals;
+    String waiterEmail;
 }

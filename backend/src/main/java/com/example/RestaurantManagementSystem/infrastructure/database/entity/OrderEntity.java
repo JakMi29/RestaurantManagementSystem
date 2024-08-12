@@ -32,6 +32,12 @@ public class OrderEntity {
     @Column(name = "status")
     private OrderStatus status;
 
+    @Column(name = "customers_quantity")
+    private Integer customerQuantity;
+
+    @Column(name = "edit")
+    private Boolean edit;
+
     @Column(name = "received_date_time")
     private OffsetDateTime receivedDateTime;
 

@@ -36,12 +36,17 @@ public class AuthenticationService {
         repository.save(user);
 
         restaurantOwnerService.createRestaurantOwner(request.getEmail(), request.getRestaurantName());
+        String restaurantName = "Italiano";
+        if (user.getRole().equals(Role.ADMIN)) {
+            restaurantName = "Italiano";
+        }
 
         var jwtToken = jwtService.generateToken(user);
         return AuthenticationResponse.builder()
                 .token(jwtToken)
                 .role(user.getRole())
                 .email(user.getEmail())
+                .restaurantName(restaurantName)
                 .build();
     }
 
@@ -56,10 +61,12 @@ public class AuthenticationService {
         var user = repository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new NotFoundException("Can not found user with this email"));
         var jwtToken = jwtService.generateToken(user);
+        String restaurantName = "Italiano";
         return AuthenticationResponse.builder()
                 .token(jwtToken)
                 .role(user.getRole())
                 .email(user.getEmail())
+                .restaurantName(restaurantName)
                 .build();
     }
 

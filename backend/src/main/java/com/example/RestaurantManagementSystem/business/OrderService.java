@@ -1,5 +1,7 @@
 package com.example.RestaurantManagementSystem.business;
 
+import com.example.RestaurantManagementSystem.api.dto.OrderDTO;
+import com.example.RestaurantManagementSystem.api.dto.mapper.OrderDTOMapper;
 import com.example.RestaurantManagementSystem.api.rest.request.CreateOrderRequest;
 import com.example.RestaurantManagementSystem.api.rest.response.Response;
 import com.example.RestaurantManagementSystem.business.dao.OrderDAO;
@@ -21,12 +23,14 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class OrderService {
     private final OrderDAO orderDAO;
+    private final TableService tableService;
     private final RestaurantService restaurantService;
     private final WaiterService waiterService;
     private final OrderMealService orderMealService;
+    private final OrderDTOMapper mapper;
 
     @Transactional
-    public Response updateOrder(String restaurantName, String mealName, String orderNumber) {
+    public OrderDTO updateOrderMeal(String restaurantName, String mealName, String orderNumber) {
         Restaurant restaurant = restaurantService.findByName(restaurantName);
         Order order = orderDAO.findByNumber(orderNumber);
         orderMealService.updateStatus(mealName, restaurant, order);
@@ -34,35 +38,66 @@ public class OrderService {
             orderDAO.updateOrder(order);
         }
 
-        return Response.builder()
-                .code(HttpStatus.OK.value())
-                .message("Successfully update order")
-                .build();
+        return mapper.map(orderDAO.findByNumber(orderNumber));
     }
 
+    //    @Transactional
+//    public Response updateOrder(UpdateOrderRequest request) {
+//        Order order = orderDAO.findByNumber(request.getOrderNumber());
+//        orderMealService.updateStatus(mealName, restaurant, order);
+//        if (order.getOrderMeals().stream().filter(o -> o.getStatus() == OrderMealStatus.PREPARING).toList().size() == 1) {
+//            orderDAO.updateOrder(order);
+//        }
+//
+//        return Response.builder()
+//                .code(HttpStatus.OK.value())
+//                .message("Successfully update order")
+//                .build();
+//    }
     @Transactional
-    public Response createOrder(CreateOrderRequest request) {
-        Waiter waiter = waiterService.findByEmail(request.getEmail());
+    public OrderDTO createOrder(CreateOrderRequest request) {
+        Waiter waiter = waiterService.findByEmail(request.getWaiterEmail());
         Restaurant restaurant = restaurantService.findByName(request.getRestaurantName());
-        List<OrderMeal> orderMeals = prepareOrderMeals(request.getMeals(), restaurant);
+        Table table = tableService.findByNameAndRestaurant(request.getTableName(), request.getRestaurantName());
         OffsetDateTime time = OffsetDateTime.now();
         Order order = Order.builder()
                 .restaurant(restaurant)
-                .status(OrderStatus.PLACED)
+                .status(OrderStatus.NEW)
                 .number(OrderNumberGenerator.generateOrderNumber(time))
                 .waiter(waiter)
+                .table(table)
+                .customerQuantity(0)
+                .edit(true)
                 .receivedDateTime(time)
-                .price(calculatePrice(orderMeals))
+                .price(BigDecimal.ZERO)
                 .build();
 
-        orderMeals = orderMeals.stream().map(c -> c.withOrder(order)).collect(Collectors.toList());
-        orderDAO.createOrder(order.withOrderMeals(orderMeals));
-        log.info("Successful create order: %s".formatted(order.getNumber()));
-        return Response.builder()
-                .message("Successful create order: %s")
-                .code(HttpStatus.OK.value())
-                .build();
+        return mapper.map(orderDAO.createOrder(order));
+
     }
+//    @Transactional
+//    public Response createOrder(CreateOrderRequest request) {
+//        Waiter waiter = waiterService.findByEmail(request.getEmail());
+//        Restaurant restaurant = restaurantService.findByName(request.getRestaurantName());
+//        List<OrderMeal> orderMeals = prepareOrderMeals(request.getMeals(), restaurant);
+//        OffsetDateTime time = OffsetDateTime.now();
+//        Order order = Order.builder()
+//                .restaurant(restaurant)
+//                .status(OrderStatus.PLACED)
+//                .number(OrderNumberGenerator.generateOrderNumber(time))
+//                .waiter(waiter)
+//                .receivedDateTime(time)
+//                .price(calculatePrice(orderMeals))
+//                .build();
+//
+//        orderMeals = orderMeals.stream().map(c -> c.withOrder(order)).collect(Collectors.toList());
+//        orderDAO.createOrder(order.withOrderMeals(orderMeals));
+//        log.info("Successful create order: %s".formatted(order.getNumber()));
+//        return Response.builder()
+//                .message("Successful create order: %s")
+//                .code(HttpStatus.OK.value())
+//                .build();
+//    }
 
     private BigDecimal calculatePrice(List<OrderMeal> orderMeals) {
         return orderMeals.stream()
@@ -82,6 +117,7 @@ public class OrderService {
         Order order = orderDAO.findByNumber(orderNumber);
         orderDAO.updateOrder(order.withStatus(
                 switch (order.getStatus()) {
+                    case NEW -> OrderStatus.PLACED;
                     case PLACED -> OrderStatus.RELEASED;
                     case RELEASED -> OrderStatus.PAID;
                     case PAID -> null;
@@ -96,5 +132,10 @@ public class OrderService {
     @Transactional
     public Order getOrderByTableAndNotStatus(Table table, OrderStatus status) {
         return orderDAO.findByTableAndNotByStatus(table, status);
+    }
+
+    public OrderDTO edit(String orderNumber) {
+        Order order = orderDAO.findByNumber(orderNumber);
+        return mapper.map(orderDAO.updateOrder(order.withEdit(!order.getEdit())));
     }
 }

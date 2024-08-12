@@ -20,6 +20,11 @@ public class TableEntityMapper {
                 .id(entity.getId())
                 .name(entity.getName())
                 .status(entity.getStatus())
+                .orders(Optional.ofNullable(entity.getOrders())
+                        .orElseGet(Collections::emptySet)
+                        .stream()
+                        .map(orderEntityMapper::map)
+                        .toList())
                 .restaurant(
                         Restaurant
                                 .builder()
@@ -42,6 +47,7 @@ public class TableEntityMapper {
                                 .build())
                 .build();
     }
+
     public Table mapWithOrder(TableEntity entity) {
         return Table.builder()
                 .id(entity.getId())

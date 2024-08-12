@@ -15,8 +15,11 @@ public interface TableJpaRepository extends JpaRepository<TableEntity, Integer> 
 
     TableEntity findByNameAndRestaurant(String name, RestaurantEntity restaurantEntity);
 
-    @Query("SELECT t FROM TableEntity t LEFT JOIN FETCH t.orders o WHERE t.restaurant = :restaurant")
-    List<TableEntity> findAllTablesWithOrdersByRestaurant(@Param("restaurant") RestaurantEntity restaurant);
-
+    @Query("SELECT t FROM TableEntity t " +
+            "LEFT JOIN t.orders o ON o.status <> :orderStatus " +
+            "WHERE t.restaurant = :restaurant")
+    List<TableEntity> findAllTablesWithOrdersByRestaurant(
+            @Param("restaurant") RestaurantEntity restaurant,
+            @Param("orderStatus") OrderStatus orderStatus);
     List<TableEntity> findByRestaurant(RestaurantEntity restaurant);
 }

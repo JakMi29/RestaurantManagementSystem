@@ -1,80 +1,140 @@
 import { useNavigate } from 'react-router-dom';
 import classes from '../../pages/restaurant/RestaurantPage.module.css';
 import MessageContext from '../../store/MessageContext';
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import OrderMeal from './OrderMeal';
+import { orderActions } from '../../store/order-slice';
+import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
+import { useDispatch } from 'react-redux';
+import { Button, IconButton } from '@mui/material';
 
 
 function Order({ order }) {
+    const dispatch = useDispatch();
     const messageCtx = useContext(MessageContext);
     const navigate = useNavigate();
-    const [edit, setEdit] = useState(false)
-    let content;
-    const handleChangeStatus = () => {
-        fetch(`http://localhost:8080/api/admin/tables?tableName=${table.name}&restaurantName=${"Italiano"}`, {
-            method: 'PATCH',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        })
-            .then(response => {
-                if (response.ok) {
-                    navigate('/restaurant');
-                } else {
-                    messageCtx.showMessage('Something went wrong', 'error');
-                }
-            })
-            .catch(error => {
-                console.error('An error occurred while sending the request:', error);
-            });
-    };
+
+    const [navigatePath, setNavigatePath] = useState(null);
+
+    useEffect(() => {
+        if (navigatePath) {
+            navigate(navigatePath);
+            setNavigatePath(null);
+        }
+    }, [navigatePath, navigate]);
 
     const handleChange = () => {
-        setEdit(prev => !prev)
-    }
-
-
-    const handleConfirm = () => {
-
-    }
+        if (order.edit) {
+            fetch(`http://localhost:8080/api/admin/order/edit?orderNumber=${order.number}`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            })
+                .then(response => {
+                    if (response.ok) {
+                        return response.json();
+                    } else {
+                        messageCtx.showMessage('Something went wrong', 'error');
+                    }
+                })
+                .then(data => {
+                    dispatch(orderActions.revertChanges({ number: data.number }));
+                })
+                .catch(error => {
+                    console.error('Error sending request:', error);
+                });
+        } else {
+            fetch(`http://localhost:8080/api/admin/order/edit?orderNumber=${order.number}`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            })
+                .then(response => {
+                    if (response.ok) {
+                        return response.json();
+                    } else {
+                        messageCtx.showMessage('Something went wrong', 'error');
+                    }
+                })
+                .then(data => {
+                    // dispatch(orderActions.editOrder({ order: data }));
+                })
+                .catch(error => {
+                    console.error('Error sending request:', error);
+                });
+        }
+    };
 
     return (
         <>
             {order && (
                 <>
-                    <div >
-                        {edit ? (
-                            <div className={classes.orderMeal}>
-                                Customers:
+                    <div className={classes.customers}>
+                        {order.edit ? (
+                            <>
+                                <p>Customers</p>
                                 <div className={classes.orderMealActions}>
-                                    <button className={classes.redButton}>-</button>
-                                    {order.customers}
-                                    <button className={classes.greenButton}>+</button>
+                                    <button className={classes.redButton}
+                                        onClick={() => dispatch(orderActions.decreaseCustomers({ number: order.number }))}>
+                                        -
+                                    </button>
+                                    {order.customerQuantity}
+                                    <button className={classes.greenButton}
+                                        onClick={() => dispatch(orderActions.increaseCustomers({ number: order.number }))}>
+                                        +
+                                    </button>
                                 </div>
-                            </div>
+                            </>
                         ) : (
-                            <p>Customers: {order.customers}</p>
+                            <>
+                                <p>Customers</p>
+                                {order.customerQuantity}
+                            </>
                         )}
                     </div>
-                    <div className={classes.mealsContainer}>
-                        {order.meals && order.meals.length > 0 && (
-                            order.meals.map(orderMeal => (
-                                <OrderMeal key={orderMeal.id} orderNumber={order.number} orderMeal={orderMeal} edit={edit} />
-                            ))
-                        )}
-                    </div>
-                    <p>Total cost: {order.price}</p>
+                    {order.meals && order.meals.length > 0 ? (
+                        <>
+                            <div style={{ display: "flex", flexDirection: "column" }}>
+                                <div className={classes.mealsContainer}>
+                                    {order.meals.map(orderMeal => (
+                                        <OrderMeal
+                                            key={orderMeal.name}
+                                            orderNumber={order.number}
+                                            orderMeal={orderMeal}
+                                            edit={order.edit}
+                                        />
+                                    ))}
+                                </div>
+                                <button className={classes.addMore} onClick={() => setNavigatePath(`/restaurant/orderMeals?category=soup&pageNumber=0&pageSize=10`)}
+                                >Add more</button>
+                            </div>
+                            <div className={classes.customers}>
+                                <>
+                                    <p>Total cost</p> {order.price}
+                                </>
+                            </div>
+                        </>
+                    ) : (
+                        <div className={classes.imageContainer}>
+                            <AddShoppingCartIcon
+                                sx={{ fontSize: "90px" }}
+                                className={classes.iconButton}
+                                onClick={() => setNavigatePath(`/restaurant/orderMeals?category=soup&pageNumber=0&pageSize=10`)}
+                            />
+                        </div>
+                    )}
                     <div className={classes.actions}>
                         <button
-                            onClick={handleChangeStatus}
                             className={classes.greenButton}
                             disabled={order.status !== 'RELEASED'}>
-                            {edit ? 'Ok' : 'Paid'}
+                            {order.edit ? 'Ok' : 'Paid'}
                         </button>
                         <button
                             onClick={handleChange}
                             className={classes.blueButton}>
-                            {edit ? 'Cancel' : 'Edit'}
+                            {order.edit ? 'Cancel' : 'Edit'}
                         </button>
                     </div>
                 </>

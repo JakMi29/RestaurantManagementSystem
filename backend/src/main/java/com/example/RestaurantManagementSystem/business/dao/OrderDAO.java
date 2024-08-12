@@ -7,9 +7,9 @@ import com.example.RestaurantManagementSystem.infrastructure.database.entity.Ord
 import com.example.RestaurantManagementSystem.infrastructure.database.entity.TableEntity;
 
 public interface OrderDAO {
-    void createOrder(Order order);
+    Order createOrder(Order order);
 
-    void updateOrder(Order order);
+    Order updateOrder(Order order);
 
     Order findByNumber(String orderNumber);
 

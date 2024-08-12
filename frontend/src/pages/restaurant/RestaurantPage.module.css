@@ -45,11 +45,32 @@
     height: 350px;
 }
 
+.contentContainer p{
+    color:rgb(78, 74, 74)
+}
+
 .mealsContainer {
     min-height: 210px;
     overflow-y: auto;
     scrollbar-width: thin;
     scrollbar-color: rgba(60, 60, 211, 0.2) transparent;
+}
+
+.imageContainer{
+    width: 100%;
+    height: 350px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.iconButton {
+    border-radius: 0;
+    color: rgb(60, 60, 211, 0.2);
+}
+
+.iconButton:hover {
+    color: rgb(60, 60, 211)
 }
 
 .mealsContainer::-webkit-scrollbar-button {
@@ -79,15 +100,45 @@
     margin-top: auto;
 }
 
+.customers {
+    padding-right: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: auto;
+}
+
+.customers button {
+    padding: 3px;
+    font-size: 16px;
+}
+
+.addMore{
+    bottom: 0;
+    padding: 0px 60px;
+    font-size: 16px;
+    background-color: rgba(14, 185, 88, 0.2);
+}
+
+.addMore:hover{
+    background-color: rgba(14, 185, 88, 0.2);
+}
+
 .orderMealActions {
     display: flex;
     align-items: center;
+    justify-content: flex-start;
     gap: 5px;
 }
 
 .orderMeal button {
     padding: 3px;
     font-size: 16px;
+}
+
+.quantity{
+    padding: 3px;
+    background-color: rgb(60, 60, 211, 0.2);
 }
 
 .greenButton {

@@ -15,6 +15,7 @@ public class Table {
     Integer id;
     String name;
     TableStatus status;
+    Boolean creatingOrder;
     Restaurant restaurant;
     List<Order> orders;
 }

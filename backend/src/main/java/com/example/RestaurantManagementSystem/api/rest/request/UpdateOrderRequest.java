@@ -14,8 +14,7 @@ import java.util.Map;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UpdateOrderRequest {
-    String tableName;
-    String restaurantName;
-    String email;
+    String orderNumber;
+    Integer customersQuantity;
     Map<String, Integer> meals;
 }
