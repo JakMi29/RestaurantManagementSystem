@@ -14,7 +14,6 @@ function TableList() {
   const tables = useSelector((state) => state.table.tables);
   const orders = useSelector((state) => state.order.orders);
   const [preprocessedTables, setPreprocessedTables] = useState([]);
-
   useEffect(() => {
     dispatch(fetchData());
   }, [dispatch]);
@@ -59,13 +58,13 @@ function TableList() {
       }
     };
   }, [dispatch]);
-
+  
   const getOrder = useCallback((table) => {
     if (table.order) {
       if (table.order.edit) {
         const order = orders.find(order => order.number === table.order.number);
         if (!order) {
-          dispatch(orderActions.editOrder({ order: table.order }));
+          dispatch(orderActions.editOrder({ order: table.order}));
           return table.order;
         } else {
           return order;

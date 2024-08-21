@@ -26,7 +26,7 @@ const Table = React.memo(({ table, order }) => {
         })
             .then(response => {
                 if (response.ok) {
-                    navigate('/restaurant');
+                    navigate('/restaurant/tables');
                 } else {
                     messageCtx.showMessage('Something went wrong', 'error');
                 }

@@ -108,29 +108,54 @@ public class MealService {
     }
 
     @Transactional
-    public Page<Meal> findAllByCategory
-            (
-                    String restaurantName,
-                    String category,
-                    Pageable page,
-                    String searchTerm
-            ) {
+    public Page<Meal> findAllByCategory(
+            String restaurantName,
+            String category,
+            Pageable page,
+            String searchTerm,
+            List<String> excludesNames
+    ) {
         Restaurant restaurant = restaurantService.findByName(restaurantName);
-        return searchTerm != null ?
-                mealDAO.findAllByRestaurantAndCategoryAndStatusNotAndSearchTerms(
+        Category categoryEnum = Category.valueOf(category.toUpperCase());
+        MealStatus status = MealStatus.DELETE;
+
+        if (searchTerm != null) {
+            if (excludesNames != null && !excludesNames.isEmpty()) {
+                return mealDAO.findAllByRestaurantAndCategoryAndStatusNotAndSearchTermsAndNameNotIn(
                         restaurant,
-                        Category.valueOf(category.toUpperCase()),
-                        MealStatus.DELETE,
+                        categoryEnum,
+                        status,
+                        page,
+                        searchTerm,
+                        excludesNames
+                );
+            } else {
+                return mealDAO.findAllByRestaurantAndCategoryAndStatusNotAndSearchTerms(
+                        restaurant,
+                        categoryEnum,
+                        status,
                         page,
                         searchTerm
-                ) :
-                mealDAO.findAllByRestaurantAndCategoryAndStatusNot(
+                );
+            }
+        } else {
+            if (excludesNames != null && !excludesNames.isEmpty()) {
+                return mealDAO.findAllByRestaurantAndCategoryAndStatusNotAndNameNotIn(
                         restaurant,
-                        Category.valueOf(category.toUpperCase()),
-                        MealStatus.DELETE,
+                        categoryEnum,
+                        status,
+                        page,
+                        excludesNames
+                );
+            } else {
+                return mealDAO.findAllByRestaurantAndCategoryAndStatusNot(
+                        restaurant,
+                        categoryEnum,
+                        status,
                         page
                 );
-
+            }
+        }
     }
 
     @Transactional

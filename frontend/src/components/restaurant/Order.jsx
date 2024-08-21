@@ -6,13 +6,15 @@ import OrderMeal from './OrderMeal';
 import { orderActions } from '../../store/order-slice';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import { useDispatch } from 'react-redux';
-import { Button, IconButton } from '@mui/material';
+import EditOffIcon from '@mui/icons-material/EditOff';
+import { orderMealActions } from '../../store/edit-order-slice';
 
 
 function Order({ order }) {
     const dispatch = useDispatch();
     const messageCtx = useContext(MessageContext);
     const navigate = useNavigate();
+    const isDisabled = order.edit ? order.editor.email !== localStorage.getItem("email") : false
 
     const [navigatePath, setNavigatePath] = useState(null);
 
@@ -25,7 +27,7 @@ function Order({ order }) {
 
     const handleChange = () => {
         if (order.edit) {
-            fetch(`http://localhost:8080/api/admin/order/edit?orderNumber=${order.number}`, {
+            fetch(`http://localhost:8080/api/admin/order/edit?orderNumber=${order.number}&editor=${localStorage.getItem('email')}&edit=${false}`, {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',
@@ -45,7 +47,7 @@ function Order({ order }) {
                     console.error('Error sending request:', error);
                 });
         } else {
-            fetch(`http://localhost:8080/api/admin/order/edit?orderNumber=${order.number}`, {
+            fetch(`http://localhost:8080/api/admin/order/edit?orderNumber=${order.number}&editor=${localStorage.getItem('email')}&edit=${true}`, {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',
@@ -66,13 +68,17 @@ function Order({ order }) {
                 });
         }
     };
+    const handleAddMeals = () => {
+        dispatch(orderMealActions.addMeals({ meals: order.meals }));
+        navigate(`/restaurant/orderMeals?number=${order.number}&category=soup&pageNumber=0&pageSize=12`)
+    }
 
     return (
         <>
             {order && (
                 <>
                     <div className={classes.customers}>
-                        {order.edit ? (
+                        {order.edit && !isDisabled ? (
                             <>
                                 <p>Customers</p>
                                 <div className={classes.orderMealActions}>
@@ -103,40 +109,50 @@ function Order({ order }) {
                                             key={orderMeal.name}
                                             orderNumber={order.number}
                                             orderMeal={orderMeal}
-                                            edit={order.edit}
+                                            edit={order.edit&&!isDisabled}
                                         />
                                     ))}
                                 </div>
-                                <button className={classes.addMore} onClick={() => setNavigatePath(`/restaurant/orderMeals?category=soup&pageNumber=0&pageSize=10`)}
+                                <button
+                                    className={classes.addMore}
+                                    onClick={handleAddMeals}
                                 >Add more</button>
                             </div>
                             <div className={classes.customers}>
                                 <>
-                                    <p>Total cost</p> {order.price}
+                                    <p>Total cost</p>
+                                    <>{order.price.toFixed(2)} USD</>
                                 </>
                             </div>
                         </>
                     ) : (
                         <div className={classes.imageContainer}>
-                            <AddShoppingCartIcon
-                                sx={{ fontSize: "90px" }}
-                                className={classes.iconButton}
-                                onClick={() => setNavigatePath(`/restaurant/orderMeals?category=soup&pageNumber=0&pageSize=10`)}
-                            />
+                            {!isDisabled && (
+                                <AddShoppingCartIcon
+                                    sx={{ fontSize: "90px" }}
+                                    className={classes.iconButton}
+                                    onClick={handleAddMeals}
+                                />
+                            )}
                         </div>
                     )}
                     <div className={classes.actions}>
                         <button
                             className={classes.greenButton}
                             disabled={order.status !== 'RELEASED'}>
-                            {order.edit ? 'Ok' : 'Paid'}
+                            {order.edit && !isDisabled ? 'Ok' : 'Paid'}
                         </button>
                         <button
                             onClick={handleChange}
                             className={classes.blueButton}>
-                            {order.edit ? 'Cancel' : 'Edit'}
+                            {order.edit && !isDisabled ? 'Cancel' : 'Edit'}
                         </button>
                     </div>
+                    {isDisabled && (
+                        <div className={classes.overlay}>
+                            <EditOffIcon sx={{ fontSize: "80px", color: "rgb(60, 60, 211, 0.2)" }} />
+                        </div>
+                    )}
                 </>
             )}
         </>

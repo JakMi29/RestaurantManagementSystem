@@ -13,13 +13,14 @@ public class OrderDTOMapper {
 
     public OrderDTO map(Order order) {
         return OrderDTO.builder()
-                .price(order.getPrice().toString())
+                .price(order.getPrice())
                 .number(order.getNumber())
                 .status(order.getStatus().toString())
                 .edit(order.getEdit())
                 .customerQuantity(order.getCustomerQuantity())
                 .tableName(order.getTable().getName())
                 .waiter(waiterDTOMapper.map(order.getWaiter()))
+                .editor(order.getEditor() != null ? waiterDTOMapper.map(order.getEditor()) : null)
                 .meals(order.getOrderMeals().stream().map(orderMealDTOMapper::map).toList())
                 .build();
     }

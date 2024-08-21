@@ -1,0 +1,236 @@
+.mealPage{
+    margin: 0 auto 0 auto;
+}
+
+.categoryContainer {
+    display: flex;
+    gap: 5px;
+    height: 40px;
+    margin-bottom: 10px;
+}
+
+.categoryButton {
+    background-color: rgb(60, 60, 211, 0.2);
+    color: rgb(249, 249, 249);
+    padding: 10px 20px;
+    border-radius: 4px;
+    border: none;
+    font-size: 16px;
+    text-decoration: none;
+}
+
+.categoryButton:hover {
+    background-color: rgb(60, 60, 211);
+}
+
+.categoryButtonActive {
+    background-color: rgb(60, 60, 211);
+    color: rgb(249, 249, 249);
+    padding: 10px 20px;
+    border-radius: 4px;
+    border: none;
+    font-size: 16px;
+    text-decoration: none;
+}
+
+.mealsContainer {
+    margin-top: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 27px;
+    overflow: hide;
+    position: relative;
+}
+
+.meal {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 330px;
+    height: 290px;
+    background-color: #f7f7f7;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+    position: relative;
+}
+
+.mealOfDayFalse {
+    position: absolute;
+    top: -15px;
+    right: -15px;
+    z-index: 10;
+    opacity: 0;
+    color: rgba(60, 60, 211, 0.2);
+    transition: opacity 0.3s ease;
+}
+
+.mealOfDayFalse:hover {
+    color: rgb(60, 60, 211);
+}
+
+.meal:hover .mealOfDayFalse {
+    opacity: 1;
+}
+
+.mealOfDay {
+    position: absolute;
+    top: -15px;
+    right: -15px;
+    z-index: 10;
+    padding: 0;
+    color: rgb(60, 60, 211);
+    transition: opacity 0.3s ease;
+    opacity: 1;
+}
+
+.mealOfDayTrue {
+    position: absolute;
+    top: -15px;
+    right: -15px;
+    z-index: 10;
+    padding: 0;
+    color: rgb(60, 60, 211);
+    transition: opacity 0.3s ease;
+    opacity: 1;
+}
+
+.mealOfDayTrue:hover {
+    color: rgba(60, 60, 211, 0.2);
+}
+
+.meal:hover {
+    box-shadow: 0px 0px 20px rgba(60, 60, 211, 0.2);
+}
+
+.mealImage {
+    padding-top: 5px;
+    height: 150px;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+    overflow: hidden;
+}
+
+.mealImage img {
+    border-radius: 4px;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.contentContainer {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 10px;
+}
+
+.mealContent {
+    color: black;
+    text-align: center;
+    overflow: hidden;
+    width: 100%;
+}
+
+.mealContent p:first-child {
+    margin-bottom: 5px;
+    font-weight: bold;
+    font-size: 1em;
+}
+
+.mealContent p {
+    margin: 0;
+    font-weight: normal;
+    color: black;
+    font-size: 0.9em;
+}
+
+.actions {
+    display: flex;
+    justify-content: space-between;
+    gap: 140px;
+    margin-top: auto;
+    margin-bottom: 10px;
+}
+
+.deleteButton {
+    background-color: rgba(255, 0, 0, 0.2);
+    font-size: 16px;
+}
+
+.deleteButton:hover {
+    background-color: rgb(237, 14, 14);
+}
+
+.editButton {
+    background-color: rgba(14, 185, 88, 0.2);
+}
+
+.editButton:hover {
+    background-color: rgb(79, 156, 109);
+}
+
+.newMealButton{
+    margin-left: auto;
+}
+
+.orders-container {
+    margin: 20px auto;
+    max-width: 1200px;
+  }
+  
+  .orders-title {
+    margin-bottom: 20px;
+    color: #333;
+    font-weight: bold;
+  }
+  
+  .orders-loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+  }
+  
+  .orders-table {
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+  }
+  
+  .data-grid {
+    border: none;
+  }
+  
+  .data-grid .MuiDataGrid-root {
+    font-size: 16px;
+  }
+  
+  .data-grid .MuiDataGrid-cell {
+    border-bottom: 1px solid #ddd;
+    text-align: center; /* Wyśrodkowanie zawartości komórek */
+  }
+  
+  .data-grid .MuiDataGrid-columnHeaders {
+    background-color: #0033cc; /* Niebieski kolor tła nagłówków */
+    color: white; /* Kolor tekstu nagłówków */
+  }
+  
+  .data-grid .MuiDataGrid-columnHeaderTitle {
+    text-align: center; /* Wyśrodkowanie tekstu nagłówków */
+  }
+  
+  .data-grid .MuiDataGrid-footerContainer {
+    background-color: #0033cc; /* Niebieski kolor tła stopki */
+    color: white; /* Kolor tekstu stopki */
+  }
+  
+  .data-grid .MuiDataGrid-pagination {
+    background-color: #0033cc; /* Niebieski kolor tła paginacji */
+    color: white; /* Kolor tekstu paginacji */
+  }
+  
+  .data-grid .MuiDataGrid-iconSeparator {
+    color: white; /* Kolor separatora ikon paginacji */
+  }

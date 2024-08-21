@@ -18,16 +18,16 @@ import java.util.Optional;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<Response> handleException(Exception ex) {
-        log.error(ex.getMessage());
-        String message = String.format("Other exception occurred: %s", ex.getMessage());
-        Response response = Response.builder()
-                .message(message)
-                .code(HttpStatus.UNAUTHORIZED.value())
-                .build();
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
-    }
+//    @ExceptionHandler(Exception.class)
+//    public ResponseEntity<Response> handleException(Exception ex) {
+//        log.error(ex.getMessage());
+//        String message = String.format("Other exception occurred: %s", ex.getMessage());
+//        Response response = Response.builder()
+//                .message(message)
+//                .code(HttpStatus.UNAUTHORIZED.value())
+//                .build();
+//        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
+//    }
 
     @ExceptionHandler(BadCredentialsException.class)
     public ResponseEntity<Response> handleException(BadCredentialsException ex) {

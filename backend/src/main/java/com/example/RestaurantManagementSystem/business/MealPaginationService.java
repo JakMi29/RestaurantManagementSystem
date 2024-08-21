@@ -8,6 +8,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 
 @Service
 @AllArgsConstructor
@@ -21,7 +23,9 @@ public class MealPaginationService {
             String category,
             int pageNumber,
             int pageSize,
-            String searchTerm
+            String searchTerm,
+            List<String> excludesNames
+
     ) {
         Sort sort = Sort.by(
                 Sort.Order.desc("mealOfTheDay"),
@@ -32,8 +36,9 @@ public class MealPaginationService {
                 restaurantName,
                 category,
                 pageable,
-                searchTerm
+                searchTerm,
+                excludesNames
         );
-
     }
+
 }

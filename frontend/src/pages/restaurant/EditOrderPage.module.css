@@ -1,0 +1,193 @@
+.mealPage {
+    margin: 0 auto 0 auto;
+}
+
+.categoryContainer {
+    display: flex;
+    gap: 5px;
+    height: 40px;
+    margin-bottom: 10px;
+}
+
+.categoryButton {
+    background-color: rgb(60, 60, 211, 0.2);
+    color: rgb(249, 249, 249);
+    padding: 10px 20px;
+    border-radius: 4px;
+    border: none;
+    font-size: 16px;
+    text-decoration: none;
+}
+
+.categoryButton:hover {
+    background-color: rgb(60, 60, 211);
+}
+
+.orderMealContainer {
+    width: 100%;
+    height: 270px;
+    border-radius: 1px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    display: flex;
+    gap: 20px;
+    flex-direction: row;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-behavior: smooth;
+    box-sizing: border-box;
+    padding: 0 20px;
+}
+
+.orderMealContainer::-webkit-scrollbar {
+    height: 6px;
+}
+
+.orderMealContainer::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.orderMealContainer::-webkit-scrollbar-thumb {
+    background: rgb(60, 60, 211, 0.2);
+    border-radius: 3px;
+}
+
+.orderMealContainer > * {
+    flex-shrink: 0;
+    width: 270px;
+    height: 100%;
+}
+
+.categoryButtonActive {
+    background-color: rgb(60, 60, 211);
+    color: rgb(249, 249, 249);
+    padding: 10px 20px;
+    border-radius: 4px;
+    border: none;
+    font-size: 16px;
+    text-decoration: none;
+}
+
+.mealsContainer {
+    padding-bottom: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 27px;
+    position: relative;
+}
+
+.meal {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 270px;
+    height: 190px;
+    background-color: #f7f7f7;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+    position: relative;
+}
+
+.mealEdit {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 270px;
+    height: 250px;
+    margin-bottom: 10px;
+    margin-top: 10px;
+    background-color: #f7f7f7;
+    border-radius: 4px;
+    position: relative;
+    box-shadow: 0px 0px 20px rgba(60, 60, 211, 0.1);
+}
+
+.meal:hover {
+    box-shadow: 0px 0px 20px rgba(60, 60, 211, 0.2);
+}
+
+.mealImage {
+    padding-top: 5px;
+    height: 150px;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+    overflow: hidden;
+}
+
+.mealImage img {
+    border-radius: 4px;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.contentContainer {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 10px;
+}
+
+.mealContent {
+    color: black;
+    text-align: center;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+.mealContent p:first-child {
+    margin-bottom: 5px;
+    font-weight: bold;
+    font-size: 1em;
+}
+
+.mealContent p {
+    margin: 0;
+    padding: 0px;
+    font-weight: normal;
+    color: black;
+    font-size: 0.9em;
+}
+
+.actions {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.orderMealActions {
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.redButton {
+    background-color: rgba(255, 0, 0, 0.2);
+    font-size: 16px;
+}
+
+.redButton:hover {
+    background-color: rgb(237, 14, 14);
+}
+
+.greenButton {
+    background-color: rgba(14, 185, 88, 0.2);
+}
+
+.greenButton:hover {
+    background-color: rgb(79, 156, 109);
+}
+
+.newMealButton {
+    margin-left: auto;
+    background-color: rgba(14, 185, 88, 0.2);
+}
+
+.newMealButton:hover {
+    background-color: rgb(79, 156, 109);
+}

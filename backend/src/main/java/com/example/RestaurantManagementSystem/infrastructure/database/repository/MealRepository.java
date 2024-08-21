@@ -74,6 +74,36 @@ public class MealRepository implements MealDAO {
     }
 
     @Override
+    public Page<Meal> findAllByRestaurantAndCategoryAndStatusNotAndNameNotIn(
+            Restaurant restaurant,
+            Category category,
+            MealStatus mealStatus,
+            Pageable pageable,
+            List<String> excludedNames
+    ) {
+        RestaurantEntity restaurantEntity = restaurantMapper.map(restaurant);
+        return repository
+                .findAllByRestaurantAndCategoryAndStatusNotAndNameNotIn(restaurantEntity, category, mealStatus, pageable, excludedNames)
+                .map(meaLMapper::map);
+    }
+
+    @Override
+    public Page<Meal> findAllByRestaurantAndCategoryAndStatusNotAndSearchTermsAndNameNotIn
+            (Restaurant restaurant,
+             Category category,
+             MealStatus mealStatus,
+             Pageable pageable,
+             String searchTerms,
+             List<String> excludedNames
+            ) {
+        RestaurantEntity restaurantEntity = restaurantMapper.map(restaurant);
+        return repository
+                .findAllByRestaurantAndCategoryAndStatusNotAndNameContainingAndNameNotIn
+                        (restaurantEntity, category, mealStatus, pageable, searchTerms, excludedNames)
+                .map(meaLMapper::map);
+    }
+
+    @Override
     public Meal findByNameAndRestaurant(String name, Restaurant restaurant) {
         RestaurantEntity restaurantEntity = restaurantMapper.map(restaurant);
         return meaLMapper.map(

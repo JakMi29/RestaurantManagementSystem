@@ -19,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -48,10 +49,11 @@ public class MealController {
             @RequestParam String category,
             @RequestParam Integer pageNumber,
             @RequestParam Integer pageSize,
-            @RequestParam(required = false) String searchTerm
+            @RequestParam(required = false) String searchTerm,
+            @RequestParam(required = false) List<String> tags
     ) {
         return ResponseEntity.ok(mealPaginationService
-                .findAllByCategory(restaurantName, category, pageNumber, pageSize, searchTerm));
+                .findAllByCategory(restaurantName, category, pageNumber, pageSize, searchTerm,tags));
     }
 
     @GetMapping("/image")

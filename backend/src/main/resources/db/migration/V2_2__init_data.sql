@@ -123,16 +123,16 @@ VALUES
 ('table 9','DIRTY',1),
 ('table 10','BUSY',1);
 
-insert into _order (order_number, received_date_time,completed_date_time, price, status, table_id, waiter_id, restaurant_id,customers_quantity,edit)
+insert into _order (order_number, received_date_time,completed_date_time, price, status, table_id, waiter_id, restaurant_id,customers_quantity,edit,editor_id)
 values
-('ORD62023162424321', '2020-12-10 19:00:00',null, '32', 'PLACED', 2, 1,1,2,false),
-('ORD62023162424322', '2020-12-13 19:12:00',null, '36', 'PLACED', 5, 1,1,2,false),
-('ORD62023162424323', '2020-12-13 19:14:00',null, '36', 'PLACED', 6, 1,1,2,false),
-('ORD62023162424324', '2020-12-13 19:20:00',null, '0', 'PLACED', 7, 1,1,2,false),
-('ORD62023162424325', '2020-12-13 19:20:00',null, '0', 'PLACED', 8, 2,1,2,false),
-('ORD62023162424326', '2023-06-25 20:38:30','2023-06-25 20:58:30', '40', 'PAID', 3, 1,1,2,false),
-('ORD62023162424327', '2023-06-25 20:38:30','2023-06-25 20:58:30', '40', 'PAID', 3, 1,1,2,false),
-('ORD62023162424328', '2023-06-25 20:38:30','2023-06-25 20:53:30', '60', 'RELEASED', 4, 1,1,2,false);
+('ORD62023162424321', '2020-12-10 19:00:00',null, '32', 'PLACED', 2, 1,1,2,false,null),
+('ORD62023162424322', '2020-12-13 19:12:00',null, '36', 'PLACED', 5, 1,1,2,false,null),
+('ORD62023162424323', '2020-12-13 19:14:00',null, '36', 'PLACED', 6, 1,1,2,false,null),
+('ORD62023162424324', '2020-12-13 19:20:00',null, '0', 'PLACED', 7, 1,1,2,false,null),
+('ORD62023162424325', '2020-12-13 19:20:00',null, '0', 'PLACED', 8, 2,1,2,false,null),
+('ORD62023162424326', '2023-06-25 20:38:30','2023-06-25 20:58:30', '40', 'PAID', 3, 1,1,2,false,null),
+('ORD62023162424327', '2023-06-25 20:38:30','2023-06-25 20:58:30', '40', 'PAID', 3, 1,1,2,false,null),
+('ORD62023162424328', '2023-06-25 20:38:30','2023-06-25 20:53:30', '60', 'RELEASED', 4, 1,1,2,false,null);
 
 insert into order_meal (quantity,received_date_time,completed_date_time,status, order_id,price, meal_id)
 values

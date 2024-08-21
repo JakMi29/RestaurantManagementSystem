@@ -2,7 +2,7 @@ import './App.css'
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import RootLayout from './pages/Root';
 import HomePage from './pages/HomePage';
-import StatisticPage from './pages/StatisticsPage';
+import StatisticPage from './pages/statistics/StatisticsPage';
 import RestaurantPage, { loader as tableLoader } from './pages/restaurant/RestaurantPage';
 import AuthenticationPage, {
   action as authAction,
@@ -15,8 +15,9 @@ import MealPage from './pages/meals/MealPage';
 import MealsRootLayout from './pages/meals/MealRootLayout';
 import MealsPage, { loader as mealsLoader } from './pages/meals/MealsPage';
 import { MessageContextProvider } from './store/MessageContext';
-import OrderMealsPage,{ loader as orderMealsLoader } from './pages/restaurant/MealsPage';
+import OrderMealsPage from './pages/restaurant/OrderMealsPage';
 import TableList from './components/restaurant/TableList';
+import OrdersTable from './components/statistics/orderTable';
 
 
 const router = createBrowserRouter([
@@ -31,6 +32,12 @@ const router = createBrowserRouter([
       {
         path: 'statistics',
         element: <StatisticPage />,
+        children: [
+          {
+            path:"orders",
+            element: <OrdersTable />,
+          }
+        ]
       },
       {
         path: 'meals',
@@ -55,12 +62,11 @@ const router = createBrowserRouter([
         element: <RestaurantPage />,
         children: [
           {
-            path:"orderMeals",
-            element: <OrderMealsPage />,
-            loader: orderMealsLoader,
+            path: "orderMeals",
+            element: <OrderMealsPage />
           },
           {
-            path:"tables",
+            path: "tables",
             element: <TableList />,
             loader: tableLoader,
           },

@@ -7,6 +7,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import MealList from "../../components/meals/MealList";
 import { MealPageContextProvider } from "../../store/MealPageContext";
 import MealModal from "../../components/meals/MealForm";
+
 function MealsPage() {
     const { meals } = useLoaderData();
     const location = useLocation();
@@ -46,7 +47,7 @@ function MealsPage() {
         <div className={classes.mealPage}>
             <MealPageContextProvider>
                 <MealModal />
-                <MealCategoryContainer currentCategory={currentCategory} />
+                <MealCategoryContainer currentCategory={currentCategory} order={false} />
                 <div style={{ display: "flex", justifyContent: "flex-end" }}>
                     <form style={{ marginTop: "20px", marginLeft: "auto" }}>
                         <input
@@ -63,7 +64,7 @@ function MealsPage() {
                         {(loadedMeals) => (
                             <>
                                 <div className={classes.mealsContainer}>
-                                    <MealList meals={loadedMeals.content} />
+                                    <MealList meals={loadedMeals.content} order={false} />
                                 </div>
                                 <div className={classes.paginationContainer}>
                                     {!loadedMeals.first && (

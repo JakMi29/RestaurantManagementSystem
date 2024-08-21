@@ -1,10 +1,12 @@
 package com.example.RestaurantManagementSystem.api.dto;
 
+import com.example.RestaurantManagementSystem.domain.Waiter;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Data
@@ -17,7 +19,8 @@ public class OrderDTO {
     WaiterDTO waiter;
     String tableName;
     Boolean edit;
-    String price;
+    WaiterDTO editor;
+    BigDecimal price;
     Integer customerQuantity;
     List<OrderMealDTO> meals;
 }

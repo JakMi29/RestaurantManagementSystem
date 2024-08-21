@@ -25,5 +25,6 @@ public class Order {
     Integer customerQuantity;
     Table table;
     Waiter waiter;
+    Waiter editor;
     List<OrderMeal> orderMeals;
 }

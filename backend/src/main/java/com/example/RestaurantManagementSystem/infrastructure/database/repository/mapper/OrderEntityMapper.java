@@ -30,6 +30,10 @@ public class OrderEntityMapper {
                 .receivedDateTime(entity.getReceivedDateTime())
                 .customerQuantity(entity.getCustomerQuantity())
                 .completedDateTime(entity.getCompletedDateTime())
+                .editor(entity.getWaiter() == null ? null : Waiter.builder()
+                        .id(entity.getWaiter().getId())
+                        .email(entity.getWaiter().getEmail())
+                        .build())
                 .table(
                         Table.builder()
                                 .id(entity.getTable().getId())

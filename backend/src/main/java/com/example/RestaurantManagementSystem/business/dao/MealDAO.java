@@ -17,11 +17,35 @@ public interface MealDAO {
     List<Meal> findAllByRestaurant(Restaurant restaurant);
 
     Page<Meal> findAllByRestaurantAndCategoryAndStatusNot(
-            Restaurant restaurant, Category category, MealStatus mealStatus, Pageable pageable
+            Restaurant restaurant,
+            Category category,
+            MealStatus mealStatus,
+            Pageable pageable
     );
 
     Page<Meal> findAllByRestaurantAndCategoryAndStatusNotAndSearchTerms(
-            Restaurant restaurant, Category category, MealStatus mealStatus, Pageable pageable, String searchTerms
+            Restaurant restaurant,
+            Category category,
+            MealStatus mealStatus,
+            Pageable pageable,
+            String searchTerms
+            );
+
+    Page<Meal> findAllByRestaurantAndCategoryAndStatusNotAndNameNotIn(
+            Restaurant restaurant,
+            Category category,
+            MealStatus mealStatus,
+            Pageable pageable,
+            List<String> excludedNames
+    );
+
+    Page<Meal> findAllByRestaurantAndCategoryAndStatusNotAndSearchTermsAndNameNotIn(
+            Restaurant restaurant,
+            Category category,
+            MealStatus mealStatus,
+            Pageable pageable,
+            String searchTerms,
+            List<String> excludedNames
     );
 
     Meal findByNameAndRestaurant(String name, Restaurant restaurant);

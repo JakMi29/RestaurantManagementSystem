@@ -27,5 +27,20 @@ public interface MealJpaRepository extends JpaRepository<MealEntity, Integer> {
             Pageable pageable,
             String searchTerms);
 
+    Page<MealEntity> findAllByRestaurantAndCategoryAndStatusNotAndNameNotIn(
+            RestaurantEntity restaurant,
+            Category category,
+            MealStatus status,
+            Pageable pageable,
+            List<String> excludedNames);
+
+    Page<MealEntity> findAllByRestaurantAndCategoryAndStatusNotAndNameContainingAndNameNotIn(
+            RestaurantEntity restaurant,
+            Category category,
+            MealStatus status,
+            Pageable pageable,
+            String searchTerms,
+            List<String> excludedNames);
+
     MealEntity findByNameAndRestaurant(String name, RestaurantEntity restaurantEntity);
 }

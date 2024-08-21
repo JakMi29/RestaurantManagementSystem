@@ -1,6 +1,5 @@
 import { defer, json, Outlet } from "react-router-dom";
 import { getAuthToken } from "../../util/auth";
-import TableList from "../../components/restaurant/TableList";
 
 import { Provider } from "react-redux";
 import store from "../../store";
@@ -12,6 +11,7 @@ function RestaurantPage() {
         </Provider>
     );
 }
+
 export default RestaurantPage;
 
 async function loadTables() {

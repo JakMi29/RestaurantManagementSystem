@@ -7,6 +7,7 @@ CREATE TABLE _order
     price                       NUMERIC(19, 2) NOT NULL,
     status  VARCHAR(20)            NOT NULL,
     edit BOOLEAN,
+    editor_id INT,
     waiter_id INT NOT NULL,
     table_id INT NOT NULL,
     customers_quantity INT NOT NULL,

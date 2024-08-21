@@ -56,6 +56,10 @@ public class OrderEntity {
     @JoinColumn(name = "waiter_id")
     private WaiterEntity waiter;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "editor_id")
+    private WaiterEntity editor;
+
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "order", cascade = CascadeType.PERSIST)
     private Set<OrderMealEntity> orderMeals;
 }
