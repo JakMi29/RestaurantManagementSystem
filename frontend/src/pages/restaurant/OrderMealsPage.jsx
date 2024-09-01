@@ -13,6 +13,7 @@ import { orderActions } from "../../store/order-slice";
 function OrderMealsPage() {
     const dispatch = useDispatch();
     const orderMeals = useSelector((state) => state.orderMeal.meals);
+    const price = useSelector((state) => state.orderMeal.price);
     const location = useLocation();
     const navigate = useNavigate();
     const containerRef = useRef(null);
@@ -27,18 +28,17 @@ function OrderMealsPage() {
     const [loading, setLoading] = useState(true);
     const [initialLoad, setInitialLoad] = useState(true);
 
-
     useEffect(() => {
         const fetchMeals = async () => {
             setLoading(true);
             try {
                 const tagsParam = orderMeals.map(meal => `tags=${encodeURIComponent(meal.meal.name)}`).join('&');
                 const response = await fetch(
-                    `http://localhost:8080/api/admin/meals?restaurantName=Italiano`+
-                    `&category=${currentCategory}`+
-                    `&pageNumber=${pageNumber}`+
-                    `&pageSize=${pageSize}`+
-                    `${searchTerm ? `&searchTerm=${searchTerm}` : ''}`+
+                    `http://localhost:8080/api/admin/meals?restaurantName=Italiano` +
+                    `&category=${currentCategory}` +
+                    `&pageNumber=${pageNumber}` +
+                    `&pageSize=${pageSize}` +
+                    `${searchTerm ? `&searchTerm=${searchTerm}` : ''}` +
                     `${tagsParam ? `&${tagsParam}` : ''}`, {
                     headers: {
                         'Authorization': 'Bearer ' + getAuthToken()
@@ -83,9 +83,8 @@ function OrderMealsPage() {
         dispatch(orderMealActions.resetOrderMeals());
         navigate(`/restaurant/tables`);
     };
-
     const handleConfirm = () => {
-        dispatch(orderActions.addMeals({ number: number, meals: orderMeals }));
+        dispatch(orderActions.addMeals({ number: number, meals: orderMeals, price: price }));
         navigate(`/restaurant/tables`);
     };
 

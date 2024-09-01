@@ -2,8 +2,16 @@ import { NavLink, useNavigate } from 'react-router-dom';
 import classes from '../../pages/statistics/StatisticPage.module.css';
 import { Select, MenuItem, FormControl, InputLabel } from '@mui/material';
 
-function StatisticsCategoryContainer({ currentCategory, currentPeriod, handlePeriodChange }) {
+function StatisticsCategoryContainer({ currentCategory, currentPeriod }) {
+    const navigate = useNavigate();
+
     const isActive = (category) => currentCategory === category;
+
+    const handlePeriodChange = (event) => {
+        const newPeriod = event.target.value;
+        navigate(`/statistics/${currentCategory}?period=${newPeriod}`);
+    };
+
     return (
         <div className={classes.categoryContainer}>
             <NavLink
@@ -14,42 +22,42 @@ function StatisticsCategoryContainer({ currentCategory, currentPeriod, handlePer
             </NavLink>
             <NavLink
                 to={`/statistics/meals?period=${currentPeriod}`}
-                className={isActive("soup") ? classes.categoryButtonActive : classes.categoryButton}
+                className={isActive("meals") ? classes.categoryButtonActive : classes.categoryButton}
             >
                 Meals
             </NavLink>
             <NavLink
                 to={`/statistics/waiters?period=${currentPeriod}`}
-                className={isActive("main_dish") ? classes.categoryButtonActive : classes.categoryButton}
+                className={isActive("waiters") ? classes.categoryButtonActive : classes.categoryButton}
             >
                 Waiters
             </NavLink>
-            <FormControl
-                variant="outlined"
+        <FormControl
+            variant="outlined"
+            sx={{
+                minWidth: 200,
+                marginLeft: 'auto',
+            }}
+        >
+            <InputLabel
+                id="period-label"
+            >
+                Period
+            </InputLabel>
+            <Select
+                labelId="period-label"
+                value={currentPeriod}
+                onChange={handlePeriodChange}
+                label="Period"
                 sx={{
-                    minWidth: 200,
-                    marginLeft: 'auto',
+                    padding: '0px 10px',
+                    border: 'none',
+                    fontSize: '16px',
+                    height: '40px',
+                    display: 'flex',
+                    alignItems: 'center',
                 }}
             >
-                <InputLabel
-                    id="period-label"
-                >
-                    Period
-                </InputLabel>
-                <Select
-                    labelId="period-label"
-                    value={currentPeriod}
-                    onChange={handlePeriodChange}
-                    label="Period"
-                    sx={{
-                        padding: '0px 10px',
-                        border: 'none',
-                        fontSize: '16px',
-                        height: '40px',
-                        display: 'flex',
-                        alignItems: 'center',
-                    }}
-                >
                     <MenuItem value="today">Today</MenuItem>
                     <MenuItem value="3days">3 days</MenuItem>
                     <MenuItem value="7days">7 days</MenuItem>

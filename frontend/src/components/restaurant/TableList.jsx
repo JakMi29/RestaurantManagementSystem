@@ -14,50 +14,50 @@ function TableList() {
   const tables = useSelector((state) => state.table.tables);
   const orders = useSelector((state) => state.order.orders);
   const [preprocessedTables, setPreprocessedTables] = useState([]);
+  console.log(tables)
   useEffect(() => {
     dispatch(fetchData());
   }, [dispatch]);
 
   useEffect(() => {
-    const getAuthToken = () => {
-      return localStorage.getItem('token');
-    };
-
-    const socket = new SockJS('http://localhost:8080/ws');
-    const stompClient = Stomp.over(socket);
-
-    stompClient.connect(
-      { Authorization: `Bearer ${getAuthToken()}` },
-      (frame) => {
-        console.log('Connected: ' + frame);
-
-        stompClient.subscribe('/topic/tables', (table) => {
-          if (table && table.body) {
-            const updatedTable = JSON.parse(table.body);
-            dispatch(tableActions.updateTable({ table: updatedTable }));
-          }
-        });
-
-        stompClient.subscribe('/topic/orders', (order) => {
-          if (order && order.body) {
-            const updatedOrder = JSON.parse(order.body);
-            dispatch(tableActions.updateOrder({ order: updatedOrder }));
-          }
-        });
-
-        setStompClient(stompClient);
-      },
-      (error) => {
-        console.error('STOMP error: ', error);
-      }
-    );
-
-    return () => {
-      if (stompClient && stompClient.connected) {
-        stompClient.disconnect();
-      }
-    };
-  }, [dispatch]);
+    if (!stompClient) {
+      const getAuthToken = () => localStorage.getItem('token');
+      const socket = new SockJS('http://localhost:8080/ws');
+      const newStompClient = Stomp.over(socket);
+  
+      newStompClient.connect(
+        { Authorization: `Bearer ${getAuthToken()}` },
+        (frame) => {
+          console.log('Connected: ' + frame);
+  
+          newStompClient.subscribe('/topic/tables', (table) => {
+            if (table && table.body) {
+              const updatedTable = JSON.parse(table.body);
+              dispatch(tableActions.updateTable({ table: updatedTable }));
+            }
+          });
+  
+          newStompClient.subscribe('/topic/orders', (order) => {
+            if (order && order.body) {
+              const updatedOrder = JSON.parse(order.body);
+              dispatch(tableActions.updateOrder({ order: updatedOrder }));
+            }
+          });
+  
+          setStompClient(newStompClient);
+        },
+        (error) => {
+          console.error('STOMP error: ', error);
+        }
+      );
+  
+      return () => {
+        if (newStompClient && newStompClient.connected) {
+          newStompClient.disconnect();
+        }
+      };
+    }
+  }, [dispatch, stompClient]);
   
   const getOrder = useCallback((table) => {
     if (table.order) {

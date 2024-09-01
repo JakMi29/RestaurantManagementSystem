@@ -32,11 +32,14 @@ const tableSlice = createSlice({
     },
     updateOrder(state, action) {
       const updatedOrder = action.payload.order;
-      console.log(updatedOrder)
       const index = state.tables.findIndex(table => table.name === updatedOrder.tableName);
       if (index !== -1) {
-        state.tables[index].order = updatedOrder;
-      }
+          if(updatedOrder.status==='RELEASED'){
+            state.tables[index].order=null;
+          }else{
+            state.tables[index].order = updatedOrder;
+          }
+        }
     }
   },
 });

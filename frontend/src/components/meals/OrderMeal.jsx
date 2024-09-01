@@ -6,7 +6,7 @@ function OrderMeal({ meal }) {
     const dispatch = useDispatch();
     return (
         <button style={{ padding: "0px" }}   
-        onClick={() => dispatch(orderMealActions.increaseOrderMealQuantity({ name: meal.name, image: meal.image}))
+        onClick={() => dispatch(orderMealActions.increaseOrderMealQuantity({ meal: meal}))
     }>
             <div className={classes.meal} >
                 <div className={classes.contentContainer}>

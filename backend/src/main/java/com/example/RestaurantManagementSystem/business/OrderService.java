@@ -1,12 +1,16 @@
 package com.example.RestaurantManagementSystem.business;
 
+import com.example.RestaurantManagementSystem.api.dto.DailyOrdersStatisticsDTO;
 import com.example.RestaurantManagementSystem.api.dto.OrderDTO;
+import com.example.RestaurantManagementSystem.api.dto.OrdersStatisticDTO;
 import com.example.RestaurantManagementSystem.api.dto.mapper.OrderDTOMapper;
 import com.example.RestaurantManagementSystem.api.rest.request.CreateOrderRequest;
 import com.example.RestaurantManagementSystem.api.rest.response.Response;
 import com.example.RestaurantManagementSystem.business.dao.OrderDAO;
 import com.example.RestaurantManagementSystem.domain.*;
 import com.example.RestaurantManagementSystem.domain.exception.ObjectAlreadyExist;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -16,10 +20,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.math.RoundingMode;
+import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.time.temporal.ChronoUnit;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -39,16 +45,50 @@ public class OrderService {
     private final OrderDTOMapper mapper;
     private final ConcurrentHashMap<String, Lock> orderLocks = new ConcurrentHashMap<>();
 
+    @PersistenceContext
+    private EntityManager entityManager;
+
     @Transactional
-    public OrderDTO updateOrderMeal(String restaurantName, String mealName, String orderNumber) {
+    public OrderDTO updateOrder(OrderDTO updatedOrder) {
+        Order order = orderDAO.findByNumber(updatedOrder.getNumber());
+        this.updateMeals(order, updatedOrder);
+        orderDAO.updateOrder(order
+                .withEdit(false)
+                .withEditor(null)
+                .withCustomerQuantity(updatedOrder.getCustomerQuantity())
+                .withPrice(updatedOrder.getPrice()));
+        entityManager.flush();
+        entityManager.clear();
+        return mapper.map(orderDAO.findByNumber(updatedOrder.getNumber()), false);
+    }
+
+    @Transactional
+    public void updateMeals(Order order, OrderDTO updatedOrder) {
+        orderMealService.updateOrderMeals(order, updatedOrder.getMeals());
+    }
+
+    @Transactional
+    public OrderDTO updateAndGetOrder(String restaurantName, String mealName, String orderNumber, String orderMealStatus) {
+        this.updateOrderMeal(restaurantName, mealName, orderNumber, orderMealStatus);
+        Order order = orderDAO.findByNumber(orderNumber);
+        if (this.checkOrderStatus(order)) {
+            this.changeStatus(order);
+        }
+        return mapper.map(order, false);
+    }
+
+    private Boolean checkOrderStatus(Order order) {
+        List<OrderMeal> orderMeals = order.getOrderMeals();
+        Map<OrderMealStatus, List<OrderMeal>> mealByStatus = orderMeals.stream()
+                .collect(Collectors.groupingBy(OrderMeal::getStatus));
+        return mealByStatus.size() == 1 && mealByStatus.containsKey(OrderMealStatus.RELEASED);
+    }
+
+    @Transactional
+    private void updateOrderMeal(String restaurantName, String mealName, String orderNumber, String orderMealStatus) {
         Restaurant restaurant = restaurantService.findByName(restaurantName);
         Order order = orderDAO.findByNumber(orderNumber);
-        orderMealService.updateStatus(mealName, restaurant, order);
-        if (order.getOrderMeals().stream().filter(o -> o.getStatus() == OrderMealStatus.PREPARING).toList().size() == 1) {
-            orderDAO.updateOrder(order);
-        }
-
-        return mapper.map(orderDAO.findByNumber(orderNumber));
+        orderMealService.updateStatus(mealName, restaurant, order, OrderMealStatus.valueOf(orderMealStatus));
     }
 
     //    @Transactional
@@ -72,17 +112,17 @@ public class OrderService {
         OffsetDateTime time = OffsetDateTime.now();
         Order order = Order.builder()
                 .restaurant(restaurant)
-                .status(OrderStatus.NEW)
+                .status(OrderStatus.PLACED)
                 .number(OrderNumberGenerator.generateOrderNumber(time))
                 .waiter(waiter)
+                .editor(waiter)
                 .table(table)
                 .customerQuantity(0)
                 .edit(true)
                 .receivedDateTime(time)
                 .price(BigDecimal.ZERO)
                 .build();
-
-        return mapper.map(orderDAO.createOrder(order));
+        return mapper.map(orderDAO.createOrder(order), false);
 
     }
 //    @Transactional
@@ -125,18 +165,27 @@ public class OrderService {
     @Transactional
     public Response changeStatus(String orderNumber) {
         Order order = orderDAO.findByNumber(orderNumber);
-        orderDAO.updateOrder(order.withStatus(
-                switch (order.getStatus()) {
-                    case NEW -> OrderStatus.PLACED;
-                    case PLACED -> OrderStatus.RELEASED;
-                    case RELEASED -> OrderStatus.PAID;
-                    case PAID -> null;
-                }));
+        this.changeStatus(order);
 
         return Response.builder()
                 .code(HttpStatus.OK.value())
                 .message("Successfully change order status")
                 .build();
+    }
+
+    private Order changeStatus(Order order) {
+        Order updatedOrder = order.withStatus(
+                switch (order.getStatus()) {
+                    case NEW -> OrderStatus.PLACED;
+                    case PLACED -> OrderStatus.RELEASED;
+                    case RELEASED -> OrderStatus.PAID;
+                    case PAID -> null;
+                });
+        if (updatedOrder.getStatus() == OrderStatus.PAID) {
+            updatedOrder = updatedOrder.withCompletedDateTime(OffsetDateTime.now());
+        }
+        orderDAO.updateOrder(updatedOrder);
+        return updatedOrder;
     }
 
     @Transactional
@@ -167,41 +216,91 @@ public class OrderService {
                 order = order.withEdit(false).withEditor(null);
             }
 
-            return mapper.map(orderDAO.updateOrder(order));
+            return mapper.map(orderDAO.updateOrder(order), true);
         } finally {
             lock.unlock();
             orderLocks.remove(orderNumber);
         }
     }
 
+    @Transactional
     public Page<OrderDTO> findAllByPeriod(String restaurantName, String period, Pageable pageable) {
         Restaurant restaurant = restaurantService.findByName(restaurantName);
         OffsetDateTime endDate = OffsetDateTime.now();
-        OffsetDateTime startDate;
+        OffsetDateTime startDate = getStartPeriod(period, endDate);
+        return orderDAO.findAllByPeriod(restaurant, startDate, endDate, pageable).map(order -> mapper.map(order, false));
+    }
+
+    @Transactional
+    public OrdersStatisticDTO getStatistics(String restaurantName, String period) {
+        Restaurant restaurant = restaurantService.findByName(restaurantName);
+        OffsetDateTime endDate = OffsetDateTime.now();
+        OffsetDateTime startDate = getStartPeriod(period, endDate);
+        List<Order> orders = orderDAO.findAllByPeriod(restaurant, startDate, endDate);
+        return getStatistics(orders, startDate, endDate);
+    }
+
+    private OrdersStatisticDTO getStatistics(List<Order> orders, OffsetDateTime startDate, OffsetDateTime endDate) {
+        BigDecimal totalIncome = BigDecimal.ZERO;
+        int totalCustomers = 0;
+        Map<LocalDate, DailyOrdersStatistics> dailyStatsMap = new HashMap<>();
+
+        LocalDate currentDate = startDate.toLocalDate();
+        while (!currentDate.isAfter(endDate.toLocalDate())) {
+            dailyStatsMap.put(currentDate, new DailyOrdersStatistics());
+            currentDate = currentDate.plusDays(1);
+        }
+
+        for (Order order : orders) {
+            totalIncome = totalIncome.add(order.getPrice());
+            totalCustomers += order.getCustomerQuantity();
+
+            LocalDate orderDate = order.getCompletedDateTime().toLocalDate();
+            DailyOrdersStatistics dailyStats = dailyStatsMap.get(orderDate);
+            dailyStats.addOrder(order);
+        }
+
+        int days = dailyStatsMap.size();
+        BigDecimal averageIncome = days > 0 ? totalIncome.divide(BigDecimal.valueOf(days), RoundingMode.HALF_UP) : BigDecimal.ZERO;
+        int averageCustomers = days > 0 ? totalCustomers / days : 0;
+
+        List<DailyOrdersStatisticsDTO> dailyStatistics = dailyStatsMap.entrySet().stream()
+                .map(entry -> DailyOrdersStatisticsDTO.builder()
+                        .date(entry.getKey())
+                        .totalCustomers(entry.getValue().getTotalGuests())
+                        .totalOrders(entry.getValue().getTotalOrders())
+                        .build())
+                .collect(Collectors.toList());
+        return OrdersStatisticDTO.builder()
+                .averageIncome(averageIncome)
+                .totalIncome(totalIncome)
+                .totalCustomers(totalCustomers)
+                .averageCustomers(averageCustomers)
+                .dailyStatistics(dailyStatistics)
+                .build();
+    }
+
+    private OffsetDateTime getStartPeriod(String period, OffsetDateTime endDate) {
         switch (period.toLowerCase()) {
             case "today":
-                startDate = endDate.truncatedTo(ChronoUnit.DAYS);
-                break;
+                return endDate.truncatedTo(ChronoUnit.DAYS);
             case "3days":
-                startDate = endDate.minusDays(3).truncatedTo(ChronoUnit.DAYS);
-                break;
+                return endDate.minusDays(3).truncatedTo(ChronoUnit.DAYS);
             case "7days":
-                startDate = endDate.minusDays(7).truncatedTo(ChronoUnit.DAYS);
-                break;
+                return endDate.minusDays(7).truncatedTo(ChronoUnit.DAYS);
             case "1month":
-                startDate = endDate.minusMonths(1).truncatedTo(ChronoUnit.DAYS);
-                break;
+                return endDate.minusMonths(1).truncatedTo(ChronoUnit.DAYS);
             case "3months":
-                startDate = endDate.minusMonths(3).truncatedTo(ChronoUnit.DAYS);
-                break;
-            case "year":
-                startDate = endDate.minusYears(1).truncatedTo(ChronoUnit.DAYS);
-                break;
+                return endDate.minusMonths(3).truncatedTo(ChronoUnit.DAYS);
+            case "1year":
+                return endDate.minusYears(1).truncatedTo(ChronoUnit.DAYS);
             case "all":
             default:
-                startDate = OffsetDateTime.of(2000, 1, 1, 0, 0, 0, 0, ZoneOffset.UTC);
-                break;
+                return OffsetDateTime.of(2000, 1, 1, 0, 0, 0, 0, ZoneOffset.UTC);
         }
-        return orderDAO.findAllByPeriod(restaurant, startDate, endDate, pageable).map(mapper::map);
+    }
+
+    public OrderDTO findByNumber(String number) {
+        return mapper.map(orderDAO.findByNumber(number), false);
     }
 }

@@ -6,12 +6,14 @@ import com.example.RestaurantManagementSystem.infrastructure.database.entity.Mea
 import com.example.RestaurantManagementSystem.infrastructure.database.entity.RestaurantEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
 public interface MealJpaRepository extends JpaRepository<MealEntity, Integer> {
 
+    @EntityGraph(attributePaths = { "restaurant"})
     List<MealEntity> findAllByRestaurant(RestaurantEntity restaurant);
 
     Page<MealEntity> findAllByRestaurantAndCategoryAndStatusNot(

@@ -1,6 +1,7 @@
 package com.example.RestaurantManagementSystem.business;
 
 import com.example.RestaurantManagementSystem.api.dto.OrderDTO;
+import com.example.RestaurantManagementSystem.api.dto.OrdersStatisticDTO;
 import com.example.RestaurantManagementSystem.domain.Order;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -36,5 +37,4 @@ public class OrderPaginationService {
                 pageable
         );
     }
-
 }

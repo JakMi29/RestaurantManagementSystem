@@ -12,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
+import java.util.List;
 
 public interface OrderDAO {
     Order createOrder(Order order);
@@ -23,4 +24,5 @@ public interface OrderDAO {
     Order findByTableAndNotByStatus(Table table, OrderStatus status);
 
     Page<Order> findAllByPeriod(Restaurant restaurant, OffsetDateTime startDate, OffsetDateTime endDate, Pageable pageable);
+    List<Order> findAllByPeriod(Restaurant restaurant, OffsetDateTime startDate, OffsetDateTime endDate);
 }

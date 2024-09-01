@@ -18,6 +18,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import java.time.OffsetDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -54,5 +55,14 @@ public class OrderRepository implements OrderDAO {
     public Page<Order> findAllByPeriod(Restaurant restaurant, OffsetDateTime startDate, OffsetDateTime endDate, Pageable pageable) {
         RestaurantEntity restaurantEntity = restaurantMapper.map(restaurant);
         return repository.findByRestaurantAndCompletedDateTimeBetween(restaurantEntity, startDate, endDate, pageable).map(mapper::map);
+    }
+
+    @Override
+    public List<Order> findAllByPeriod(Restaurant restaurant, OffsetDateTime startDate, OffsetDateTime endDate) {
+        RestaurantEntity restaurantEntity = restaurantMapper.map(restaurant);
+        return repository.findByRestaurantAndCompletedDateTimeBetween(restaurantEntity, startDate, endDate)
+                .stream()
+                .map(mapper::map)
+                .toList();
     }
 }

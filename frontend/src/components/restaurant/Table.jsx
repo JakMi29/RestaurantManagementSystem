@@ -86,7 +86,7 @@ const Table = React.memo(({ table, order }) => {
             content = (
                 <div className={classes.contentContainer}>
                     {order ? <Order key={order.number} order={order} /> : <>
-                        :<div className={classes.iconContainer}>
+                        <div className={classes.iconContainer}>
                             <GroupsIcon sx={{ fontSize: 150, color: 'rgba(60, 60, 211, 0.2)' }} />
                         </div>
                         <div className={classes.actions}>
@@ -95,6 +95,12 @@ const Table = React.memo(({ table, order }) => {
                                 className={classes.greenButton}
                             >
                                 Order
+                            </button>
+                        <button
+                                onClick={craeteOrder}
+                                className={classes.redButton}
+                            >
+                                Vacate
                             </button>
                         </div>
                     </>

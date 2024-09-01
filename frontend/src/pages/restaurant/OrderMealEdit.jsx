@@ -23,7 +23,7 @@ function OrderMealEdit({ meal }) {
                     () => dispatch(orderMealActions.decreasemealMealQuantity({ name: meal.meal.name }))}>-</button>
                 <p style={{color:"black"}}>{meal.quantity}</p>
                 <button className={classes.greenButton} onClick={
-                    () => dispatch(orderMealActions.increaseOrderMealQuantity({ name: meal.meal.name }))}>+</button>
+                    () => dispatch(orderMealActions.increaseOrderMealQuantity({ meal: meal.meal }))}>+</button>
             </div>
         </div>
     )

@@ -10,7 +10,6 @@ function Order({ order,tableName }) {
     const navigate = useNavigate();
     const [edit, setEdit] = useState(false)
 
-    let content;
 
     const handleChangeStatus = () => {
         fetch(`http://localhost:8080/api/admin/tables?tableName=${tableName}&restaurantName=${"Italiano"}`, {
@@ -33,10 +32,6 @@ function Order({ order,tableName }) {
         setEdit(prev => !prev)
     }
 
-
-    const handleConfirm = () => {
-
-    }
 
     return (
         <>

@@ -17,7 +17,7 @@ public class TableDTOMapper {
                 .name(table.getName())
                 .status(table.getStatus().toString())
                 .order(Optional.ofNullable(table.getOrders())
-                        .map(orders -> orders.stream().map(orderDTOMapper::map).findFirst().orElse(null))
+                        .map(orders -> orders.stream().map(order -> orderDTOMapper.map(order, false)).findFirst().orElse(null))
                         .orElse(null))
                 .build();
     }

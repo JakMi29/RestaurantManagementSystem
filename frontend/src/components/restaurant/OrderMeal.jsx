@@ -13,7 +13,7 @@ function OrderMeal({ orderMeal, orderNumber, edit }) {
     let content;
 
     const handleChangeOrderMealStatus = () => {
-        fetch(`http://localhost:8080/api/admin/order?mealName=${orderMeal.meal.name}&restaurantName=${"Italiano"}&orderNumber=${orderNumber}`, {
+        fetch(`http://localhost:8080/api/admin/order?mealName=${orderMeal.meal.name}&restaurantName=${"Italiano"}&orderNumber=${orderNumber}&status=${orderMeal.status}`, {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',
@@ -21,7 +21,7 @@ function OrderMeal({ orderMeal, orderNumber, edit }) {
         })
             .then(response => {
                 if (response.ok) {
-                    navigate(`/restaurant`)
+                    navigate(`/restaurant/tables`)
                 } else {
                     messageCtx.showMessage('Something gone wrong', 'error')
                 }
@@ -31,21 +31,55 @@ function OrderMeal({ orderMeal, orderNumber, edit }) {
             });
     }
 
+    function getOrderMealButton(disabled) {
+        switch (orderMeal.status) {
+            case 'PREPARING':
+                return (
+                    <button onClick={handleChangeOrderMealStatus} className={classes.greenButton} disabled={disabled}>
+                        {'Complete'}
+                    </button>
+                );
+            case 'READY':
+                return (
+                    <button onClick={handleChangeOrderMealStatus} className={classes.greenButton} disabled={disabled}>
+                        {'Ready'}
+                    </button>
+                );
+            case 'RELEASED':
+                return (
+                    <button className={classes.blueButton} disabled={true}>
+                        {'Released'}
+                    </button>
+                );
+            default:
+                return null;
+        }
+    }
+
     {
         edit ?
             content = (
                 <div className={classes.orderMeal}>
                     {orderMeal.meal.name}
                     <div className={classes.orderMealActions}>
-                        <button
-                            className={classes.redButton}
-                            onClick={() => dispatch(orderActions.decreaseOrderMealQuantity({ number: orderNumber, mealName: orderMeal.meal.name }))}
-                        >-</button>
-                        {orderMeal.quantity}
-                        <button
-                            className={classes.greenButton}
-                            onClick={() => dispatch(orderActions.increaseOrderMealQuantity({ number: orderNumber, mealName: orderMeal.meal.name }))}
-                        >+</button>
+                        {orderMeal.status === 'PREPARING' ?
+                            <>
+                                <button
+                                    className={classes.redButton}
+                                    onClick={() => dispatch(orderActions.decreaseOrderMealQuantity({ number: orderNumber, mealName: orderMeal.meal.name }))}
+                                >-</button>
+                                {orderMeal.quantity}
+                                <button
+                                    className={classes.greenButton}
+                                    onClick={() => dispatch(orderActions.increaseOrderMealQuantity({ number: orderNumber, mealName: orderMeal.meal.name }))}
+                                >+</button>
+                            </> :
+                            <>
+                                <button className={classes.blueButton} disabled={true}>{orderMeal.quantity}</button>
+                                {getOrderMealButton(true)}
+                                <button onClick={() => dispatch(orderActions.increaseOrderMealQuantity({ number: orderNumber, mealName: orderMeal.meal.name }))} className={classes.greenButton}>+</button>
+                            </>
+                        }
                     </div>
                 </div>
             )
@@ -55,12 +89,7 @@ function OrderMeal({ orderMeal, orderNumber, edit }) {
                     {orderMeal.meal.name}
                     <div className={classes.orderMealActions}>
                         <button className={classes.blueButton} disabled={true}>{orderMeal.quantity}</button>
-                        {orderMeal.status === 'PREPARING' && 
-                        <button onClick={handleChangeOrderMealStatus} className={classes.greenButton}>Complete</button>}
-                        {orderMeal.status === 'READY' &&
-                         <button onClick={handleChangeOrderMealStatus} className={classes.greenButton}>Ready</button>}
-                        {orderMeal.status === 'RELEASED' &&
-                         <button onClick={handleChangeOrderMealStatus} className={classes.blueButton} disabled={true}>Released</button>}
+                        {getOrderMealButton(false)}
                     </div>
                 </div>
             )

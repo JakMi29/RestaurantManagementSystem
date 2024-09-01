@@ -8,14 +8,25 @@ import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import { useDispatch } from 'react-redux';
 import EditOffIcon from '@mui/icons-material/EditOff';
 import { orderMealActions } from '../../store/edit-order-slice';
+import { getAuthToken } from '../../util/auth';
 
+function sortMeals(meals) {
+    const statusOrder = ['PREPARING', 'READY', 'RELEASED'];
+
+    return meals.slice().sort((a, b) => {
+        const statusComparison = statusOrder.indexOf(a.status) - statusOrder.indexOf(b.status);
+        if (statusComparison !== 0) return statusComparison;
+
+        return a.meal.name.localeCompare(b.meal.name);
+    });
+};
 
 function Order({ order }) {
     const dispatch = useDispatch();
     const messageCtx = useContext(MessageContext);
     const navigate = useNavigate();
     const isDisabled = order.edit ? order.editor.email !== localStorage.getItem("email") : false
-
+    const mealsToDisplay = order.edit ? sortMeals(order.meals) : order.meals;
     const [navigatePath, setNavigatePath] = useState(null);
 
     useEffect(() => {
@@ -69,8 +80,57 @@ function Order({ order }) {
         }
     };
     const handleAddMeals = () => {
-        dispatch(orderMealActions.addMeals({ meals: order.meals }));
+        dispatch(orderMealActions.addMeals({ meals: order.meals, price: order.price }));
         navigate(`/restaurant/orderMeals?number=${order.number}&category=soup&pageNumber=0&pageSize=12`)
+    }
+
+    const handleUpdateOrder = () => {
+        const token = getAuthToken();
+        fetch(`http://localhost:8080/api/admin/order/update`, {
+            method: 'PUT',
+            body: JSON.stringify(order),
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + token
+            },
+        })
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    messageCtx.showMessage('Something went wrong', 'error');
+                }
+            })
+            .then(
+                messageCtx.showMessage('Successfuly update order')
+            )
+            .catch(error => {
+                console.error('Error sending request:', error);
+            });
+    }
+
+    const handleChangeStatus = (status) => {
+        const token = getAuthToken();
+        fetch(`http://localhost:8080/api/admin/order/status?orderNumber=${order.number}`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + token
+            },
+        })
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    messageCtx.showMessage('Something went wrong', 'error');
+                }
+            })
+            .then(
+                messageCtx.showMessage('Successfuly update order')
+            )
+            .catch(error => {
+                console.error('Error sending request:', error);
+            });
     }
 
     return (
@@ -104,19 +164,19 @@ function Order({ order }) {
                         <>
                             <div style={{ display: "flex", flexDirection: "column" }}>
                                 <div className={classes.mealsContainer}>
-                                    {order.meals.map(orderMeal => (
+                                    {mealsToDisplay.map(orderMeal => (
                                         <OrderMeal
                                             key={orderMeal.name}
                                             orderNumber={order.number}
                                             orderMeal={orderMeal}
-                                            edit={order.edit&&!isDisabled}
+                                            edit={order.edit && !isDisabled}
                                         />
                                     ))}
                                 </div>
-                                <button
+                                {order.edit && <button
                                     className={classes.addMore}
                                     onClick={handleAddMeals}
-                                >Add more</button>
+                                >Add more</button>}
                             </div>
                             <div className={classes.customers}>
                                 <>
@@ -138,8 +198,9 @@ function Order({ order }) {
                     )}
                     <div className={classes.actions}>
                         <button
+                            disabled={order.edit ? false : order.status !== 'RELEASED'}
                             className={classes.greenButton}
-                            disabled={order.status !== 'RELEASED'}>
+                            onClick={order.edit ? handleUpdateOrder : handleChangeStatus}>
                             {order.edit && !isDisabled ? 'Ok' : 'Paid'}
                         </button>
                         <button

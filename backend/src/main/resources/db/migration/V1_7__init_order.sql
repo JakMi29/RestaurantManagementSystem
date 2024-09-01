@@ -3,7 +3,7 @@ CREATE TABLE _order
     id   SERIAL         NOT NULL,
     received_date_time        TIMESTAMP WITH TIME ZONE,
     completed_date_time       TIMESTAMP WITH TIME ZONE,
-    order_number            VARCHAR(20)     NOT NULL,
+    order_number            VARCHAR(30)     NOT NULL,
     price                       NUMERIC(19, 2) NOT NULL,
     status  VARCHAR(20)            NOT NULL,
     edit BOOLEAN,

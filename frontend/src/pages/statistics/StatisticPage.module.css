@@ -1,5 +1,16 @@
-.mealPage{
-    margin: 0 auto 0 auto;
+.page {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.pageContent {
+    overflow: auto;
+    margin-bottom: 20px;
+}
+
+.pageContent::-webkit-scrollbar {
+    display: none;
 }
 
 .categoryContainer {
@@ -19,6 +30,18 @@
     text-decoration: none;
 }
 
+.meal {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 330px;
+    height: 190px;
+    background-color: #f7f7f7;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+    position: relative;
+}
+
 .categoryButton:hover {
     background-color: rgb(60, 60, 211);
 }
@@ -34,73 +57,23 @@
 }
 
 .mealsContainer {
-    margin-top: 10px;
+    padding-top: 20px;
+    padding-bottom: 20px;
     display: flex;
     flex-wrap: wrap;
     gap: 27px;
-    overflow: hide;
+    overflow: auto;
     position: relative;
 }
 
-.meal {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 330px;
-    height: 290px;
-    background-color: #f7f7f7;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-    border-radius: 4px;
-    position: relative;
-}
-
-.mealOfDayFalse {
-    position: absolute;
-    top: -15px;
-    right: -15px;
-    z-index: 10;
-    opacity: 0;
-    color: rgba(60, 60, 211, 0.2);
-    transition: opacity 0.3s ease;
+.mealsContainer::-webkit-scrollbar {
+    display: none;
 }
 
 .mealOfDayFalse:hover {
     color: rgb(60, 60, 211);
 }
 
-.meal:hover .mealOfDayFalse {
-    opacity: 1;
-}
-
-.mealOfDay {
-    position: absolute;
-    top: -15px;
-    right: -15px;
-    z-index: 10;
-    padding: 0;
-    color: rgb(60, 60, 211);
-    transition: opacity 0.3s ease;
-    opacity: 1;
-}
-
-.mealOfDayTrue {
-    position: absolute;
-    top: -15px;
-    right: -15px;
-    z-index: 10;
-    padding: 0;
-    color: rgb(60, 60, 211);
-    transition: opacity 0.3s ease;
-    opacity: 1;
-}
-
-.mealOfDayTrue:hover {
-    color: rgba(60, 60, 211, 0.2);
-}
-
-.meal:hover {
-    box-shadow: 0px 0px 20px rgba(60, 60, 211, 0.2);
-}
 
 .mealImage {
     padding-top: 5px;

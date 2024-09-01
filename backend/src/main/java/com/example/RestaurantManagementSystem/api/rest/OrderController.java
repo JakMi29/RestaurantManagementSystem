@@ -1,6 +1,7 @@
 package com.example.RestaurantManagementSystem.api.rest;
 
 import com.example.RestaurantManagementSystem.api.dto.OrderDTO;
+import com.example.RestaurantManagementSystem.api.dto.OrdersStatisticDTO;
 import com.example.RestaurantManagementSystem.api.rest.request.CreateOrderRequest;
 import com.example.RestaurantManagementSystem.api.rest.response.Response;
 import com.example.RestaurantManagementSystem.business.OrderPaginationService;
@@ -33,14 +34,36 @@ public class OrderController {
         return order;
     }
 
-    @GetMapping("/order")
-    public ResponseEntity<Page<OrderDTO>> updateOrderMeal(
+    @PutMapping("/order/update")
+    public ResponseEntity<OrderDTO>  editOrder(@RequestBody OrderDTO order) {
+        OrderDTO orderDTO = orderService.updateOrder(order);
+
+        this.template.convertAndSend("/topic/orders", order);
+        return ResponseEntity.ok(orderDTO);
+    }
+
+    @GetMapping("/orders")
+    public ResponseEntity<Page<OrderDTO>> getOrders(
             @RequestParam String restaurantName,
             @RequestParam String period,
             @RequestParam Integer pageSize,
             @RequestParam Integer pageNumber
     ) {
         return ResponseEntity.ok(orderPaginationService.findAllByPeriod(restaurantName,period,pageSize,pageNumber));
+    }
+    @GetMapping("/order")
+    public ResponseEntity<OrderDTO> getOrder(
+            @RequestParam String number
+    ) {
+        return ResponseEntity.ok(orderService.findByNumber(number));
+    }
+
+    @GetMapping("/order/statistics")
+    public ResponseEntity<OrdersStatisticDTO> getStatistics(
+            @RequestParam String restaurantName,
+            @RequestParam String period
+    ) {
+        return ResponseEntity.ok(orderService.getStatistics(restaurantName,period));
     }
 
     @PostMapping("/order")
@@ -57,9 +80,10 @@ public class OrderController {
     public Response updateOrderMeal(
             @RequestParam String mealName,
             @RequestParam String restaurantName,
-            @RequestParam String orderNumber
+            @RequestParam String orderNumber,
+            @RequestParam String status
     ) {
-        OrderDTO order = orderService.updateOrderMeal(restaurantName, mealName, orderNumber);
+        OrderDTO order = orderService.updateAndGetOrder(restaurantName, mealName, orderNumber,status);
         this.template.convertAndSend("/topic/orders", order);
 
         return Response.builder()

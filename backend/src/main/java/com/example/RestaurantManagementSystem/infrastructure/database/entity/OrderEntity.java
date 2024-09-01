@@ -14,6 +14,7 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@ToString
 @Table(name = "_order")
 public class OrderEntity {
 
@@ -60,6 +61,6 @@ public class OrderEntity {
     @JoinColumn(name = "editor_id")
     private WaiterEntity editor;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "order", cascade = CascadeType.PERSIST)
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "order")
     private Set<OrderMealEntity> orderMeals;
 }

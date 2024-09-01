@@ -13,6 +13,7 @@ import java.time.OffsetDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@ToString
 @Table(name = "order_meal")
 public class OrderMealEntity {
 
@@ -42,7 +43,7 @@ public class OrderMealEntity {
     private OrderEntity order;
 
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "meal_id")
     private MealEntity meal;
 }

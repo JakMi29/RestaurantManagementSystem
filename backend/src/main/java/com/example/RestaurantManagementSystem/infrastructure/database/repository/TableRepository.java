@@ -45,6 +45,6 @@ public class TableRepository implements TableDAO {
     @Override
     public List<Table> findAllTablesWithActiveOrders(Restaurant restaurant) {
         RestaurantEntity restaurantEntity = restaurantEntityMapper.map(restaurant);
-        return repository.findAllTablesWithOrdersByRestaurant(restaurantEntity, OrderStatus.PLACED).stream().map(mapper::map).toList();
+        return repository.findAllTablesWithOrdersByRestaurant(restaurantEntity, OrderStatus.PAID).stream().map(mapper::map).toList();
     }
 }

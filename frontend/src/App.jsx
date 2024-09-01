@@ -14,10 +14,13 @@ import ErrorPage from './pages/ErrorPage';
 import MealPage from './pages/meals/MealPage';
 import MealsRootLayout from './pages/meals/MealRootLayout';
 import MealsPage, { loader as mealsLoader } from './pages/meals/MealsPage';
+import OrdersStatisticsPage, { loader as orderStatisticLoader } from './pages/statistics/Orders/OrdersStatisticPage';
 import { MessageContextProvider } from './store/MessageContext';
 import OrderMealsPage from './pages/restaurant/OrderMealsPage';
 import TableList from './components/restaurant/TableList';
-import OrdersTable from './components/statistics/orderTable';
+import MealsStatisticsPage, { loader as mealsStatisticLoader } from './pages/statistics/Meals/MealsStatisticPage';
+import OrderDetailsPage, { loader as orderDetailsLoader } from './pages/statistics/Orders/OrderDetailsPage';
+import PeriodStatisticPage from './pages/statistics/PeriodStatisticsPage';
 
 
 const router = createBrowserRouter([
@@ -34,8 +37,25 @@ const router = createBrowserRouter([
         element: <StatisticPage />,
         children: [
           {
-            path:"orders",
-            element: <OrdersTable />,
+            path: '',
+            element: <PeriodStatisticPage />,
+            children: [
+              {
+                path: "orders",
+                element: <OrdersStatisticsPage />,
+                loader: orderStatisticLoader,
+              },
+              {
+                path: "meals",
+                element: <MealsStatisticsPage />,
+                loader: mealsStatisticLoader,
+              },
+            ]
+          },
+          {
+            path: "order",
+            element: <OrderDetailsPage />,
+            loader: orderDetailsLoader,
           }
         ]
       },

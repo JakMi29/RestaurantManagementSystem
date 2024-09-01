@@ -1,15 +1,13 @@
 package com.example.RestaurantManagementSystem.api.dto;
 
 import com.example.RestaurantManagementSystem.domain.Category;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
 public class OrderMealDTO {
     String price;
     MealDTO meal;

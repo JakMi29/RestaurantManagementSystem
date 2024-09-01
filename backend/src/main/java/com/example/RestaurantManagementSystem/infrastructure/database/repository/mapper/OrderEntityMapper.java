@@ -1,17 +1,12 @@
 package com.example.RestaurantManagementSystem.infrastructure.database.repository.mapper;
 
-import com.example.RestaurantManagementSystem.domain.Order;
-import com.example.RestaurantManagementSystem.domain.Restaurant;
-import com.example.RestaurantManagementSystem.domain.Table;
-import com.example.RestaurantManagementSystem.domain.Waiter;
-import com.example.RestaurantManagementSystem.infrastructure.database.entity.OrderEntity;
-import com.example.RestaurantManagementSystem.infrastructure.database.entity.RestaurantEntity;
-import com.example.RestaurantManagementSystem.infrastructure.database.entity.TableEntity;
-import com.example.RestaurantManagementSystem.infrastructure.database.entity.WaiterEntity;
+import com.example.RestaurantManagementSystem.domain.*;
+import com.example.RestaurantManagementSystem.infrastructure.database.entity.*;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -30,9 +25,9 @@ public class OrderEntityMapper {
                 .receivedDateTime(entity.getReceivedDateTime())
                 .customerQuantity(entity.getCustomerQuantity())
                 .completedDateTime(entity.getCompletedDateTime())
-                .editor(entity.getWaiter() == null ? null : Waiter.builder()
-                        .id(entity.getWaiter().getId())
-                        .email(entity.getWaiter().getEmail())
+                .editor(entity.getEditor() == null ? null : Waiter.builder()
+                        .id(entity.getEditor().getId())
+                        .email(entity.getEditor().getEmail())
                         .build())
                 .table(
                         Table.builder()
@@ -49,10 +44,11 @@ public class OrderEntityMapper {
                                 .email(entity.getWaiter().getEmail())
                                 .build()
                 )
-                .orderMeals(Optional.ofNullable(entity.getOrderMeals())
-                        .orElseGet(Collections::emptySet).
-                        stream().map(orderMealEntityMapper::map)
-                        .collect(Collectors.toList()))
+                .orderMeals(
+                        entity.getOrderMeals().stream()
+                                .map(orderMealEntityMapper::map)
+                                .toList()
+                )
                 .build();
     }
 
@@ -79,10 +75,16 @@ public class OrderEntityMapper {
                         WaiterEntity.builder()
                                 .id(order.getWaiter().getId())
                                 .build())
+                .editor(order.getEditor() == null ? null :
+                        WaiterEntity.builder()
+                                .id(order.getEditor().getId())
+                                .email(order.getEditor().getEmail())
+                                .build())
                 .orderMeals(Optional.ofNullable(order.getOrderMeals())
                         .orElseGet(Collections::emptyList).
                         stream().map(orderMealEntityMapper::map)
                         .collect(Collectors.toSet()))
                 .build();
     }
+
 }

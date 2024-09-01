@@ -24,7 +24,7 @@ function Sidebar() {
           <>
             <MenuItem
               text="Statistics"
-              link="/statistics/orders"
+              link="/statistics/orders?period=today"
               icon={<LeaderboardOutlinedIcon />}
             />
             <MenuItem

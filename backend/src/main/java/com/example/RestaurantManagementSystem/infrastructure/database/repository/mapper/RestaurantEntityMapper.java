@@ -17,8 +17,8 @@ public class RestaurantEntityMapper {
 
     public RestaurantEntity map(Restaurant restaurant) {
         return RestaurantEntity.builder()
-                .name(restaurant.getName())
                 .id(restaurant.getId())
+                .name(restaurant.getName())
                 .build();
     }
 }

@@ -12,8 +12,8 @@ const orderSlice = createSlice({
     addMeals(state, action) {
       const number = action.payload.number;
       const order = state.orders.find((order) => order.number === number);
-      console.log(number)
-      order.meals=action.payload.meals
+      order.meals = [...order.meals.filter(meal => meal.status !== 'PREPARING'), ...action.payload.meals]
+      order.price = action.payload.price
     },
     increaseCustomers(state, action) {
       const number = action.payload.number;
@@ -33,14 +33,27 @@ const orderSlice = createSlice({
     editOrder(state, action) {
       state.orders.push(action.payload.order)
     },
+
     increaseOrderMealQuantity(state, action) {
       const number = action.payload.number;
       const mealName = action.payload.mealName;
       const order = state.orders.find((order) => order.number === number);
-      const meal = order.meals.find(meal => meal.meal.name === mealName)
+      const meal = order.meals.find(meal => meal.meal.name === mealName && meal.status === 'PREPARING')
+      if (meal) {
+        meal.quantity = meal.quantity + 1;
+      }
+      else {
+        const newMeal = {
+          ...meal,
+          quantity: 1,
+          status: 'PREPARING',
+          price: meal.meal.price
+        };
+        order.meals.push(newMeal);
+      }
       order.price = order.price + meal.meal.price;
-      meal.quantity = meal.quantity + 1;
     },
+
     decreaseOrderMealQuantity(state, action) {
       const number = action.payload.number;
       const mealName = action.payload.mealName;

@@ -4,7 +4,9 @@ VALUES
 INSERT INTO waiter(email, restaurant_id)
 VALUES
 ('waiterAdam@gmail.com',1),
-('waiterMaria@gmail.com',1);
+('waiterMaria@gmail.com',1),
+('waiterKuba@gmail.com',1),
+('waiterKasia@gmail.com',1);
 
 INSERT INTO meal (name, description, category, status, price, restaurant_id, image, meal_of_the_day)
 VALUES
@@ -123,23 +125,23 @@ VALUES
 ('table 9','DIRTY',1),
 ('table 10','BUSY',1);
 
-insert into _order (order_number, received_date_time,completed_date_time, price, status, table_id, waiter_id, restaurant_id,customers_quantity,edit,editor_id)
-values
-('ORD62023162424321', '2020-12-10 19:00:00',null, '32', 'PLACED', 2, 1,1,2,false,null),
-('ORD62023162424322', '2020-12-13 19:12:00',null, '36', 'PLACED', 5, 1,1,2,false,null),
-('ORD62023162424323', '2020-12-13 19:14:00',null, '36', 'PLACED', 6, 1,1,2,false,null),
-('ORD62023162424324', '2020-12-13 19:20:00',null, '0', 'PLACED', 7, 1,1,2,false,null),
-('ORD62023162424325', '2020-12-13 19:20:00',null, '0', 'PLACED', 8, 2,1,2,false,null),
-('ORD62023162424326', '2023-06-25 20:38:30','2023-06-25 20:58:30', '40', 'PAID', 3, 1,1,2,false,null),
-('ORD62023162424327', '2023-06-25 20:38:30','2023-06-25 20:58:30', '40', 'PAID', 3, 1,1,2,false,null),
-('ORD62023162424328', '2023-06-25 20:38:30','2023-06-25 20:53:30', '60', 'RELEASED', 4, 1,1,2,false,null);
+--insert into _order (order_number, received_date_time,completed_date_time, price, status, table_id, waiter_id, restaurant_id,customers_quantity,edit,editor_id)
+--values
+--('ORD62023162424321', CURRENT_TIMESTAMP-INTERVAL '5 minutes',null, '32', 'PLACED', 2, 1,1,2,false,null),
+--('ORD62023162424322', CURRENT_TIMESTAMP-INTERVAL '3 minutes',null, '36', 'PLACED', 5, 1,1,2,false,null),
+--('ORD62023162424323', CURRENT_TIMESTAMP-INTERVAL '10 minutes',null, '36', 'PLACED', 6, 1,1,2,false,null),
+--('ORD62023162424324', CURRENT_TIMESTAMP-INTERVAL '2 minutes',null, '0', 'PLACED', 7, 1,1,2,false,null),
+--('ORD62023162424325', CURRENT_TIMESTAMP-INTERVAL '12 minutes',null, '0', 'PLACED', 8, 2,1,2,false,null),
+--('ORD62023162424326', CURRENT_TIMESTAMP-INTERVAL '40 minutes',CURRENT_TIMESTAMP-INTERVAL '10 minutes', '40', 'PAID', 3, 1,1,2,false,null),
+--('ORD62023162424327', CURRENT_TIMESTAMP-INTERVAL '2 hours',CURRENT_TIMESTAMP-INTERVAL '1 hours 40 minutes', '40', 'PAID', 3, 1,1,2,false,null),
+--('ORD62023162424328', CURRENT_TIMESTAMP-INTERVAL '3 hours',CURRENT_TIMESTAMP-INTERVAL '2 hours 40 minutes', '60', 'RELEASED', 4, 1,1,2,false,null);
 
-insert into order_meal (quantity,received_date_time,completed_date_time,status, order_id,price, meal_id)
-values
-(2,'2020-12-10 19:00:00',null,'PREPARING', 1,'12', 1),(1,'2020-12-10 19:00:00',null,'PREPARING', 1,'2', 2),(1,'2020-12-10 19:00:00',null,'PREPARING', 1,'2', 3),
-(1,'2020-12-10 19:00:00',null,'PREPARING', 2,'8', 76),(1,'2020-12-10 19:00:00',null,'READY', 2,'9', 35),(1,'2020-12-10 19:00:00',null,'RELEASED', 2,'6', 8),
-(2,'2020-12-10 19:00:00',null,'PREPARING', 1,'12', 7),(1,'2020-12-10 19:00:00',null,'PREPARING', 1,'2', 6),(1,'2020-12-10 19:00:00',null,'PREPARING', 5,'2', 2),
-(1,'2020-12-10 19:00:00',null,'PREPARING', 2,'8', 75),(1,'2020-12-10 19:00:00',null,'READY', 2,'9', 32),(1,'2020-12-10 19:00:00',null,'RELEASED', 5,'6', 12);
+--insert into order_meal (quantity,received_date_time,completed_date_time,status, order_id,price, meal_id)
+--values
+--(2,'2020-12-10 19:00:00',null,'PREPARING', 1,'12', 1),(1,'2020-12-10 19:00:00',null,'PREPARING', 1,'2', 2),(1,'2020-12-10 19:00:00',null,'PREPARING', 1,'2', 3),
+--(1,'2020-12-10 19:00:00',null,'PREPARING', 2,'8', 76),(1,'2020-12-10 19:00:00',null,'READY', 2,'9', 35),(1,'2020-12-10 19:00:00',null,'RELEASED', 2,'6', 8),
+--(2,'2020-12-10 19:00:00',null,'PREPARING', 1,'12', 7),(1,'2020-12-10 19:00:00',null,'PREPARING', 1,'2', 6),(1,'2020-12-10 19:00:00',null,'PREPARING', 5,'2', 2),
+--(1,'2020-12-10 19:00:00',null,'PREPARING', 2,'8', 75),(1,'2020-12-10 19:00:00',null,'READY', 2,'9', 32),(1,'2020-12-10 19:00:00',null,'RELEASED', 5,'6', 12);
 
 
 
