@@ -7,8 +7,8 @@ import MealList from "../../components/meals/MealList";
 import MealCategoryContainer from "../../components/meals/MealCategoryContainer";
 import { useDispatch, useSelector } from "react-redux";
 import OrderMealEdit from "./OrderMealEdit";
-import { orderMealActions } from "../../store/edit-order-slice";
-import { orderActions } from "../../store/order-slice";
+import { orderMealActions } from "../../store/EditOrderSlice";
+import { orderActions } from "../../store/OrderSlice";
 
 function OrderMealsPage() {
     const dispatch = useDispatch();
@@ -21,23 +21,23 @@ function OrderMealsPage() {
     const queryParams = new URLSearchParams(location.search);
     const currentCategory = queryParams.get('category');
     const number = queryParams.get('number');
+    const rpSearchTerm = useSelector((state) => state.table.searchTerm);
+    const rpPageNumber = useSelector((state) => state.table.pageNumber);
     const [pageNumber, setPageNumber] = useState(Number(queryParams.get('pageNumber')) || 0);
     const [searchTerm, setSearchTerm] = useState(queryParams.get('searchTerm') || '');
-    const [pageSize, setPageSize] = useState(queryParams.get('pageSize') || 12);
     const [meals, setMeals] = useState([]);
     const [loading, setLoading] = useState(true);
     const [initialLoad, setInitialLoad] = useState(true);
-
     useEffect(() => {
         const fetchMeals = async () => {
             setLoading(true);
             try {
                 const tagsParam = orderMeals.map(meal => `tags=${encodeURIComponent(meal.meal.name)}`).join('&');
                 const response = await fetch(
-                    `http://localhost:8080/api/admin/meals?restaurantName=Italiano` +
+                    `http://localhost:8080/api/restaurantManagementSystem/meal/all?restaurantName=Italiano` +
                     `&category=${currentCategory}` +
                     `&pageNumber=${pageNumber}` +
-                    `&pageSize=${pageSize}` +
+                    `&pageSize=12` +
                     `${searchTerm ? `&searchTerm=${searchTerm}` : ''}` +
                     `${tagsParam ? `&${tagsParam}` : ''}`, {
                     headers: {
@@ -81,11 +81,12 @@ function OrderMealsPage() {
 
     const handleCancel = () => {
         dispatch(orderMealActions.resetOrderMeals());
-        navigate(`/restaurant/tables`);
+        console.log(rpSearchTerm)
+        navigate(`/restaurant/tables?&pageNumber=${rpPageNumber}&pageSize=${10}${rpSearchTerm !== "" ? `&searchTerm=${rpSearchTerm}` : ""}`);
     };
     const handleConfirm = () => {
         dispatch(orderActions.addMeals({ number: number, meals: orderMeals, price: price }));
-        navigate(`/restaurant/tables`);
+        navigate(`/restaurant/tables?&pageNumber=${rpPageNumber}&pageSize=${10}${rpSearchTerm !== "" ? `&searchTerm=${rpSearchTerm}` : ""}`);
     };
 
     const throttle = (func, delay) => {

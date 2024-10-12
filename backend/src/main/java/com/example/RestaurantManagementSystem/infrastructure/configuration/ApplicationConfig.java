@@ -1,6 +1,6 @@
 package com.example.RestaurantManagementSystem.infrastructure.configuration;
 
-import com.example.RestaurantManagementSystem.infrastructure.security.UserRepository;
+import com.example.RestaurantManagementSystem.infrastructure.security.UserJpaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,7 +17,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @RequiredArgsConstructor
 public class ApplicationConfig {
 
-    private final UserRepository repository;
+    private final UserJpaRepository repository;
 
     @Bean
     public UserDetailsService userDetailsService() {

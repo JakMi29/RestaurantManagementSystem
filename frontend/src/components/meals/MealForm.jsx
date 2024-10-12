@@ -1,5 +1,5 @@
 import { Form, json, useActionData } from 'react-router-dom';
-import classes from '../Form.module.css';
+import classes from '../dialogs/Form.module.css';
 import { useContext, useEffect, useRef, useState } from 'react';
 import MealPageContext from '../../store/MealPageContext';
 import MessageContext from '../../store/MessageContext';
@@ -28,6 +28,7 @@ function MealModal() {
       reader.readAsDataURL(file);
     }
   }
+  
   function handleDrop(event) {
     event.preventDefault();
     const file = event.dataTransfer.files[0];
@@ -208,7 +209,7 @@ export async function action({ request }) {
   formData.append('meal', mealBlob);
   formData.append('image', data.get('image'));
   method === "patch" && formData.append('oldName', data.get('oldName'));
-  let url = 'http://localhost:8080/api/admin/meal';
+  let url = 'http://localhost:8080/api/restaurantManagementSystem/meal/admin';
   const token = getAuthToken();
   const response = await fetch(url, {
     method: method,

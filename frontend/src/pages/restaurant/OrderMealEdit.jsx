@@ -2,7 +2,7 @@ import { useContext } from 'react';
 import classes from '../../pages/restaurant/EditOrderPage.module.css';
 import MealPageContext from '../../store/MealPageContext';
 import { useDispatch } from 'react-redux';
-import { orderMealActions } from '../../store/edit-order-slice';
+import { orderMealActions } from '../../store/EditOrderSlice';
 
 function OrderMealEdit({ meal }) {
     const mealPageCtx = useContext(MealPageContext);

@@ -9,7 +9,7 @@ function StatisticsCategoryContainer({ currentCategory, currentPeriod }) {
 
     const handlePeriodChange = (event) => {
         const newPeriod = event.target.value;
-        navigate(`/statistics/${currentCategory}?period=${newPeriod}`);
+        navigate(`/statistics/${currentCategory}?period=${newPeriod}${currentCategory === "waiters" ? "&pageNumber=0&pageSize=12" : ""}`);
     };
 
     return (
@@ -27,37 +27,37 @@ function StatisticsCategoryContainer({ currentCategory, currentPeriod }) {
                 Meals
             </NavLink>
             <NavLink
-                to={`/statistics/waiters?period=${currentPeriod}`}
+                to={`/statistics/waiters?period=${currentPeriod}&pageNumber=0&pageSize=12`}
                 className={isActive("waiters") ? classes.categoryButtonActive : classes.categoryButton}
             >
                 Waiters
             </NavLink>
-        <FormControl
-            variant="outlined"
-            sx={{
-                minWidth: 200,
-                marginLeft: 'auto',
-            }}
-        >
-            <InputLabel
-                id="period-label"
-            >
-                Period
-            </InputLabel>
-            <Select
-                labelId="period-label"
-                value={currentPeriod}
-                onChange={handlePeriodChange}
-                label="Period"
+            <FormControl
+                variant="outlined"
                 sx={{
-                    padding: '0px 10px',
-                    border: 'none',
-                    fontSize: '16px',
-                    height: '40px',
-                    display: 'flex',
-                    alignItems: 'center',
+                    minWidth: 200,
+                    marginLeft: 'auto',
                 }}
             >
+                <InputLabel
+                    id="period-label"
+                >
+                    Period
+                </InputLabel>
+                <Select
+                    labelId="period-label"
+                    value={currentPeriod}
+                    onChange={handlePeriodChange}
+                    label="Period"
+                    sx={{
+                        padding: '0px 10px',
+                        border: 'none',
+                        fontSize: '16px',
+                        height: '40px',
+                        display: 'flex',
+                        alignItems: 'center',
+                    }}
+                >
                     <MenuItem value="today">Today</MenuItem>
                     <MenuItem value="3days">3 days</MenuItem>
                     <MenuItem value="7days">7 days</MenuItem>

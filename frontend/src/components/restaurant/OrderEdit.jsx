@@ -3,19 +3,22 @@ import classes from '../../pages/restaurant/RestaurantPage.module.css';
 import MessageContext from '../../store/MessageContext';
 import { useContext, useState } from 'react';
 import OrderMeal from './OrderMeal';
+import { getAuthToken } from '../../util/auth';
 
 
-function Order({ order,tableName }) {
+function Order({ order, tableName }) {
     const messageCtx = useContext(MessageContext);
     const navigate = useNavigate();
     const [edit, setEdit] = useState(false)
 
 
     const handleChangeStatus = () => {
-        fetch(`http://localhost:8080/api/admin/tables?tableName=${tableName}&restaurantName=${"Italiano"}`, {
+        const token=getAuthToken();
+        fetch(`http://localhost:8080/api/restaurantManagementSystem/table/waiter?tableName=${tableName}&restaurantName=${"Italiano"}`, {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + token
             },
         })
             .then(response => {

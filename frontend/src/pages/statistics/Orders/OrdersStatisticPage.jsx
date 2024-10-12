@@ -28,7 +28,7 @@ export default OrdersStatisticsPage;
 async function loadStatistic(period) {
   const token = getAuthToken();
 
-  const response = await fetch(`http://localhost:8080/api/admin/statistics/orders?restaurantName=Italiano&period=${period}`, {
+  const response = await fetch(`http://localhost:8080/api/restaurantManagementSystem/admin/statistics/orders?restaurantName=Italiano&period=${period}`, {
     headers: {
       'Authorization': 'Bearer ' + token
     }

@@ -24,26 +24,26 @@ import java.util.List;
 @Slf4j
 @RestController
 @AllArgsConstructor
-@RequestMapping("/api/admin")
+@RequestMapping("/api/restaurantManagementSystem/meal")
 public class MealController {
     private final MealService mealService;
     private final MealPaginationService mealPaginationService;
 
-    @PostMapping(value = "/meal", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
+    @PostMapping(value = "/admin", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<Response> addMeal(
             @Valid @RequestPart("meal") MealRequest request,
             @RequestPart("image") MultipartFile image) {
         return ResponseEntity.ok(mealService.addMeal(request, image));
     }
 
-    @PatchMapping(value = "/meal", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
+    @PatchMapping(value = "/admin", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<Response> updateMeal(
             @RequestPart("meal") MealRequest request,
             @RequestPart(value = "image", required = false) MultipartFile image) {
         return ResponseEntity.ok(mealService.updateMeal(request, image));
     }
 
-    @GetMapping("/meals")
+    @GetMapping("/all")
     public ResponseEntity<Page<Meal>> meals(
             @RequestParam String restaurantName,
             @RequestParam String category,
@@ -53,7 +53,7 @@ public class MealController {
             @RequestParam(required = false) List<String> tags
     ) {
         return ResponseEntity.ok(mealPaginationService
-                .findAllByCategory(restaurantName, category, pageNumber, pageSize, searchTerm,tags));
+                .findAllByCategory(restaurantName, category, pageNumber, pageSize, searchTerm, tags));
     }
 
     @GetMapping("/image")
@@ -63,18 +63,18 @@ public class MealController {
         return ResponseEntity.ok().contentType(MediaType.IMAGE_PNG).body(imageBytes);
     }
 
-    @GetMapping("/meal")
+    @GetMapping
     public ResponseEntity<Meal> getMeal(@RequestParam String restaurantName, @RequestParam String name) {
         return ResponseEntity.ok(mealService.getMeal(restaurantName, name));
     }
 
-    @PutMapping("/meal")
+    @PutMapping("/admin")
     public ResponseEntity<Object> deleteMeal(@RequestParam String restaurantName, @RequestParam String name) {
         mealService.deleteMeal(name, restaurantName);
         return ResponseEntity.ok(mealService.deleteMeal(name, restaurantName));
     }
 
-    @PatchMapping("/meal/mealOfTheDay")
+    @PatchMapping("/admin/mealOfTheDay")
     public void setMealOfTheDay(@RequestParam String restaurantName, @RequestParam String name) {
         mealService.setMealOfTheDay(restaurantName, name);
     }

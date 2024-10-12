@@ -8,7 +8,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.time.Duration;
-import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
 
@@ -18,6 +17,7 @@ public class OrderDTOMapper {
     private final WaiterDTOMapper waiterDTOMapper;
     private final OrderMealDTOMapper orderMealDTOMapper;
     private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+
     public OrderDTO map(Order order, Boolean edit) {
         return OrderDTO.builder()
                 .price(order.getPrice())
@@ -26,18 +26,19 @@ public class OrderDTOMapper {
                 .edit(order.getEdit())
                 .customerQuantity(order.getCustomerQuantity())
                 .tableName(order.getTable().getName())
-                .completedDateTime(order.getReceivedDateTime() != null
+                .completedDateTime(order.getCompletedDateTime() != null
                         ? order.getCompletedDateTime().format(dateTimeFormatter)
                         : null)
                 .receivedDateTime(order.getReceivedDateTime() != null
                         ? order.getReceivedDateTime().format(dateTimeFormatter)
                         : null)
                 .durationTime(
-                        String.valueOf(
-                                Duration.between(
-                                        order.getReceivedDateTime(),
-                                        order.getCompletedDateTime())
-                                        .toMinutes()))
+                        order.getCompletedDateTime() != null && order.getCompletedDateTime() != null ?
+                                String.valueOf(
+                                        Duration.between(
+                                                        order.getReceivedDateTime(),
+                                                        order.getCompletedDateTime())
+                                                .toMinutes()) : null)
                 .waiter(waiterDTOMapper.map(order.getWaiter()))
                 .editor(order.getEditor() != null ? waiterDTOMapper.map(order.getEditor()) : null)
                 .meals(order.getOrderMeals().stream().sorted(Comparator

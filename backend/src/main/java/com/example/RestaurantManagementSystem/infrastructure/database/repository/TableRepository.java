@@ -1,7 +1,6 @@
 package com.example.RestaurantManagementSystem.infrastructure.database.repository;
 
 import com.example.RestaurantManagementSystem.business.dao.TableDAO;
-import com.example.RestaurantManagementSystem.domain.OrderStatus;
 import com.example.RestaurantManagementSystem.domain.Restaurant;
 import com.example.RestaurantManagementSystem.domain.Table;
 import com.example.RestaurantManagementSystem.infrastructure.database.entity.RestaurantEntity;
@@ -9,9 +8,12 @@ import com.example.RestaurantManagementSystem.infrastructure.database.repository
 import com.example.RestaurantManagementSystem.infrastructure.database.repository.mapper.RestaurantEntityMapper;
 import com.example.RestaurantManagementSystem.infrastructure.database.repository.mapper.TableEntityMapper;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @AllArgsConstructor
@@ -37,14 +39,20 @@ public class TableRepository implements TableDAO {
     }
 
     @Override
-    public Table findByNameAndRestaurant(String name, Restaurant restaurant) {
+    public Optional<Table> findByNameAndRestaurant(String name, Restaurant restaurant) {
         RestaurantEntity restaurantEntity = restaurantEntityMapper.map(restaurant);
-        return mapper.map(repository.findByNameAndRestaurant(name, restaurantEntity));
+        return repository.findByNameAndRestaurant(name, restaurantEntity).map(mapper::map);
     }
 
     @Override
-    public List<Table> findAllTablesWithActiveOrders(Restaurant restaurant) {
+    public Page<Table> findAllTablesByRestaurantAndSearchTerm(Restaurant restaurant, Pageable page, String searchTerm) {
         RestaurantEntity restaurantEntity = restaurantEntityMapper.map(restaurant);
-        return repository.findAllTablesWithOrdersByRestaurant(restaurantEntity, OrderStatus.PAID).stream().map(mapper::map).toList();
+        return repository.findAllTablesByRestaurantAndSearchTerm(restaurantEntity, page, searchTerm).map(mapper::mapWithOrder);
+    }
+
+    @Override
+    public Page<Table> findAllTablesByRestaurant(Restaurant restaurant, Pageable page) {
+        RestaurantEntity restaurantEntity = restaurantEntityMapper.map(restaurant);
+        return repository.findAllTablesByRestaurant(restaurantEntity, page).map(mapper::mapWithOrder);
     }
 }

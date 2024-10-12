@@ -1,6 +1,6 @@
 import { useDispatch } from 'react-redux';
 import classes from '../../pages/restaurant/EditOrderPage.module.css';
-import { orderMealActions } from '../../store/edit-order-slice';
+import { orderMealActions } from '../../store/EditOrderSlice';
 
 function OrderMeal({ meal }) {
     const dispatch = useDispatch();

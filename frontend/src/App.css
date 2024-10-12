@@ -74,28 +74,9 @@ button{
     justify-content: center; 
 }
 
-.side-bar{
-  top: 80px;
-  position: fixed;
-  width: 250px;
-  height: calc(100vh - 80px);
-  display: flex;
-  flex-direction: column;
-  background-color: #f7f7f7;
-  border-radius: 8px;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-  z-index: 9999;
-}
-
 .paginationContainer {
   position: relative;
   height: 50px; 
-}
-
-.side-bar .text{
-  font-size: 25px;
-  font-weight: 500;
-  color: rgb(0, 0, 0);
 }
 
 .toggle-button{
@@ -114,43 +95,6 @@ button{
 .toggle-button:hover {
   color: rgb(60, 60, 211);
   background-color: rgb(249, 249, 249);
-}
-
-.menu-items-container{
-  margin-top: 150px;
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-}
-
-.menu-item {
-  border-radius: 4px;
-  padding: 10px;
-  margin-left:10px;
-  margin-right:10px;
-  margin-top: 5px;
-  text-decoration: none;
-  color: rgb(60, 60, 211);
-  font-size:20px;
-}
-.menu-item:hover {
-  background-color:rgb(60, 60, 211,0.2);
-  color: rgb(249, 249, 249);
-}
-
-.menu-content {
-  gap:20px;
-  display: flex;
-  align-items: center;
-}
-
-.menu-item.active {
-  background-color:rgb(60, 60, 211);
-  color: rgb(249, 249, 249);
-}
-
-.menu-content span {
-  margin-left: 5px; 
 }
 
 .error-page{

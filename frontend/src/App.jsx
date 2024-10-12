@@ -21,6 +21,11 @@ import TableList from './components/restaurant/TableList';
 import MealsStatisticsPage, { loader as mealsStatisticLoader } from './pages/statistics/Meals/MealsStatisticPage';
 import OrderDetailsPage, { loader as orderDetailsLoader } from './pages/statistics/Orders/OrderDetailsPage';
 import PeriodStatisticPage from './pages/statistics/PeriodStatisticsPage';
+import WaitersPage, { loader as waitersLoader } from './pages/waiters/WaitersPage';
+import WaitersRootLayout from './pages/waiters/WaitersRootPage';
+import { action as tableAction } from './components/dialogs/form/TableFormDialog';
+import WaitersStatisticsPage, { loader as waitersStatisticLoader } from './pages/statistics/waiters/WaitersStatisticsPage';
+import WaiterStatisticsPage, { loader as waiterStatisticLoader } from './pages/statistics/waiters/WaiterStatisticsPage';
 
 
 const router = createBrowserRouter([
@@ -49,6 +54,16 @@ const router = createBrowserRouter([
                 path: "meals",
                 element: <MealsStatisticsPage />,
                 loader: mealsStatisticLoader,
+              },
+              {
+                path: "waiters",
+                element: <WaitersStatisticsPage />,
+                loader: waitersStatisticLoader,
+              },
+              {
+                path: "waiter",
+                element: <WaiterStatisticsPage />,
+                loader: waiterStatisticLoader,
               },
             ]
           },
@@ -89,7 +104,23 @@ const router = createBrowserRouter([
             path: "tables",
             element: <TableList />,
             loader: tableLoader,
+            action: tableAction,
           },
+        ]
+      },
+      {
+        path: 'waiters',
+        element: <WaitersRootLayout />,
+        children: [
+          {
+            path: "all",
+            element: <WaitersPage />,
+            loader: waitersLoader,
+          },
+          // {
+          //   path: "details",
+          //   element: <WaitersDetailPage />
+          // },
         ]
       },
       {

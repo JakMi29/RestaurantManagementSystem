@@ -1,8 +1,8 @@
 import { configureStore } from '@reduxjs/toolkit';
 
-import tableSlice from './table-slice';
-import orderSlice from './order-slice';
-import orderMealsSlice from './edit-order-slice';
+import tableSlice from './TableSlice';
+import orderSlice from './OrderSlice';
+import orderMealsSlice from './EditOrderSlice';
 
 const store = configureStore({
   reducer: { table: tableSlice.reducer, order: orderSlice.reducer, orderMeal: orderMealsSlice.reducer },

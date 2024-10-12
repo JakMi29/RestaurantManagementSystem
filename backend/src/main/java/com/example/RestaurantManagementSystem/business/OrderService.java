@@ -28,6 +28,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -108,7 +109,8 @@ public class OrderService {
     public OrderDTO createOrder(CreateOrderRequest request) {
         Waiter waiter = waiterService.findByEmail(request.getWaiterEmail());
         Restaurant restaurant = restaurantService.findByName(request.getRestaurantName());
-        Table table = tableService.findByNameAndRestaurant(request.getTableName(), request.getRestaurantName());
+        Table table = tableService.findByNameAndRestaurant(request.getTableName(), request.getRestaurantName())
+                .orElseThrow(()->new RuntimeException("Something gone wrong"));
         OffsetDateTime time = OffsetDateTime.now();
         Order order = Order.builder()
                 .restaurant(restaurant)
@@ -189,7 +191,7 @@ public class OrderService {
     }
 
     @Transactional
-    public Order getOrderByTableAndNotStatus(Table table, OrderStatus status) {
+    public Optional<Order> getOrderByTableAndNotStatus(Table table, OrderStatus status) {
         return orderDAO.findByTableAndNotByStatus(table, status);
     }
 
@@ -231,54 +233,6 @@ public class OrderService {
         return orderDAO.findAllByPeriod(restaurant, startDate, endDate, pageable).map(order -> mapper.map(order, false));
     }
 
-    @Transactional
-    public OrdersStatisticDTO getStatistics(String restaurantName, String period) {
-        Restaurant restaurant = restaurantService.findByName(restaurantName);
-        OffsetDateTime endDate = OffsetDateTime.now();
-        OffsetDateTime startDate = getStartPeriod(period, endDate);
-        List<Order> orders = orderDAO.findAllByPeriod(restaurant, startDate, endDate);
-        return getStatistics(orders, startDate, endDate);
-    }
-
-    private OrdersStatisticDTO getStatistics(List<Order> orders, OffsetDateTime startDate, OffsetDateTime endDate) {
-        BigDecimal totalIncome = BigDecimal.ZERO;
-        int totalCustomers = 0;
-        Map<LocalDate, DailyOrdersStatistics> dailyStatsMap = new HashMap<>();
-
-        LocalDate currentDate = startDate.toLocalDate();
-        while (!currentDate.isAfter(endDate.toLocalDate())) {
-            dailyStatsMap.put(currentDate, new DailyOrdersStatistics());
-            currentDate = currentDate.plusDays(1);
-        }
-
-        for (Order order : orders) {
-            totalIncome = totalIncome.add(order.getPrice());
-            totalCustomers += order.getCustomerQuantity();
-
-            LocalDate orderDate = order.getCompletedDateTime().toLocalDate();
-            DailyOrdersStatistics dailyStats = dailyStatsMap.get(orderDate);
-            dailyStats.addOrder(order);
-        }
-
-        int days = dailyStatsMap.size();
-        BigDecimal averageIncome = days > 0 ? totalIncome.divide(BigDecimal.valueOf(days), RoundingMode.HALF_UP) : BigDecimal.ZERO;
-        int averageCustomers = days > 0 ? totalCustomers / days : 0;
-
-        List<DailyOrdersStatisticsDTO> dailyStatistics = dailyStatsMap.entrySet().stream()
-                .map(entry -> DailyOrdersStatisticsDTO.builder()
-                        .date(entry.getKey())
-                        .totalCustomers(entry.getValue().getTotalGuests())
-                        .totalOrders(entry.getValue().getTotalOrders())
-                        .build())
-                .collect(Collectors.toList());
-        return OrdersStatisticDTO.builder()
-                .averageIncome(averageIncome)
-                .totalIncome(totalIncome)
-                .totalCustomers(totalCustomers)
-                .averageCustomers(averageCustomers)
-                .dailyStatistics(dailyStatistics)
-                .build();
-    }
 
     private OffsetDateTime getStartPeriod(String period, OffsetDateTime endDate) {
         switch (period.toLowerCase()) {

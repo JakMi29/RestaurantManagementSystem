@@ -1,5 +1,6 @@
 package com.example.RestaurantManagementSystem.api.auth;
 
+import com.example.RestaurantManagementSystem.business.AuthenticationService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -9,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/restaurantManagementSystem")
+@RequestMapping("/api/restaurantManagementSystem/auth")
 @RequiredArgsConstructor
 public class AuthenticationController {
 

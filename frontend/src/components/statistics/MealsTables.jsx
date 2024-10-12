@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useLocation, useOutletContext } from 'react-router-dom';
 import { Container, Typography, CircularProgress, Box } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
+import { getAuthToken } from '../../util/auth';
 
 
 const MealsTable = ({ currentPeriod }) => {
@@ -13,14 +14,18 @@ const MealsTable = ({ currentPeriod }) => {
   const fetchOrders = useCallback(async () => {
     setLoading(true);
     try {
-      const response = await fetch(`http://localhost:8080/api/admin/statistics/table/meals?restaurantName=Italiano&period=${currentPeriod}`);
+      const response = await fetch(`http://localhost:8080/api/restaurantManagementSystem/admin/statistics/table/meals?restaurantName=Italiano&period=${currentPeriod}`, {
+        headers: {
+          'Authorization': 'Bearer ' + getAuthToken()
+        },
+      });
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
       const data = await response.json();
       setRows(data.map(orderMeal => ({
         id: orderMeal.mealName,
-        mealName:orderMeal.mealName,
+        mealName: orderMeal.mealName,
         mealPrice: orderMeal.mealPrice,
         quantity: orderMeal.quantity,
         totalPrice: orderMeal.totalPrice,
@@ -36,7 +41,7 @@ const MealsTable = ({ currentPeriod }) => {
 
   useEffect(() => {
     fetchOrders();
-  }, [ currentPeriod, fetchOrders]);
+  }, [currentPeriod, fetchOrders]);
 
   const columns = [
     { field: 'mealName', headerName: 'Meal name', width: 150 },

@@ -20,6 +20,7 @@ public class TableEntityMapper {
                 .id(entity.getId())
                 .name(entity.getName())
                 .status(entity.getStatus())
+                .active(entity.getActive())
                 .orders(Optional.ofNullable(entity.getOrders())
                         .orElseGet(Collections::emptySet)
                         .stream()
@@ -39,6 +40,7 @@ public class TableEntityMapper {
                 .id(table.getId())
                 .name(table.getName())
                 .status(table.getStatus())
+                .active(table.getActive())
                 .restaurant(
                         RestaurantEntity
                                 .builder()

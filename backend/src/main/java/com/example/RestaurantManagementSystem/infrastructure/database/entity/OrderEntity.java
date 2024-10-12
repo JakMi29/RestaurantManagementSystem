@@ -61,6 +61,6 @@ public class OrderEntity {
     @JoinColumn(name = "editor_id")
     private WaiterEntity editor;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "order")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "order")
     private Set<OrderMealEntity> orderMeals;
 }

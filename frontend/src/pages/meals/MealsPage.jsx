@@ -26,12 +26,11 @@ function MealsPage() {
         setPageNumber(page);
         navigate(`/meals?category=${currentCategory}&pageNumber=${page}&pageSize=${10}`);
     };
-
     const handlePreviousPage = () => {
         if (pageNumber > 0) {
             const page = pageNumber - 1;
             setPageNumber(page);
-            navigate(`/meals?category=${currentCategory}&pageNumber=${page}&pageSize=${10}`);
+            navigate(`/meals?category=${currentCategory}&pageNumber=${page}&pageSize=${10}${searchTerm ? `&searchTerm=${searchTerm}` : ""}`);
         }
     }
 
@@ -39,7 +38,7 @@ function MealsPage() {
         const search = event.target.value
         setSearchTerm(search);
         search === "" ? navigate(`/meals?category=${currentCategory}&pageNumber=0&pageSize=10`) :
-            navigate(`/meals?category=${currentCategory}&pageNumber=0&pageSize=10&searchTerm=${search}`);
+            navigate(`/meals?category=${currentCategory}&pageNumber=0&pageSize=10&searchTerm=${search} `);
     };
 
 
@@ -66,7 +65,7 @@ function MealsPage() {
                                 <div className={classes.mealsContainer}>
                                     <MealList meals={loadedMeals.content} order={false} />
                                 </div>
-                                <div className={classes.paginationContainer}>
+                                <div>
                                     {!loadedMeals.first && (
                                         <button
                                             className={classes.categoryButton}
@@ -98,11 +97,10 @@ function MealsPage() {
 export default MealsPage;
 
 async function loadMeals(category, pageNumber, pageSize, searchTerm) {
-    const token = getAuthToken();
 
-    const response = await fetch(`http://localhost:8080/api/admin/meals?restaurantName=Italiano&category=${category}&pageNumber=${pageNumber}&pageSize=${pageSize}${searchTerm ? `&searchTerm=${searchTerm}` : ''}`, {
+    const response = await fetch(`http://localhost:8080/api/restaurantManagementSystem/meal/all?restaurantName=Italiano&category=${category}&pageNumber=${pageNumber}&pageSize=${pageSize}${searchTerm ? `&searchTerm=${searchTerm}` : ''}`, {
         headers: {
-            'Authorization': 'Bearer ' + token
+            'Authorization': 'Bearer ' + getAuthToken()
         }
     });
     if (!response.ok) {

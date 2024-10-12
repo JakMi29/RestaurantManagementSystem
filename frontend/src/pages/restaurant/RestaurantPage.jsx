@@ -14,14 +14,15 @@ function RestaurantPage() {
 
 export default RestaurantPage;
 
-async function loadTables() {
-    const token = getAuthToken();
-
-    const response = await fetch(`http://localhost:8080/api/admin/tables/orders?restaurantName=${"Italiano"}`, {
-        headers: {
-            'Authorization': 'Bearer ' + token
+async function loadTables(pageNumber, pageSize, searchTerm) {
+    const response = await fetch(
+        `http://localhost:8080/api/restaurantManagementSystem/table/orders?restaurantName=${"Italiano"}&pageNumber=${pageNumber}&pageSize=${pageSize}${searchTerm ? `&searchTerm=${searchTerm}` : ''}`,
+        {
+            headers: {
+                'Authorization': 'Bearer ' + getAuthToken()
+            }
         }
-    });
+    );
     if (!response.ok) {
         throw json(
             { message: 'Could not fetch tables.' },
@@ -35,8 +36,12 @@ async function loadTables() {
     }
 }
 
-export async function loader() {
+export async function loader({ request }) {
+    const url = new URL(request.url);
+    const pageNumber = url.searchParams.get("pageNumber");
+    const searchTerm = url.searchParams.get("searchTerm");
+    const pageSize = 10;
     return defer({
-        tables: await loadTables(),
+        tables: await loadTables(pageNumber, pageSize, searchTerm),
     });
 }

@@ -13,4 +13,8 @@ import org.springframework.validation.annotation.Validated;
 @Validated
 public class WaiterDTO {
     String email;
+    String name;
+    String surname;
+    String salary;
+    String employmentDate;
 }

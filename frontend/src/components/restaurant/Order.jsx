@@ -3,12 +3,13 @@ import classes from '../../pages/restaurant/RestaurantPage.module.css';
 import MessageContext from '../../store/MessageContext';
 import { useContext, useEffect, useState } from 'react';
 import OrderMeal from './OrderMeal';
-import { orderActions } from '../../store/order-slice';
+import { orderActions } from '../../store/OrderSlice';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import { useDispatch } from 'react-redux';
 import EditOffIcon from '@mui/icons-material/EditOff';
-import { orderMealActions } from '../../store/edit-order-slice';
+import { orderMealActions } from '../../store/EditOrderSlice';
 import { getAuthToken } from '../../util/auth';
+import { IconButton } from '@mui/material';
 
 function sortMeals(meals) {
     const statusOrder = ['PREPARING', 'READY', 'RELEASED'];
@@ -21,7 +22,7 @@ function sortMeals(meals) {
     });
 };
 
-function Order({ order }) {
+function Order({ order, admin }) {
     const dispatch = useDispatch();
     const messageCtx = useContext(MessageContext);
     const navigate = useNavigate();
@@ -38,10 +39,11 @@ function Order({ order }) {
 
     const handleChange = () => {
         if (order.edit) {
-            fetch(`http://localhost:8080/api/admin/order/edit?orderNumber=${order.number}&editor=${localStorage.getItem('email')}&edit=${false}`, {
+            fetch(`http://localhost:8080/api/restaurantManagementSystem/order/waiter/edit?orderNumber=${order.number}&editor=${localStorage.getItem('email')}&edit=${false}`, {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + getAuthToken()
                 },
             })
                 .then(response => {
@@ -58,10 +60,11 @@ function Order({ order }) {
                     console.error('Error sending request:', error);
                 });
         } else {
-            fetch(`http://localhost:8080/api/admin/order/edit?orderNumber=${order.number}&editor=${localStorage.getItem('email')}&edit=${true}`, {
+            fetch(`http://localhost:8080/api/restaurantManagementSystem/order/waiter/edit?orderNumber=${order.number}&editor=${localStorage.getItem('email')}&edit=${true}`, {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + getAuthToken()
                 },
             })
                 .then(response => {
@@ -86,7 +89,7 @@ function Order({ order }) {
 
     const handleUpdateOrder = () => {
         const token = getAuthToken();
-        fetch(`http://localhost:8080/api/admin/order/update`, {
+        fetch(`http://localhost:8080/api/restaurantManagementSystem/order/waiter/update`, {
             method: 'PUT',
             body: JSON.stringify(order),
             headers: {
@@ -111,7 +114,7 @@ function Order({ order }) {
 
     const handleChangeStatus = (status) => {
         const token = getAuthToken();
-        fetch(`http://localhost:8080/api/admin/order/status?orderNumber=${order.number}`, {
+        fetch(`http://localhost:8080/api/restaurantManagementSystem/order/waiter/status?orderNumber=${order.number}`, {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',
@@ -170,6 +173,7 @@ function Order({ order }) {
                                             orderNumber={order.number}
                                             orderMeal={orderMeal}
                                             edit={order.edit && !isDisabled}
+                                            admin={admin}
                                         />
                                     ))}
                                 </div>
@@ -188,15 +192,23 @@ function Order({ order }) {
                     ) : (
                         <div className={classes.imageContainer}>
                             {!isDisabled && (
-                                <AddShoppingCartIcon
-                                    sx={{ fontSize: "90px" }}
-                                    className={classes.iconButton}
-                                    onClick={handleAddMeals}
-                                />
+                              <IconButton
+                              sx={{
+                                backgroundColor: "inherit",
+                                "&:hover": {
+                                  backgroundColor: "inherit",
+                                },
+                              }}
+                              disabled={admin}
+                              onClick={handleAddMeals}
+                            >
+                              <AddShoppingCartIcon  sx={{ fontSize: "90px" }}
+                              className={classes.iconButton}/>
+                            </IconButton>
                             )}
                         </div>
                     )}
-                    <div className={classes.actions}>
+                    {!admin && <div className={classes.actions}>
                         <button
                             disabled={order.edit ? false : order.status !== 'RELEASED'}
                             className={classes.greenButton}
@@ -208,7 +220,7 @@ function Order({ order }) {
                             className={classes.blueButton}>
                             {order.edit && !isDisabled ? 'Cancel' : 'Edit'}
                         </button>
-                    </div>
+                    </div>}
                     {isDisabled && (
                         <div className={classes.overlay}>
                             <EditOffIcon sx={{ fontSize: "80px", color: "rgb(60, 60, 211, 0.2)" }} />

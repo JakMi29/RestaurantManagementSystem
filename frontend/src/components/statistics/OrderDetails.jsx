@@ -2,13 +2,18 @@ import React from 'react';
 import { Box, Grid, Paper, Typography } from '@mui/material';
 import OrderMealDetails from './OrderMealDetails';
 import classes from '../../pages/statistics/StatisticPage.module.css';
+import uiClasses from '../ui/Ui.module.css';
 import { useNavigate } from 'react-router-dom';
 
 const OrderDetails = ({ order }) => {
-  const navigate=useNavigate()
+  const navigate = useNavigate()
   return (<>
-    <Typography variant="h3">Details</Typography>
-    <button onClick={()=>navigate(-1)}/>
+    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+      <Typography variant="h3">Details</Typography>
+      <button className={uiClasses.blueButton} style={{ padding: "10px" }} onClick={() => navigate(-1)}>
+        Back
+      </button>
+    </div>
     <Box sx={{ padding: 4 }}>
       <Grid container spacing={2} justifyContent="space-between" alignItems="center">
         <Grid item xs={12} sm={6} md={3}>

@@ -32,8 +32,14 @@ public class SecurityConfiguration {
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/ws/**").permitAll()
-                        .requestMatchers("/api/restaurantManagementSystem/**").permitAll()
-                        .requestMatchers("/api/admin/**").permitAll()
+                        .requestMatchers("/api/restaurantManagementSystem/auth/**").permitAll()
+                        .requestMatchers("/api/restaurantManagementSystem/waiters/**").hasAnyAuthority("ADMIN")
+                        .requestMatchers("/api/restaurantManagementSystem/*/admin/**").hasAnyAuthority("ADMIN")
+                        .requestMatchers("/api/restaurantManagementSystem/table/admin").hasAnyAuthority("ADMIN")
+                        .requestMatchers("/api/restaurantManagementSystem/*/waiter/**").hasAnyAuthority("WAITER")
+                        .requestMatchers("/api/restaurantManagementSystem/meal/**").hasAnyAuthority("ADMIN", "WAITER")
+                        .requestMatchers("/api/restaurantManagementSystem/order/**").hasAnyAuthority("ADMIN", "WAITER")
+                        .requestMatchers("/api/restaurantManagementSystem/table/orders").hasAnyAuthority("ADMIN", "WAITER")
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session

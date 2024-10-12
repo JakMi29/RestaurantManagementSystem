@@ -5,7 +5,7 @@ import {
   useSearchParams,
 } from 'react-router-dom';
 
-import classes from './Form.module.css';
+import classes from './dialogs/Form.module.css';
 import { useEffect, useState } from 'react';
 
 function AuthForm() {

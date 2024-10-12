@@ -4,6 +4,7 @@ import MessageContext from '../../store/MessageContext';
 import { useNavigate } from 'react-router-dom';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import MealPageContext from '../../store/MealPageContext';
+import { getAuthToken } from '../../util/auth';
 
 function Meal({ meal }) {
     const messageCtx = useContext(MessageContext);
@@ -12,18 +13,21 @@ function Meal({ meal }) {
     const admin = localStorage.getItem('role') === 'ADMIN';
 
     const handleConfirmAction = () => {
+        const token = getAuthToken();
         messageCtx.showMessage('Are you sure you want to remove the meal?', 'confirmation', (confirmed) => {
             if (confirmed) {
-                fetch(`http://localhost:8080/api/admin/meal?restaurantName=${"Italiano"}&name=${meal.name}`, {
+                fetch(`http://localhost:8080/api/restaurantManagementSystem/meal/admin?restaurantName=${"Italiano"}&name=${meal.name}`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + token
+
                     },
                 })
                     .then(response => {
                         if (response.ok) {
                             messageCtx.showMessage('The meal has been removed', 'info')
-                            navigate(`/meals?category=${meal.category}&pageNumber=0&pageSize=10`)
+                            navigate(`/meals?category=${meal.category.toLowerCase()}&pageNumber=0&pageSize=10`)
                         } else {
                             messageCtx.showMessage('The meal can not be remove', 'error')
                         }
@@ -41,16 +45,18 @@ function Meal({ meal }) {
     }
 
     const handleMealofTheDay = () => {
-        fetch(`http://localhost:8080/api/admin/meal/mealOfTheDay?restaurantName=${"Italiano"}&name=${meal.name}`, {
+        const token = getAuthToken();
+        fetch(`http://localhost:8080/api/restaurantManagementSystem/meal/admin/mealOfTheDay?restaurantName=${"Italiano"}&name=${meal.name}`, {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + token
             },
         })
             .then(response => {
                 if (response.ok) {
                     messageCtx.showMessage('Meal was added as meal of the day', 'info')
-                    navigate(`/meals?category=${meal.category}&pageNumber=0&pageSize=10`)
+                    navigate(`/meals?category=${meal.category.toLowerCase()}&pageNumber=0&pageSize=10`)
                 } else {
                     messageCtx.showMessage('Something gone wrong', 'error')
                 }

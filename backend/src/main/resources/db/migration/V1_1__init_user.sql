@@ -6,5 +6,6 @@
         email VARCHAR(255),
         password VARCHAR(255),
         role VARCHAR(255),
+        active BOOLEAN NOT NULL,
         PRIMARY KEY (id)
     );

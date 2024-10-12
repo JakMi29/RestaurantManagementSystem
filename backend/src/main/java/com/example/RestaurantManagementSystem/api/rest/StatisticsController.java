@@ -1,52 +1,73 @@
 package com.example.RestaurantManagementSystem.api.rest;
 
-import com.example.RestaurantManagementSystem.api.dto.MealsStatisticDTO;
-import com.example.RestaurantManagementSystem.api.dto.OrdersStatisticDTO;
-import com.example.RestaurantManagementSystem.api.dto.TableOrderMealDTO;
+import com.example.RestaurantManagementSystem.api.dto.*;
+import com.example.RestaurantManagementSystem.business.MealsStatisticService;
 import com.example.RestaurantManagementSystem.business.OrderStatisticService;
+import com.example.RestaurantManagementSystem.business.StatisticsPaginationService;
+import com.example.RestaurantManagementSystem.business.WaiterStatisticService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
 @Slf4j
 @RestController
 @AllArgsConstructor
-@RequestMapping("/api/admin/statistics")
+@RequestMapping("/api/restaurantManagementSystem/admin/statistics")
 public class StatisticsController {
     private final OrderStatisticService orderStatisticService;
+    private final MealsStatisticService mealStatisticService;
+    private final WaiterStatisticService waiterStatisticService;
+    private final StatisticsPaginationService statisticsPaginationService;
 
     @GetMapping("/orders")
     public ResponseEntity<OrdersStatisticDTO> getOrderStatistics(
             @RequestParam String restaurantName,
             @RequestParam String period
     ) {
-        return ResponseEntity.ok(orderStatisticService.getOrdersStatistics(restaurantName,period));
+        return ResponseEntity.ok(orderStatisticService.getOrdersStatistics(restaurantName, period));
     }
+
     @GetMapping("/meals")
     public ResponseEntity<MealsStatisticDTO> getMealsStatistics(
             @RequestParam String restaurantName,
             @RequestParam String period
     ) {
-        return ResponseEntity.ok(orderStatisticService.getMealsStatistics(restaurantName,period));
+        return ResponseEntity.ok(mealStatisticService.getMealsStatistics(restaurantName, period));
     }
 
     @GetMapping("table/meals")
-    public ResponseEntity<List<TableOrderMealDTO>> getWAITERStatistics(
+    public ResponseEntity<List<TableOrderMealDTO>> getOrderMealsStatistics(
             @RequestParam String restaurantName,
             @RequestParam String period
     ) {
-        return ResponseEntity.ok(orderStatisticService.getMeals(restaurantName,period));
+        return ResponseEntity.ok(mealStatisticService.getMeals(restaurantName, period));
     }
-//    @GetMapping("/statistics/waiters")
-//    public ResponseEntity<OrdersStatisticDTO> getWAITERStatistics(
-//            @RequestParam String restaurantName,
-//            @RequestParam String period
-//    ) {
-//        return ResponseEntity.ok(statisticOrder.getWaitersStatistics(restaurantName,period));
-//    }
+
+    @GetMapping("/waiters")
+    public ResponseEntity<Page<WaitersDTO>> getWaiterStatistics(
+            @RequestParam String restaurantName,
+            @RequestParam Integer pageNumber,
+            @RequestParam Integer pageSize,
+            @RequestParam(required = false) String searchTerm,
+            @RequestParam String period
+            ) {
+        return ResponseEntity.ok(statisticsPaginationService.findAll(restaurantName, pageNumber, pageSize, searchTerm, period));
+    }
+
+    @GetMapping("/waiter")
+    public ResponseEntity<WaiterStatisticsDTO> getTablesStatistics(
+            @RequestParam String email,
+            @RequestParam String period
+    ) {
+        return ResponseEntity.ok(waiterStatisticService.getWaiterStatistics(email, period));
+    }
 
 
 }

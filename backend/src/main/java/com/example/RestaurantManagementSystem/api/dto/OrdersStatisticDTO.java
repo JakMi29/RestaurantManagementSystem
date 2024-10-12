@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.time.Duration;
 import java.util.List;
 
 @Data
@@ -13,9 +14,15 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class OrdersStatisticDTO {
-    BigDecimal averageIncome;
     BigDecimal totalIncome;
+    BigDecimal averageDailyIncome;
+    BigDecimal averageOrderIncome;
+    Duration averageOrderDuration;
     Integer totalCustomers;
-    Integer averageCustomers;
+    Integer averageCustomersPerDay;
+    Integer averageCustomersPerOrder;
+    Integer totalOrders;
+    Integer averageOrdersPerDay;
+    Integer averageMealPerOrder;
     List<DailyOrdersStatisticsDTO> dailyStatistics;
 }

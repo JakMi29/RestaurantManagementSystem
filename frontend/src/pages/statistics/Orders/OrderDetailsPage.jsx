@@ -1,5 +1,5 @@
 import React, { Suspense } from 'react';
-import { Await, defer, useLoaderData, useLocation} from 'react-router-dom';
+import { Await, defer, useLoaderData, useLocation } from 'react-router-dom';
 import { CircularProgress, Box } from '@mui/material';
 import { getAuthToken } from '../../../util/auth';
 import OrderDetails from '../../../components/statistics/OrderDetails';
@@ -22,7 +22,7 @@ export default OrderDetailsPage;
 async function loadOrder(number) {
   const token = getAuthToken();
 
-  const response = await fetch(`http://localhost:8080/api/admin/order?number=${number}`, {
+  const response = await fetch(`http://localhost:8080/api/restaurantManagementSystem/order?number=${number}`, {
     headers: {
       'Authorization': 'Bearer ' + token
     }

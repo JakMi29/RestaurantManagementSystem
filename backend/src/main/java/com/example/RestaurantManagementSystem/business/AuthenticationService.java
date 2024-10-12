@@ -1,12 +1,15 @@
-package com.example.RestaurantManagementSystem.api.auth;
+package com.example.RestaurantManagementSystem.business;
 
-import com.example.RestaurantManagementSystem.business.RestaurantOwnerService;
+import com.example.RestaurantManagementSystem.api.auth.AuthenticationRequest;
+import com.example.RestaurantManagementSystem.api.auth.AuthenticationResponse;
+import com.example.RestaurantManagementSystem.api.auth.RegisterRequest;
 import com.example.RestaurantManagementSystem.domain.exception.NotFoundException;
 import com.example.RestaurantManagementSystem.domain.exception.ObjectAlreadyExist;
+import com.example.RestaurantManagementSystem.infrastructure.database.repository.mapper.UserEntityMapper;
 import com.example.RestaurantManagementSystem.infrastructure.security.JwtService;
 import com.example.RestaurantManagementSystem.infrastructure.security.Role;
-import com.example.RestaurantManagementSystem.infrastructure.security.User;
-import com.example.RestaurantManagementSystem.infrastructure.security.UserRepository;
+import com.example.RestaurantManagementSystem.infrastructure.security.UserEntity;
+import com.example.RestaurantManagementSystem.infrastructure.security.UserJpaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -20,7 +23,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class AuthenticationService {
 
-    private final UserRepository repository;
+    private final UserJpaRepository repository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
@@ -29,7 +32,7 @@ public class AuthenticationService {
     @Transactional
     public AuthenticationResponse register(RegisterRequest request) {
 
-        Optional<User> existingUser = repository.findByEmail(request.getEmail());
+        Optional<UserEntity> existingUser = repository.findByEmail(request.getEmail());
         if (existingUser.isPresent())
             throw new ObjectAlreadyExist("User with this email already exist!");
         var user = buildUser(request);
@@ -59,7 +62,8 @@ public class AuthenticationService {
                 )
         );
         var user = repository.findByEmail(request.getEmail())
-                .orElseThrow(() -> new NotFoundException("Can not found user with this email"));
+                .filter(UserEntity::getActive)
+                .orElseThrow(() -> new NotFoundException("Can not found user with this email or user is not active"));
         var jwtToken = jwtService.generateToken(user);
         String restaurantName = "Italiano";
         return AuthenticationResponse.builder()
@@ -70,8 +74,8 @@ public class AuthenticationService {
                 .build();
     }
 
-    private User buildUser(RegisterRequest request) {
-        return User.builder()
+    private UserEntity buildUser(RegisterRequest request) {
+        return UserEntity.builder()
                 .name(request.getName())
                 .surname(request.getSurname())
                 .phone(request.getPhone())

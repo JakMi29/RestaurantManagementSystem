@@ -36,7 +36,7 @@ export async function action({ request }) {
     };
   }
 
-  const response = await fetch('http://localhost:8080/api/restaurantManagementSystem/' + mode, {
+  const response = await fetch('http://localhost:8080/api/restaurantManagementSystem/auth/' + mode, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

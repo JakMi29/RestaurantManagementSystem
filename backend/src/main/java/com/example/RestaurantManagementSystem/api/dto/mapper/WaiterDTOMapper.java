@@ -13,4 +13,14 @@ public class WaiterDTOMapper {
                 .build();
     }
 
+    public WaiterDTO mapWithUserData(Waiter waiter) {
+        return WaiterDTO.builder()
+                .email(waiter.getEmail())
+                .name(waiter.getUser().getName())
+                .surname(waiter.getUser().getSurname())
+                .employmentDate(waiter.getEmploymentDate().toString())
+                .salary(waiter.getSalary().toString())
+                .build();
+    }
+
 }

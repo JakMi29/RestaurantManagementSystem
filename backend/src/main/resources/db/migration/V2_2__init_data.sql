@@ -1,12 +1,20 @@
 INSERT INTO restaurant(name, restaurant_owner_id)
 VALUES
 ('Italiano',1);
-INSERT INTO waiter(email, restaurant_id)
+
+INSERT INTO waiter(email,salary,employment_date, restaurant_id, user_id)
 VALUES
-('waiterAdam@gmail.com',1),
-('waiterMaria@gmail.com',1),
-('waiterKuba@gmail.com',1),
-('waiterKasia@gmail.com',1);
+('waiterAdam@gmail.com',3000,CURRENT_TIMESTAMP-INTERVAL '999 days',1,1),
+('waiterMaria@gmail.com',3500,CURRENT_TIMESTAMP-INTERVAL '600 days',1,3),
+('waiterKuba@gmail.com',4000,CURRENT_TIMESTAMP-INTERVAL '400 days',1,10),
+('waiterKasia@gmail.com',3300,CURRENT_TIMESTAMP-INTERVAL '150 days',1,4),
+('waiterMichal@gmail.com',3300,CURRENT_TIMESTAMP-INTERVAL '50 days',1,5),
+('waiterPiotr@gmail.com',3300,CURRENT_TIMESTAMP-INTERVAL '120 days',1,6),
+('waiterGosia@gmail.com',3300,CURRENT_TIMESTAMP-INTERVAL '90 days',1,7),
+('waiterPawel@gmail.com',3300,CURRENT_TIMESTAMP-INTERVAL '80 days',1,8),
+('waiterWiktoria@gmail.com',3300,CURRENT_TIMESTAMP-INTERVAL '20 days',1,9),
+('waiterFranciszek@gmail.com',3300,CURRENT_TIMESTAMP-INTERVAL '20 days',1,11),
+('waiterMarian@gmail.com',3300,CURRENT_TIMESTAMP-INTERVAL '20 days',1,9);
 
 INSERT INTO meal (name, description, category, status, price, restaurant_id, image, meal_of_the_day)
 VALUES
@@ -112,18 +120,20 @@ VALUES
     ('Linguine alle Vongole', 'Linguine with clams', 'MAIN_DISH', 'ACTIVE', 15, 1, 'https://t4.ftcdn.net/jpg/05/34/30/49/240_F_534304978_YHfU0fRQkhLrq8eFcq0IljaVzVakLVnw.jpg', FALSE),
     ('Pappardelle al Cinghiale', 'Pasta with wild boar ragu', 'MAIN_DISH', 'ACTIVE', 16, 1, 'https://t4.ftcdn.net/jpg/06/86/06/73/360_F_686067390_C0qRc1KKsHtUW3996zFNAiWG7M34fUr5.jpg', FALSE);
 
-INSERT INTO _table(name, status, restaurant_id)
+INSERT INTO _table(name, status, restaurant_id,active)
 VALUES
-('table 1','READY',1),
-('table 2','BUSY',1),
-('table 3','READY',1),
-('table 4','READY',1),
-('table 5','BUSY',1),
-('table 6','BUSY',1),
-('table 7','BUSY',1),
-('table 8','DIRTY',1),
-('table 9','DIRTY',1),
-('table 10','BUSY',1);
+('table 1','READY',1,true),
+('table 2','BUSY',1,true),
+('table 3','READY',1,true),
+('table 4','READY',1,true),
+('table 5','BUSY',1,true),
+('table 6','BUSY',1,true),
+('table 7','BUSY',1,true),
+('table 8','DIRTY',1,true),
+('table 9','DIRTY',1,true),
+('table 10','DIRTY',1,true),
+('table 11','DIRTY',1,true),
+('table 12','BUSY',1,true);
 
 --insert into _order (order_number, received_date_time,completed_date_time, price, status, table_id, waiter_id, restaurant_id,customers_quantity,edit,editor_id)
 --values

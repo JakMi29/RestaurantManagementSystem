@@ -86,5 +86,17 @@ public class OrderEntityMapper {
                         .collect(Collectors.toSet()))
                 .build();
     }
+    public Order mapMainData(OrderEntity entity) {
+        return Order.builder()
+                .id(entity.getId())
+                .price(entity.getPrice())
+                .number(entity.getNumber())
+                .status(entity.getStatus())
+                .edit(entity.getEdit())
+                .receivedDateTime(entity.getReceivedDateTime())
+                .customerQuantity(entity.getCustomerQuantity())
+                .completedDateTime(entity.getCompletedDateTime())
+                .build();
+    }
 
 }

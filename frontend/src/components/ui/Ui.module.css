@@ -1,0 +1,96 @@
+.sidebar {
+    top: 80px;
+    position: fixed;
+    width: 250px;
+    height: calc(100vh - 80px);
+    display: flex;
+    flex-direction: column;
+    background-color: #f7f7f7;
+    border-radius: 8px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    z-index: 9999;
+}
+
+.sidebar .text {
+    font-size: 25px;
+    font-weight: 500;
+    color: rgb(0, 0, 0);
+}
+
+.menuItemsContainer {
+    margin-top: 150px;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.menuItem {
+    border-radius: 4px;
+    padding: 10px;
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-top: 5px;
+    text-decoration: none;
+    color: rgb(60, 60, 211);
+    font-size: 20px;
+}
+
+.menuItem.active {
+    background-color: rgb(60, 60, 211);
+    color: rgb(249, 249, 249);
+}
+
+.menuItem:hover {
+    background-color: rgb(60, 60, 211, 0.2);
+    color: rgb(249, 249, 249);
+}
+
+.menuContent {
+    gap: 20px;
+    display: flex;
+    align-items: center;
+}
+
+.menuContentSpan {
+    margin-left: 5px;
+}
+
+.greenButton {
+    background-color: rgba(14, 185, 88, 0.2);
+}
+
+.greenButton:hover {
+    background-color: rgb(79, 156, 109);
+}
+
+.greenButton:disabled {
+    background-color: rgba(14, 185, 88, 0.2);
+}
+
+.redButton {
+    background-color: rgba(255, 0, 0, 0.2);
+}
+
+.redButton:hover {
+    background-color: rgb(237, 14, 14);
+}
+
+.yellowButton {
+    background-color: rgba(255, 224, 99, 0.5);
+}
+
+.yellowButton:hover {
+    background-color: rgb(255, 223, 99);
+}
+
+.blueButton {
+    background-color: rgb(60, 60, 211, 0.2);
+}
+
+.blueButton:hover {
+    background-color: rgb(60, 60, 211)
+}
+
+.blueButton:disabled {
+    background-color: rgb(60, 60, 211, 0.2);
+}

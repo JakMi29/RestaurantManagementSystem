@@ -16,6 +16,7 @@ public class Table {
     String name;
     TableStatus status;
     Boolean creatingOrder;
+    Boolean active;
     Restaurant restaurant;
     List<Order> orders;
 }

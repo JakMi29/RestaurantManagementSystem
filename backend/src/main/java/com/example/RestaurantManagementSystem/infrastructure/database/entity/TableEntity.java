@@ -22,6 +22,8 @@ public class TableEntity {
     private Integer id;
     @Column(name = "name")
     private String name;
+    @Column(name = "active")
+    private Boolean active;
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
     private TableStatus status;

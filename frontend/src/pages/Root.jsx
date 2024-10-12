@@ -1,6 +1,6 @@
 import { Outlet, useLoaderData, useSubmit } from "react-router-dom";
 import PageHeader from "../components/PageHeader";
-import Sidebar from "../components/SideBar";
+import Sidebar from "../components/ui/side-bar/SideBar";
 import { useEffect, useState } from "react";
 import { getTokenDuration } from "../util/auth";
 import ArrowBackIosOutlinedIcon from '@mui/icons-material/ArrowBackIosOutlined';

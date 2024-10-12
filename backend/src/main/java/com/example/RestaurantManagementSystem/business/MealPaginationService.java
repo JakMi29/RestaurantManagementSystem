@@ -14,9 +14,7 @@ import java.util.List;
 @Service
 @AllArgsConstructor
 public class MealPaginationService {
-
     private final MealService mealService;
-
 
     public Page<Meal> findAllByCategory(
             String restaurantName,
@@ -40,5 +38,4 @@ public class MealPaginationService {
                 excludesNames
         );
     }
-
 }

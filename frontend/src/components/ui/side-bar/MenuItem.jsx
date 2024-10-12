@@ -1,10 +1,14 @@
 import { NavLink } from "react-router-dom"
 import PropTypes from 'prop-types';
+import classes from '../Ui.module.css';
 
-function MenuItem({ text, link, icon}) {
+
+function MenuItem({ text, link, icon }) {
     return (
-        <NavLink to={link} className="menu-item" activeclassname="active">
-            <div className="menu-content">
+        <NavLink to={link} className={({ isActive }) =>
+            isActive ? `${classes.menuItem} ${classes.active}` : classes.menuItem
+        }>
+            <div className={classes.menuContent}>
                 {icon}
                 {text}
             </div>

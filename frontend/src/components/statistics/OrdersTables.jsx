@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useLocation, useNavigate, useOutletContext } from 'react-router-dom';
 import { Container, Typography, CircularProgress, Box } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
+import { getAuthToken } from '../../util/auth';
 
 
 const OrdersTable = ({ currentPeriod }) => {
@@ -16,7 +17,11 @@ const OrdersTable = ({ currentPeriod }) => {
   const fetchOrders = useCallback(async (page, pageSize) => {
     setLoading(true);
     try {
-      const response = await fetch(`http://localhost:8080/api/admin/orders?restaurantName=Italiano&period=${currentPeriod}&pageSize=${pageSize}&pageNumber=${page}`);
+      const response = await fetch(`http://localhost:8080/api/restaurantManagementSystem/order/all?restaurantName=Italiano&period=${currentPeriod}&pageSize=${pageSize}&pageNumber=${page}`,
+        {headers: {
+          'Authorization': 'Bearer ' + getAuthToken()
+        }}
+      );
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
