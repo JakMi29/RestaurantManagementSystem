@@ -10,6 +10,7 @@ import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface MealJpaRepository extends JpaRepository<MealEntity, Integer> {
 
@@ -44,5 +45,5 @@ public interface MealJpaRepository extends JpaRepository<MealEntity, Integer> {
             String searchTerms,
             List<String> excludedNames);
 
-    MealEntity findByNameAndRestaurant(String name, RestaurantEntity restaurantEntity);
+    Optional<MealEntity> findByNameAndRestaurant(String name, RestaurantEntity restaurantEntity);
 }

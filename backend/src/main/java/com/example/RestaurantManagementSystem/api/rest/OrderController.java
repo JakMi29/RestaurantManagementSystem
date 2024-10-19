@@ -1,7 +1,6 @@
 package com.example.RestaurantManagementSystem.api.rest;
 
 import com.example.RestaurantManagementSystem.api.dto.OrderDTO;
-import com.example.RestaurantManagementSystem.api.dto.OrdersStatisticDTO;
 import com.example.RestaurantManagementSystem.api.rest.request.CreateOrderRequest;
 import com.example.RestaurantManagementSystem.api.rest.response.Response;
 import com.example.RestaurantManagementSystem.business.OrderPaginationService;
@@ -27,7 +26,6 @@ public class OrderController {
     @PatchMapping("/waiter/edit")
     public OrderDTO editOrder(@RequestParam String orderNumber, @RequestParam String editor, @RequestParam Boolean edit) {
         OrderDTO order = orderService.edit(orderNumber, editor, edit);
-
         this.template.convertAndSend("/topic/orders", order);
 
         return order;
@@ -36,8 +34,7 @@ public class OrderController {
     @PutMapping("/waiter/update")
     public ResponseEntity<OrderDTO> editOrder(@RequestBody OrderDTO order) {
         OrderDTO orderDTO = orderService.updateOrder(order);
-
-        this.template.convertAndSend("/topic/orders", order);
+        this.template.convertAndSend("/topic/orders", orderDTO);
         return ResponseEntity.ok(orderDTO);
     }
 
@@ -76,6 +73,7 @@ public class OrderController {
             @RequestParam String status
     ) {
         OrderDTO order = orderService.updateAndGetOrder(restaurantName, mealName, orderNumber, status);
+        System.out.println(order);
         this.template.convertAndSend("/topic/orders", order);
 
         return Response.builder()
@@ -86,6 +84,11 @@ public class OrderController {
 
     @PatchMapping("/waiter/status")
     public Response changeStatus(@RequestParam String orderNumber) {
-        return orderService.changeStatus(orderNumber);
+        OrderDTO order = orderService.changeStatus(orderNumber);
+        this.template.convertAndSend("/topic/orders", order);
+        return Response.builder()
+                .code(HttpStatus.OK.value())
+                .message("Successfully update order")
+                .build();
     }
 }

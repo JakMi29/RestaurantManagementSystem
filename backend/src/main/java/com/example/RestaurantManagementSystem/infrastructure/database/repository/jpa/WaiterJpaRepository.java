@@ -7,8 +7,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import java.util.Optional;
+
 public interface WaiterJpaRepository extends JpaRepository<WaiterEntity, Integer> {
-    WaiterEntity findByEmail(String email);
+    Optional<WaiterEntity> findByEmail(String email);
 
     @Query("SELECT DISTINCT w FROM WaiterEntity w " +
             "JOIN w.user u " +
@@ -22,8 +24,7 @@ public interface WaiterJpaRepository extends JpaRepository<WaiterEntity, Integer
 
     @Query("SELECT DISTINCT w FROM WaiterEntity w " +
             "JOIN w.user u " +
-
-            "WHERE w.restaurant = :restaurant")
+            "WHERE w.restaurant = :restaurant AND u.active=true")
     Page<WaiterEntity> findAllByRestaurant(
             RestaurantEntity restaurant,
             Pageable pageable

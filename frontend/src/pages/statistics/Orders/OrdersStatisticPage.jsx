@@ -15,9 +15,12 @@ const OrdersStatisticsPage = () => {
     <>
       <Suspense fallback={<p style={{ textAlign: 'center' }}><CircularProgress /></p>}>
         <Await resolve={statistics}>
-      {(statistics)=><OrdersStatistics statistics={statistics}/>}
+          {(statistics) => <OrdersStatistics statistics={statistics} />}
         </Await>
       </Suspense>
+      <Typography variant="h4" sx={{ paddingLeft: 4, color: "rgba(60, 60, 211,1)", fontWeight: "bold" }}>
+        {"Orders"}
+      </Typography>
       <OrdersTable currentPeriod={currentPeriod} />
     </>
   );

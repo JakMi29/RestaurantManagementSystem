@@ -16,6 +16,8 @@ public class UserEntityMapper {
                 .name(entity.getName())
                 .surname(entity.getSurname())
                 .active(entity.getActive())
+                .role(entity.getRole())
+                .password(entity.getPassword())
                 .build();
     }
     public UserEntity map(User user) {
@@ -24,8 +26,10 @@ public class UserEntityMapper {
                 .email(user.getEmail())
                 .phone(user.getPhone())
                 .name(user.getName())
+                .role(user.getRole())
                 .surname(user.getSurname())
                 .active(user.getActive())
+                .password(user.getPassword())
                 .build();
     }
 }

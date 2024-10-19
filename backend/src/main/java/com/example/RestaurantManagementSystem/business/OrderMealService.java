@@ -100,11 +100,13 @@ public class OrderMealService {
         List<OrderMeal> orderMeals = order.getOrderMeals().stream().
                 filter(orderMeal -> orderMeal.getStatus() == OrderMealStatus.PREPARING)
                 .toList();
+        System.out.println(orderMeals);
 
         for (OrderMealDTO meal : meals) {
             OrderMeal updateOrderMeal = orderMeals.stream()
                     .filter(orderMeal -> orderMeal.getMeal().getName().equals(meal.getMeal().getName()))
                     .findFirst().orElse(this.createOrderMeal(meal.getMeal().getName(), order));
+            System.out.println(updateOrderMeal);
             orderMealDAO.save(updateOrderMeal
                     .withQuantity(meal.getQuantity())
                     .withPrice(meal.getMeal().getPrice().multiply(BigDecimal.valueOf(meal.getQuantity())))

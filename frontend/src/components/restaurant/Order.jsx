@@ -37,6 +37,26 @@ function Order({ order, admin }) {
         }
     }, [navigatePath, navigate]);
 
+    const handleEditAndAddMeals=()=>{
+        fetch(`http://localhost:8080/api/restaurantManagementSystem/order/waiter/edit?orderNumber=${order.number}&editor=${localStorage.getItem('email')}&edit=${true}`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + getAuthToken()
+            },
+        })
+            .then(response => {
+                if (response.ok) {
+                    navigate(`/restaurant/orderMeals?number=${order.number}&category=soup&pageNumber=0&pageSize=12`)
+                } else {
+                    messageCtx.showMessage('Something went wrong', 'error');
+                }
+            })
+            .catch(error => {
+                console.error('Error sending request:', error);
+            });
+    }
+
     const handleChange = () => {
         if (order.edit) {
             fetch(`http://localhost:8080/api/restaurantManagementSystem/order/waiter/edit?orderNumber=${order.number}&editor=${localStorage.getItem('email')}&edit=${false}`, {
@@ -73,9 +93,6 @@ function Order({ order, admin }) {
                     } else {
                         messageCtx.showMessage('Something went wrong', 'error');
                     }
-                })
-                .then(data => {
-                    // dispatch(orderActions.editOrder({ order: data }));
                 })
                 .catch(error => {
                     console.error('Error sending request:', error);
@@ -143,7 +160,7 @@ function Order({ order, admin }) {
                     <div className={classes.customers}>
                         {order.edit && !isDisabled ? (
                             <>
-                                <p>Customers</p>
+                                <p style={{ margin: "5px" }}>Customers</p>
                                 <div className={classes.orderMealActions}>
                                     <button className={classes.redButton}
                                         onClick={() => dispatch(orderActions.decreaseCustomers({ number: order.number }))}>
@@ -158,14 +175,14 @@ function Order({ order, admin }) {
                             </>
                         ) : (
                             <>
-                                <p>Customers</p>
+                                <p style={{ margin: "5px" }}>Customers</p>
                                 {order.customerQuantity}
                             </>
                         )}
                     </div>
                     {order.meals && order.meals.length > 0 ? (
                         <>
-                            <div style={{ display: "flex", flexDirection: "column" }}>
+                            <div style={{ display: "flex", flexDirection: "column", justifyContent: "space-between", height: "175px" }}>
                                 <div className={classes.mealsContainer}>
                                     {mealsToDisplay.map(orderMeal => (
                                         <OrderMeal
@@ -184,7 +201,7 @@ function Order({ order, admin }) {
                             </div>
                             <div className={classes.customers}>
                                 <>
-                                    <p>Total cost</p>
+                                    <p style={{ margin: "5px" }}>Total cost</p>
                                     <>{order.price.toFixed(2)} USD</>
                                 </>
                             </div>
@@ -192,19 +209,19 @@ function Order({ order, admin }) {
                     ) : (
                         <div className={classes.imageContainer}>
                             {!isDisabled && (
-                              <IconButton
-                              sx={{
-                                backgroundColor: "inherit",
-                                "&:hover": {
-                                  backgroundColor: "inherit",
-                                },
-                              }}
-                              disabled={admin}
-                              onClick={handleAddMeals}
-                            >
-                              <AddShoppingCartIcon  sx={{ fontSize: "90px" }}
-                              className={classes.iconButton}/>
-                            </IconButton>
+                                <IconButton
+                                    sx={{
+                                        backgroundColor: "inherit",
+                                        "&:hover": {
+                                            backgroundColor: "inherit",
+                                        },
+                                    }}
+                                    disabled={admin}
+                                    onClick={handleEditAndAddMeals}
+                                >
+                                    <AddShoppingCartIcon sx={{ fontSize: "90px" }}
+                                        className={classes.iconButton} />
+                                </IconButton>
                             )}
                         </div>
                     )}

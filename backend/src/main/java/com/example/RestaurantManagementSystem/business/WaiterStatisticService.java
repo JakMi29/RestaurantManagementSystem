@@ -1,13 +1,14 @@
 package com.example.RestaurantManagementSystem.business;
 
-import com.example.RestaurantManagementSystem.api.dto.WaiterStatisticsDTO;
-import com.example.RestaurantManagementSystem.api.dto.WaitersDTO;
+import com.example.RestaurantManagementSystem.api.dto.*;
 import com.example.RestaurantManagementSystem.api.dto.mapper.WaiterDTOMapper;
 import com.example.RestaurantManagementSystem.business.dao.OrderDAO;
 import com.example.RestaurantManagementSystem.business.dao.WaiterDAO;
+import com.example.RestaurantManagementSystem.domain.DailyWaitersStatistics;
 import com.example.RestaurantManagementSystem.domain.Order;
 import com.example.RestaurantManagementSystem.domain.Restaurant;
 import com.example.RestaurantManagementSystem.domain.Waiter;
+import com.example.RestaurantManagementSystem.domain.exception.NotFoundException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -67,7 +68,18 @@ public class WaiterStatisticService {
         return waiters.map(this::getStatistics);
     }
 
-    public WaiterStatisticsDTO getWaiterStatistics(String email, String period) {
-        return WaiterStatisticsDTO.builder().build();
+    public WaiterDailyStatisticsDTO getWaiterStatistics(String email, String period) {
+        Waiter waiter=waiterDAO.findByEmail(email)
+                .orElseThrow(()->new NotFoundException("Waiter with this email does not exist"));
+        OffsetDateTime endDate = OffsetDateTime.now();
+        OffsetDateTime startDate = orderStatisticService.getStartPeriod(period, endDate);
+        List<Order> orders=orderDAO.findAllByPeriodAndWaiter(waiter, startDate, endDate);
+        OrdersStatisticDTO ordersStatisticDTO= orderStatisticService.getOrdersStatistics(orders,startDate,endDate);
+
+        return WaiterDailyStatisticsDTO
+                .builder()
+                .waiter(mapper.map(waiter))
+                .statistics(ordersStatisticDTO)
+        .build();
     }
 }

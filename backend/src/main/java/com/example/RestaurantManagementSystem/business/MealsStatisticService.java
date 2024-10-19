@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.awt.print.Pageable;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
@@ -35,7 +36,7 @@ public class MealsStatisticService {
         return getMealsStatistics(orders, startDate, endDate);
     }
 
-    public List<TableOrderMealDTO> getMeals(String restaurantName, String period) {
+    public List<TableOrderMealDTO> getMealsByPeriod(String restaurantName, String period) {
         Restaurant restaurant = restaurantService.findByName(restaurantName);
         OffsetDateTime endDate = OffsetDateTime.now();
         OffsetDateTime startDate = getStartPeriod(period, endDate);

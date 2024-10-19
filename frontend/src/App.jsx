@@ -9,7 +9,7 @@ import AuthenticationPage, {
 } from './pages/AuthenticationPage';
 import { tokenLoader } from './util/auth';
 import { action as logoutAction } from './pages/Logout';
-import { action as mealAction } from './components/meals/MealForm';
+import { action as mealAction } from './components/dialogs/form/MealFormDialog';
 import ErrorPage from './pages/ErrorPage';
 import MealPage from './pages/meals/MealPage';
 import MealsRootLayout from './pages/meals/MealRootLayout';
@@ -22,6 +22,7 @@ import MealsStatisticsPage, { loader as mealsStatisticLoader } from './pages/sta
 import OrderDetailsPage, { loader as orderDetailsLoader } from './pages/statistics/Orders/OrderDetailsPage';
 import PeriodStatisticPage from './pages/statistics/PeriodStatisticsPage';
 import WaitersPage, { loader as waitersLoader } from './pages/waiters/WaitersPage';
+import { action as waiterAction } from './components/dialogs/form/WaiterFormDialog';
 import WaitersRootLayout from './pages/waiters/WaitersRootPage';
 import { action as tableAction } from './components/dialogs/form/TableFormDialog';
 import WaitersStatisticsPage, { loader as waitersStatisticLoader } from './pages/statistics/waiters/WaitersStatisticsPage';
@@ -116,6 +117,7 @@ const router = createBrowserRouter([
             path: "all",
             element: <WaitersPage />,
             loader: waitersLoader,
+            action: waiterAction,
           },
           // {
           //   path: "details",

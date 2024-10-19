@@ -1,7 +1,9 @@
 import { Paper, Typography, Grid, Button } from '@mui/material';
 import classes from '../ui/Ui.module.css';
+import { useNavigate } from 'react-router-dom';
 
 function WaiterStatistic({ waiter }) {
+    const navigate=useNavigate()
     return (
         <Paper elevation={3} sx={{ padding: 1, width: "550px", textAlign: 'center' }}>
             <Typography variant="h6" gutterBottom>
@@ -35,7 +37,7 @@ function WaiterStatistic({ waiter }) {
                 </Grid>
             </Grid>
             <div style={{ marginTop: 8, display: 'flex', alignContent: "center", width: "100%", justifyContent: 'space-between' }}>
-                <button className={classes.blueButton}>
+                <button className={classes.blueButton} onClick={()=>navigate(`/statistics/waiter?email=${waiter.waiter.email}&period=today`)}>
                     Statistics
                 </button>
             </div>

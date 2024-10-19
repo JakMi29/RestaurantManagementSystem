@@ -14,20 +14,17 @@ import DialogComponent from '../dialogs/DialogComponent';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { styled } from '@mui/system';
 import { getRestaurantName } from '../../util/data';
+import { Paper } from '@mui/material';
 
-const Table = React.memo(({ table, order }) => {
+const Table = React.memo(({ table, order, updateTable }) => {
     const admin = localStorage.getItem('role') === 'ADMIN';
     const messageCtx = useContext(MessageContext);
     const navigate = useNavigate();
     const status = table.status;
     const dispatch = useDispatch();
-    const [openForm, setOpenForm] = useState(false);
-    const handleCloseDialog = () => {
-        setOpenForm(false)
-    }
 
-    const handleChangeStatus = () => {
-        fetch(`http://localhost:8080/api/restaurantManagementSystem/table/waiter?tableName=${table.name}&restaurantName=${"Italiano"}`, {
+    const handleChangeStatus = (reverse) => {
+        fetch(`http://localhost:8080/api/restaurantManagementSystem/table/waiter?tableName=${table.name}&restaurantName=${"Italiano"}&reverse=${reverse}`, {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',
@@ -55,7 +52,7 @@ const Table = React.memo(({ table, order }) => {
             .then(response => {
                 if (!response.ok) {
                     messageCtx.showMessage('Something went wrong', 'error');
-                }else{
+                } else {
                     navigate(0)
                 }
             })
@@ -138,7 +135,7 @@ const Table = React.memo(({ table, order }) => {
                                 <button onClick={handleOrderDatails} className={classes.blueButton}>
                                     Statistics
                                 </button> :
-                                <button onClick={handleChangeStatus} className={classes.blueButton}>
+                                <button onClick={()=>handleChangeStatus(false)} className={classes.blueButton}>
                                     Ocuppy
                                 </button>
                             }
@@ -165,7 +162,7 @@ const Table = React.memo(({ table, order }) => {
                                             Order
                                         </button>
                                         <button
-                                            onClick={craeteOrder}
+                                            onClick={()=>handleChangeStatus(true)}
                                             className={classes.redButton}
                                         >
                                             Vacate
@@ -188,7 +185,7 @@ const Table = React.memo(({ table, order }) => {
                                 <button onClick={handleOrderDatails} className={classes.yellowButton}>
                                     Table statistics
                                 </button> :
-                                <button onClick={handleChangeStatus} className={classes.yellowButton}>
+                                <button onClick={()=>handleChangeStatus(false)} className={classes.yellowButton}>
                                     Clear
                                 </button>
                             }
@@ -213,17 +210,16 @@ const Table = React.memo(({ table, order }) => {
     }));
 
     return (
-        <div className={classes.table}>
-            <DialogComponent open={openForm} onClose={handleCloseDialog} mode={"edit"} name={"table"} object={table.name} />
+        <Paper elevation={4} sx={{ borderRadius: 2 }} className={classes.table}>
             <div className={classes.header}>
                 {admin ? <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "90%", }}>
                     <StyledDeleteIcon onClick={handleDelete} />
                     {table.name}
-                    <StyledEditIcon onClick={() => { setOpenForm(true) }} />
+                    <StyledEditIcon onClick={() => { updateTable(table.name) }} />
                 </div> : table.name}
             </div>
             {renderContent()}
-        </div>
+        </Paper>
     );
 })
 

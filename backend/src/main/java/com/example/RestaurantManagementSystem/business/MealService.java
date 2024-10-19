@@ -7,6 +7,7 @@ import com.example.RestaurantManagementSystem.domain.Category;
 import com.example.RestaurantManagementSystem.domain.Meal;
 import com.example.RestaurantManagementSystem.domain.MealStatus;
 import com.example.RestaurantManagementSystem.domain.Restaurant;
+import com.example.RestaurantManagementSystem.domain.exception.NotFoundException;
 import com.example.RestaurantManagementSystem.domain.exception.ObjectAlreadyExist;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
@@ -41,13 +42,8 @@ public class MealService {
     @Transactional
     public Response addMeal(MealRequest request, MultipartFile image) {
         Restaurant restaurant = restaurantService.findByName(request.getRestaurantName());
-        List<Meal> meals = mealDAO.findAllByRestaurant(restaurant);
-        Optional<Meal> existingMeal = meals.stream()
-                .filter(c -> c.getName().equals(request.getName()))
-                .findFirst();
-
+        Optional<Meal> existingMeal = mealDAO.findByNameAndRestaurant(request.getName(), restaurant);
         Meal meal = buildMeal(request);
-
         if (existingMeal.isEmpty()) {
             mealDAO.createMeal(meal
                     .withRestaurant(restaurant)
@@ -76,7 +72,8 @@ public class MealService {
     @Transactional
     public Response deleteMeal(String mealName, String restaurantName) {
         Restaurant restaurant = restaurantService.findByName(restaurantName);
-        Meal meal = mealDAO.findByNameAndRestaurant(mealName, restaurant);
+        Meal meal = mealDAO.findByNameAndRestaurant(mealName, restaurant)
+                .orElseThrow(() -> new NotFoundException("Meal with this name does not exist!"));
         mealDAO.updateMeal(meal.withStatus(MealStatus.DELETE));
         log.info("Successful deleted meal: [%s]".formatted(mealName));
         return Response.builder()
@@ -88,7 +85,9 @@ public class MealService {
     @Transactional
     public void setMealOfTheDay(String restaurantName, String mealName) {
         Restaurant restaurant = restaurantService.findByName(restaurantName);
-        Meal meal = mealDAO.findByNameAndRestaurant(mealName, restaurant);
+        Meal meal = mealDAO.findByNameAndRestaurant(mealName, restaurant)
+                .orElseThrow(() -> new NotFoundException("Meal with this name does not exist!"));
+        ;
         mealDAO.updateMeal(meal.withMealOfTheDay(!meal.isMealOfTheDay()));
         log.info("Successful set meal: [%s] as meal of the day".formatted(mealName));
     }
@@ -162,6 +161,7 @@ public class MealService {
     public Response updateMeal(MealRequest request, MultipartFile image) {
         Restaurant restaurant = restaurantService.findByName(request.getRestaurantName());
         Meal mealToUpdate = mealDAO.findByNameAndRestaurant(request.getOldName(), restaurant)
+                .orElseThrow(() -> new NotFoundException("Meal with this name does not exist!"))
                 .withCategory(Category.valueOf(request.getCategory()))
                 .withDescription(request.getDescription())
                 .withName(request.getName())
@@ -210,10 +210,12 @@ public class MealService {
     @Transactional
     public Meal getMeal(String restaurantName, String name) {
         Restaurant restaurant = restaurantService.findByName(restaurantName);
-        return mealDAO.findByNameAndRestaurant(name, restaurant);
+        return mealDAO.findByNameAndRestaurant(name, restaurant)
+                .orElseThrow(()->new NotFoundException("Meal with this name does not exist!"));
     }
 
     public Meal findByNameAndRestaurant(String name, Restaurant restaurant) {
-        return mealDAO.findByNameAndRestaurant(name, restaurant);
+        return mealDAO.findByNameAndRestaurant(name, restaurant)
+                .orElseThrow(()->new NotFoundException("Meal with this name does not exist"));
     }
 }

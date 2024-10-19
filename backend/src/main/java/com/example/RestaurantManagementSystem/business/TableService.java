@@ -49,17 +49,18 @@ public class TableService {
         log.info("Successful create table: %s for restaurant: %s".formatted(tableName, restaurantName));
     }
 
-    public TableDTO changeStatus(String tableName, String restaurantName) {
+    public TableDTO changeStatus(String tableName, String restaurantName, boolean complete) {
         Restaurant restaurant = restaurantService.findByName(restaurantName);
         Table table = tableDAO.findByNameAndRestaurant(tableName, restaurant)
                 .orElseThrow(() -> new RuntimeException("Something gone wrong"));
-
-        return mapper.map(tableDAO.updateTable(table.withStatus(
-                switch (table.getStatus()) {
-                    case READY -> TableStatus.BUSY;
-                    case BUSY -> TableStatus.DIRTY;
-                    case DIRTY -> TableStatus.READY;
-                })));
+        TableStatus tableStatus = complete
+                ? TableStatus.DIRTY
+                : switch (table.getStatus()) {
+            case READY -> TableStatus.BUSY;
+            case BUSY -> TableStatus.DIRTY;
+            case DIRTY -> TableStatus.READY;
+        };
+        return mapper.map(tableDAO.updateTable(table.withStatus(tableStatus)));
     }
 
     public Optional<Table> findByNameAndRestaurant(String tableName, String restaurantName) {

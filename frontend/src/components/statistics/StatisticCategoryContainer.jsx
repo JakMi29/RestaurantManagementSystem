@@ -2,36 +2,51 @@ import { NavLink, useNavigate } from 'react-router-dom';
 import classes from '../../pages/statistics/StatisticPage.module.css';
 import { Select, MenuItem, FormControl, InputLabel } from '@mui/material';
 
-function StatisticsCategoryContainer({ currentCategory, currentPeriod }) {
+function StatisticsCategoryContainer({ currentCategory, currentPeriod, handleChangeCategory }) {
     const navigate = useNavigate();
+    const queryParams = new URLSearchParams(location.search);
 
     const isActive = (category) => currentCategory === category;
 
     const handlePeriodChange = (event) => {
         const newPeriod = event.target.value;
-        navigate(`/statistics/${currentCategory}?period=${newPeriod}${currentCategory === "waiters" ? "&pageNumber=0&pageSize=12" : ""}`);
+        navigate(`/statistics/${currentCategory}?period=${newPeriod}${currentCategory === "waiters" ? getWaiterPath() : ""}`);
     };
 
+    const getWaiterPath = () => {
+        const email = queryParams.get('email')
+        email ? `waiter&email=${email}` : "waiters&pageNumber=0&pageSize=12"
+    }
+    { }
     return (
         <div className={classes.categoryContainer}>
-            <NavLink
-                to={`/statistics/orders?period=${currentPeriod}`}
+            <button
+                onClick={() => {
+                    handleChangeCategory("orders");
+                    navigate(`/statistics/orders?period=${currentPeriod}`);
+                }}
                 className={isActive("orders") ? classes.categoryButtonActive : classes.categoryButton}
             >
                 Orders
-            </NavLink>
-            <NavLink
-                to={`/statistics/meals?period=${currentPeriod}`}
+            </button>
+            <button
+                onClick={() => {
+                    handleChangeCategory("meals");
+                    navigate(`/statistics/meals?period=${currentPeriod}`);
+                }}
                 className={isActive("meals") ? classes.categoryButtonActive : classes.categoryButton}
             >
                 Meals
-            </NavLink>
-            <NavLink
-                to={`/statistics/waiters?period=${currentPeriod}&pageNumber=0&pageSize=12`}
+            </button>
+            <button
+                onClick={() => {
+                    handleChangeCategory("waiters");
+                    navigate(`/statistics/waiters?period=${currentPeriod}&pageNumber=0&pageSize=12`);
+                }}
                 className={isActive("waiters") ? classes.categoryButtonActive : classes.categoryButton}
             >
                 Waiters
-            </NavLink>
+            </button>
             <FormControl
                 variant="outlined"
                 sx={{

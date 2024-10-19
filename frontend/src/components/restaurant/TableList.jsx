@@ -23,10 +23,21 @@ function TableList() {
   const [searchTerm, setSearchTerm] = useState(queryParams.get('searchTerm') || '');
   const navigate = useNavigate()
   const [openForm, setOpenForm] = useState(false);
-
+  const [mode, setMode] = useState();
+  const [table, setTable] = useState();
   const handleCloseDialog = () => {
     setOpenForm(false)
-    navigate(0)
+    setTable(undefined)
+  }
+
+  const handleUpdateTable = (table) => {
+    setOpenForm(true)
+    setMode("update")
+    setTable(table)
+  }
+  const handleCreateTable = () => {
+    setOpenForm(true)
+    setMode("create")
   }
 
   const handleNextPage = () => {
@@ -83,6 +94,7 @@ function TableList() {
           newStompClient.subscribe('/topic/orders', (order) => {
             if (order && order.body) {
               const updatedOrder = JSON.parse(order.body);
+              console.log(updatedOrder)
               dispatch(tableActions.updateOrder({ order: updatedOrder }));
             }
           });
@@ -106,7 +118,7 @@ function TableList() {
       };
     }
   }, [dispatch, stompClient]);
-
+  console.log(preprocessedTables)
   const getOrder = useCallback((table) => {
     if (table.order) {
       if (table.order.edit) {
@@ -133,13 +145,13 @@ function TableList() {
   }, [tables, getOrder]);
 
   return (
-    <div>
-      <DialogComponent open={openForm} onClose={handleCloseDialog} mode={"create"} name={"table"} />
-      <div style={{ display: "flex", justifyContent: "flex-end", alignItems: "center", marginTop: "20px",}}>
-        <button className={uiClasses.blueButton} style={{ padding: "10px" }} onClick={() => { setOpenForm(true) }}>
+    <div className={classes.restaurantPage}>
+      <DialogComponent open={openForm} onClose={handleCloseDialog} mode={mode} name={"table"} object={table} />
+      <div style={{ display: "flex", justifyContent: "flex-end", alignItems: "center", marginTop: "20px", }}>
+        <button className={uiClasses.blueButton} style={{ padding: "10px" }} onClick={handleCreateTable}>
           New
         </button>
-        <form style={{  marginLeft: "auto" }}>
+        <form style={{ marginLeft: "auto" }}>
           <input
             type="text"
             value={searchTerm}
@@ -153,7 +165,7 @@ function TableList() {
         <>
           <div className={classes.tablesContainer}>
             {preprocessedTables.map((table) => (
-              <Table key={table.name} table={table} order={table.order} />
+              <Table key={table.name} table={table} order={table.order} updateTable={() => handleUpdateTable(table.name)} />
             ))}
           </div>
           <div>

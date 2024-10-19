@@ -45,7 +45,7 @@ public class OrderStatisticService {
                 .toList();
     }
 
-    private OrdersStatisticDTO getOrdersStatistics(List<Order> orders, OffsetDateTime startDate, OffsetDateTime endDate) {
+    public OrdersStatisticDTO getOrdersStatistics(List<Order> orders, OffsetDateTime startDate, OffsetDateTime endDate) {
         DailyOrdersStatistics dailyOrdersStatistics = new DailyOrdersStatistics(startDate, endDate);
 
         for (Order order : orders) {
@@ -63,6 +63,7 @@ public class OrderStatisticService {
                 .averageMealPerOrder(dailyOrdersStatistics.getAverageMealsPerOrder())
                 .averageCustomersPerDay(dailyOrdersStatistics.getAverageCustomersPerDay())
                 .dailyStatistics(getDailyOrderStatistics(dailyOrdersStatistics))
+                .averageOrdersPerDay(dailyOrdersStatistics.getAverageOrdersPerDay())
                 .build();
     }
 

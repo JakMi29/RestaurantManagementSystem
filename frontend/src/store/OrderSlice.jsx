@@ -12,7 +12,7 @@ const orderSlice = createSlice({
     addMeals(state, action) {
       const number = action.payload.number;
       const order = state.orders.find((order) => order.number === number);
-      order.meals = [...order.meals.filter(meal => meal.status !== 'PREPARING'), ...action.payload.meals]
+      order.meals = [...order?.meals.filter(meal => meal.status !== 'PREPARING'), ...action.payload.meals]
       order.price = action.payload.price
     },
     increaseCustomers(state, action) {
@@ -63,7 +63,7 @@ const orderSlice = createSlice({
       if (meal.quantity > 1) {
         meal.quantity = meal.quantity - 1;
       } else {
-        order.meals = order.meals.filter(meal => meal.meal.name !== mealName)
+        order.meals = order.meals.filter(meal => meal.meal.name === mealName ? meal.status !== 'PREPARING' : true)
       }
     },
   },

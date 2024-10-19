@@ -36,7 +36,7 @@ const tableSlice = createSlice({
       const updatedOrder = action.payload.order;
       const index = state.tables.findIndex(table => table.name === updatedOrder.tableName);
       if (index !== -1) {
-        if (updatedOrder.status === 'RELEASED') {
+        if (updatedOrder.status === 'PAID') {
           state.tables[index].order = null;
         } else {
           state.tables[index].order = updatedOrder;

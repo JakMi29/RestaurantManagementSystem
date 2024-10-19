@@ -6,7 +6,6 @@ import Waiter from '../../components/waiters/Waiter';
 import classes from './WaitersPage.module.css';
 import DialogComponent from '../../components/dialogs/DialogComponent';
 import uiClasses from '../../components/ui/Ui.module.css';
-import WaiterStatistic from '../../components/waiters/WaiterStatistics';
 
 const WaitersPage = () => {
   const { waiters } = useLoaderData();
@@ -16,9 +15,23 @@ const WaitersPage = () => {
   const [searchTerm, setSearchTerm] = useState(queryParams.get('search') || '');
   const navigate = useNavigate()
   const [openForm, setOpenForm] = useState(false);
+  const [waiter, setWaiter] = useState();
+  const [mode, setMode] = useState();
+
+  const handleOpenDialog = () => {
+    setOpenForm(true)
+    setMode("create")
+}
+
+const handleUpdateWaiter = (waiter) => {
+    setWaiter(waiter)
+    setMode("update")
+    setOpenForm(true)
+}
 
   const handleCloseDialog = () => {
     setOpenForm(false)
+    setWaiter(undefined)
   }
 
   const handleSearchChange = (event) => {
@@ -26,7 +39,7 @@ const WaitersPage = () => {
 
     setSearchTerm(search);
     search === "" ? navigate(`/waiters&pageNumber=0&pageSize=12`) :
-      navigate(`/waiters?pageNumber=${pageNumber}&pageSize=12${search ? `&searchTerm=${search}` : ""}`);
+      navigate(`/waiters/all?pageNumber=${pageNumber}&pageSize=12${search ? `&searchTerm=${search}` : ""}`);
   };
 
   const handleNextPage = () => {
@@ -44,9 +57,9 @@ const WaitersPage = () => {
 
   return (
     <>
-      <DialogComponent open={openForm} onClose={handleCloseDialog} name={"waiter"} />
+      <DialogComponent open={openForm} onClose={handleCloseDialog} name={"waiter"} mode={mode} object={waiter} />
       <div style={{ display: "flex", alignItems: "center", marginTop: "20px", justifyContent: "space-between" }}>
-        <button className={uiClasses.blueButton} style={{ padding: "10px" }} onClick={() => {setOpenForm(true)}}>
+        <button className={uiClasses.blueButton} style={{ padding: "10px" }} onClick={handleOpenDialog}>
           New
         </button>
         <form style={{ marginLeft: "auto" }}>
@@ -64,7 +77,7 @@ const WaitersPage = () => {
             <>
               <div className={classes.waitersContainer}>{
                 waiters.content.map(waiter => (
-                  <Waiter key={waiter.email} waiter={waiter} />
+                  <Waiter key={waiter.email} waiter={waiter} handleEdit={handleUpdateWaiter} />
                 ))}
               </div>
               <div>

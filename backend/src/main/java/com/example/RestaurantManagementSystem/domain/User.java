@@ -1,5 +1,6 @@
 package com.example.RestaurantManagementSystem.domain;
 
+import com.example.RestaurantManagementSystem.infrastructure.security.Role;
 import jakarta.persistence.Column;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -22,4 +23,6 @@ public class User {
     String phone;
     String email;
     Boolean active;
+    Role role;
+    String password;
 }

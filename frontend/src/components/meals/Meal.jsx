@@ -5,10 +5,10 @@ import { useNavigate } from 'react-router-dom';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import MealPageContext from '../../store/MealPageContext';
 import { getAuthToken } from '../../util/auth';
+import { Paper } from '@mui/material';
 
-function Meal({ meal }) {
+function Meal({ meal, updateMeal}) {
     const messageCtx = useContext(MessageContext);
-    const mealPageCtx = useContext(MealPageContext);
     const navigate = useNavigate()
     const admin = localStorage.getItem('role') === 'ADMIN';
 
@@ -39,9 +39,8 @@ function Meal({ meal }) {
         });
     };
 
-    function handleEditButton() {
-        mealPageCtx.edit()
-        mealPageCtx.editMeal(meal)
+    const handleEditButton=()=>{
+        updateMeal(meal)
     }
 
     const handleMealofTheDay = () => {
@@ -67,7 +66,7 @@ function Meal({ meal }) {
     }
 
     return (
-        <div className={classes.meal} >
+        <Paper elevation={4} sx={{borderRadius: 2}} className={classes.meal} >
             {admin ? (
                 <div className={meal.mealOfTheDay ? classes.mealOfDayTrue : classes.mealOfDayFalse}>
                     <FavoriteIcon sx={{ fontSize: 30 }} onClick={handleMealofTheDay} />
@@ -93,7 +92,7 @@ function Meal({ meal }) {
                     </div>
                 )}
             </div>
-        </div>
+        </Paper>
     )
 }
 export default Meal;

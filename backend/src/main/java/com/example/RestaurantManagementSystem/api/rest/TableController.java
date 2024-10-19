@@ -42,8 +42,13 @@ public class TableController {
     }
 
     @PatchMapping("/waiter")
-    public Response changeStatus(@RequestParam String tableName, @RequestParam String restaurantName) {
-        TableDTO table = tableService.changeStatus(tableName, restaurantName);
+    public Response changeStatus(
+            @RequestParam String tableName,
+            @RequestParam String restaurantName,
+            @RequestParam(required = false) boolean reverse
+
+    ) {
+        TableDTO table = tableService.changeStatus(tableName, restaurantName,reverse);
         this.template.convertAndSend("/topic/tables", table);
         return Response.builder()
                 .code(HttpStatus.OK.value())

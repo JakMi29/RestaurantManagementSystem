@@ -1,96 +1,88 @@
-import { Form, Link, useActionData, useSearchParams } from 'react-router-dom';
+import { Form, useFetcher } from 'react-router-dom';
 import classes from '../Form.module.css';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
+import { getRestaurantName } from '../../../util/data';
+import { getAuthToken } from '../../../util/auth';
+import MessageContext from '../../../store/MessageContext';
 
-function WaiterFormDialog({ waiter, mode, onClose }) {
+function WaiterFormDialog({ waiter, mode, onClose}) {
+  const fetcher = useFetcher();
   const [error, setError] = useState(false);
-  const data = useActionData();
+  const messageCtx = useContext(MessageContext);
+  const method = mode === 'create' ? 'post' : 'put';
 
   useEffect(() => {
-    if (data) {
-      if (data.code === 200) {
-        onClose()
+    if (fetcher.data) {
+      if (fetcher.data.code === 200) {
+        messageCtx.showMessage(fetcher.data.message, 'info');
+        onClose();
       } else {
         setError(true);
       }
     }
-  }, [data]);
+  }, [fetcher.data]);
 
   const handleChange = (event) => {
     setError(false);
-  }
+  };
 
   return (
     <div>
-      <Form method="post" >
-        {error && <p style={{color:"red"}}>{data.message}</p>}
-          <div className={classes.inputContainer}>
-            <label htmlFor="name">Name</label>
-            <input
-              id="name"
-              type="text"
-              name="name"
-              required
-              onChange={handleChange}
-              defaultValue={waiter ? waiter.name : ''}
-            />
-          </div>
-          <div className={classes.inputContainer}>
-            <label htmlFor="surname">Surname</label>
-            <input
-              id="surname"
-              type="text"
-              name="surname"
-              required
-              onChange={handleChange}
-              defaultValue={waiter ? waiter.name : ''}
-
-            />
-          </div>
-          <div className={classes.inputContainer}>
-            <label htmlFor="restaurantName">Restaurant name</label>
-            <input
-              id="restaurantName"
-              type="text"
-              name="restaurantName"
-              required
-              onChange={handleChange}
-              defaultValue={waiter ? waiter.name : ''}
-            />
-          </div>
-          <div className={classes.inputContainer}>
-            <label htmlFor="phone">Phone</label>
-            <input
-              id="phone"
-              type="text"
-              name="phone"
-              required
-              onChange={handleChange}
-              defaultValue={waiter ? waiter.phone : ''}
-
-            />
-          </div>
-          <div className={classes.inputContainer}>
-            <label htmlFor="salary">Salary</label>
-            <input
-              id="salary"
-              type="text"
-              name="salary"
-              required
-              onChange={handleChange}
-              defaultValue={waiter ? waiter.salary : ''}
-            />
-          </div>
+      <fetcher.Form method={method}>
+        {error && <p style={{ color: "red" }}>{fetcher.data?.message}</p>}
+        <div className={classes.inputContainer}>
+          <label htmlFor="name">Name</label>
+          <input
+            id="name"
+            type="text"
+            name="name"
+            required
+            onChange={handleChange}
+            defaultValue={waiter ? waiter.name : ''}
+          />
+        </div>
+        <div className={classes.inputContainer}>
+          <label htmlFor="surname">Surname</label>
+          <input
+            id="surname"
+            type="text"
+            name="surname"
+            required
+            onChange={handleChange}
+            defaultValue={waiter ? waiter.surname : ''}
+          />
+        </div>
         <div className={classes.inputContainer}>
           <label htmlFor="email">Email</label>
           <input
             id="email"
-            type="email"
+            type="text"
             name="email"
             required
             onChange={handleChange}
             defaultValue={waiter ? waiter.email : ''}
-
+          />
+        </div>
+        <div className={classes.inputContainer}>
+          <label htmlFor="phone">Phone</label>
+          <input
+            id="phone"
+            type="text"
+            name="phone"
+            required
+            onChange={handleChange}
+            defaultValue={waiter ? waiter.phone : ''}
+          />
+        </div>
+        <div className={classes.inputContainer}>
+          <label htmlFor="salary">Salary</label>
+          <input
+            id="salary"
+            type="text"
+            name="salary"
+            required
+            onChange={handleChange}
+            defaultValue={waiter ? waiter.salary : ''}
           />
         </div>
         <div className={classes.inputContainer}>
@@ -104,39 +96,43 @@ function WaiterFormDialog({ waiter, mode, onClose }) {
             defaultValue={waiter ? waiter.password : ''}
           />
         </div>
-        <input type="hidden" name="oldName" value={waiter.email} />
-        <input type="hidden" name="mode" value={mode} />
+        <input type="hidden" name="oldEmail" value={waiter ? waiter.email : ''} />
         <div className={classes.actions}>
-          <button className={classes.actionButton}>
+          <button type="button" onClick={onClose} className={classes.actionButton}>
             Cancel
           </button>
           <button type="submit" className={classes.actionButton}>
-            {create ? "Create" : "Update"}
+            {mode === "create" ? "Create" : "Update"}
           </button>
         </div>
-      </Form>
+      </fetcher.Form>
     </div>
   );
 }
 
-export const action = async ({ request }) => {
-  const formData = await request.formData();
-  const name = formData.get('name');
-  const oldName = formData.get('oldName');
-  const restaurantName = getRestaurantName();
-  const mode = formData.get('mode');
-
-  const response = await fetch(`http://localhost:8080/api/restaurantManagementSystem/table/admin?tableName=${name}` +
-    (mode === "create" ? "" : `&oldTableName=${oldName}`) +
-    `&restaurantName=${restaurantName}`, {
-    method: mode === "create" ? "POST" : "PUT",
+export async function action({ request }) {
+  const method = request.method;
+  const data = await request.formData();
+  const waiterData = {
+    email: data.get('email'),
+    name: data.get('name'),
+    surname: data.get('surname'),
+    salary: data.get('salary'),
+    phone: data.get('phone'),
+    restaurantName: getRestaurantName(),
+    oldEmail: data.get('oldEmail'),
+    password: data.get('password')
+  };
+  const url = 'http://localhost:8080/api/restaurantManagementSystem/waiters/admin';
+  const response = await fetch(url, {
+    method: method,
     headers: {
       'Content-Type': 'application/json',
       'Authorization': 'Bearer ' + getAuthToken()
-    }
+    },
+    body: JSON.stringify(waiterData),
   });
-
-
+  
   if (response.status === 422) {
     return response;
   }
@@ -145,10 +141,10 @@ export const action = async ({ request }) => {
   }
 
   if (!response.ok) {
-    throw json({ message: 'Could not save waiter.' }, { status: 500 });
+    throw new Response(JSON.stringify({ message: 'Could not save waiter.' }), { status: 500 });
   }
 
   return response;
-};
+}
 
 export default WaiterFormDialog;

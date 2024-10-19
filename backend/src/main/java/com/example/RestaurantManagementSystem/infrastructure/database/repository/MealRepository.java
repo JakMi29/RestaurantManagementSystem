@@ -16,6 +16,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @AllArgsConstructor
@@ -104,11 +105,9 @@ public class MealRepository implements MealDAO {
     }
 
     @Override
-    public Meal findByNameAndRestaurant(String name, Restaurant restaurant) {
+    public Optional<Meal> findByNameAndRestaurant(String name, Restaurant restaurant) {
         RestaurantEntity restaurantEntity = restaurantMapper.map(restaurant);
-        return meaLMapper.map(
-                repository.findByNameAndRestaurant(name, restaurantEntity)
-        );
+        return repository.findByNameAndRestaurant(name, restaurantEntity).map(meaLMapper::map);
     }
 
 }

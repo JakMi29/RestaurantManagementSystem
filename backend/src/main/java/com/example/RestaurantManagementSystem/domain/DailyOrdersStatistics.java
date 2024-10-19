@@ -83,4 +83,11 @@ public class DailyOrdersStatistics {
         }
         return this.totalCustomers / days;
     }
+    public Integer getAverageOrdersPerDay() {
+        int days = dateDailyOrderStatisticsMap.size();
+        if (days == 0) {
+            return 0;
+        }
+        return this.totalOrders / days;
+    }
 }

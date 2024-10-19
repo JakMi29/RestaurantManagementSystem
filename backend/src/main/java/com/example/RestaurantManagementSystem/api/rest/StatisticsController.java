@@ -1,10 +1,7 @@
 package com.example.RestaurantManagementSystem.api.rest;
 
 import com.example.RestaurantManagementSystem.api.dto.*;
-import com.example.RestaurantManagementSystem.business.MealsStatisticService;
-import com.example.RestaurantManagementSystem.business.OrderStatisticService;
-import com.example.RestaurantManagementSystem.business.StatisticsPaginationService;
-import com.example.RestaurantManagementSystem.business.WaiterStatisticService;
+import com.example.RestaurantManagementSystem.business.*;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -13,8 +10,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 
 @Slf4j
 @RestController
@@ -43,11 +38,13 @@ public class StatisticsController {
     }
 
     @GetMapping("table/meals")
-    public ResponseEntity<List<TableOrderMealDTO>> getOrderMealsStatistics(
+    public ResponseEntity<Page<TableOrderMealDTO>> getOrderMealsStatistics(
             @RequestParam String restaurantName,
+            @RequestParam Integer pageNumber,
+            @RequestParam Integer pageSize,
             @RequestParam String period
     ) {
-        return ResponseEntity.ok(mealStatisticService.getMeals(restaurantName, period));
+        return ResponseEntity.ok(statisticsPaginationService.getMealsByPeriod(restaurantName, period,pageSize,pageNumber));
     }
 
     @GetMapping("/waiters")
@@ -62,7 +59,7 @@ public class StatisticsController {
     }
 
     @GetMapping("/waiter")
-    public ResponseEntity<WaiterStatisticsDTO> getTablesStatistics(
+    public ResponseEntity<WaiterDailyStatisticsDTO> getTablesStatistics(
             @RequestParam String email,
             @RequestParam String period
     ) {

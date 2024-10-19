@@ -11,11 +11,8 @@ const ChartComponent = ({ dataset, xLabel, yLabel, title, dataKey, labelKey }) =
       {
         label: title,
         data: dataset.map(data => data[dataKey]),
-        backgroundColor: 'rgba(33, 150, 243, 0.5)',
-        borderColor: 'rgba(33, 150, 243, 1)', 
-        borderWidth: 2,
-        hoverBackgroundColor: 'rgba(60, 60, 211,0.7)',
-        hoverBorderColor: 'rgba(60, 60, 211,1)',
+        hoverBackgroundColor: 'rgba(60, 60, 211,1)',
+        backgroundColor: 'rgba(60, 60, 211,0.7)',
       },
     ],
   };
@@ -23,14 +20,19 @@ const ChartComponent = ({ dataset, xLabel, yLabel, title, dataKey, labelKey }) =
   const options = {
     responsive: true,
     plugins: {
-      legend: {
+      title: {
         display: true,
-        labels: {
-          color: '#333',
-          font: {
-            size: 14,
-          },
+        text: title,
+        font: {
+          size: 24,
         },
+        color: '#333',
+        padding: {
+          bottom: 20,
+        },
+      },
+      legend: {
+        display: false,
       },
       tooltip: {
         backgroundColor: 'rgba(0, 0, 0, 0.7)',
@@ -83,7 +85,7 @@ const ChartComponent = ({ dataset, xLabel, yLabel, title, dataKey, labelKey }) =
   };
 
   return (
-    <div style={{ width: '100%', height: '400px', marginTop: '20px' }}>
+    <div style={{ width: '100%', height: '400px' }}>
       <Bar data={chartData} options={options} />
     </div>
   );

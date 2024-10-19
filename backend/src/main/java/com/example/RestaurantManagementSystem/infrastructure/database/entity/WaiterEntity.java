@@ -38,7 +38,7 @@ public class WaiterEntity {
     @OneToMany(mappedBy = "waiter", fetch = FetchType.LAZY)
     private List<OrderEntity> orders;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
     private UserEntity user;
 }

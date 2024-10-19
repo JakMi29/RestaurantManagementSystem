@@ -1,11 +1,9 @@
 package com.example.RestaurantManagementSystem.business;
 
-import com.example.RestaurantManagementSystem.api.dto.DailyOrdersStatisticsDTO;
 import com.example.RestaurantManagementSystem.api.dto.OrderDTO;
-import com.example.RestaurantManagementSystem.api.dto.OrdersStatisticDTO;
+import com.example.RestaurantManagementSystem.api.dto.OrderMealDTO;
 import com.example.RestaurantManagementSystem.api.dto.mapper.OrderDTOMapper;
 import com.example.RestaurantManagementSystem.api.rest.request.CreateOrderRequest;
-import com.example.RestaurantManagementSystem.api.rest.response.Response;
 import com.example.RestaurantManagementSystem.business.dao.OrderDAO;
 import com.example.RestaurantManagementSystem.domain.*;
 import com.example.RestaurantManagementSystem.domain.exception.ObjectAlreadyExist;
@@ -15,17 +13,13 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.time.temporal.ChronoUnit;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -51,21 +45,22 @@ public class OrderService {
 
     @Transactional
     public OrderDTO updateOrder(OrderDTO updatedOrder) {
+        this.updateMeals(updatedOrder);
         Order order = orderDAO.findByNumber(updatedOrder.getNumber());
-        this.updateMeals(order, updatedOrder);
-        orderDAO.updateOrder(order
+        return mapper.map(orderDAO.updateOrder(order
                 .withEdit(false)
                 .withEditor(null)
                 .withCustomerQuantity(updatedOrder.getCustomerQuantity())
-                .withPrice(updatedOrder.getPrice()));
-        entityManager.flush();
-        entityManager.clear();
-        return mapper.map(orderDAO.findByNumber(updatedOrder.getNumber()), false);
+                .withPrice(updatedOrder.getPrice())), false);
     }
 
     @Transactional
-    public void updateMeals(Order order, OrderDTO updatedOrder) {
-        orderMealService.updateOrderMeals(order, updatedOrder.getMeals());
+    public void updateMeals(OrderDTO updatedOrder) {
+        Order order = orderDAO.findByNumber(updatedOrder.getNumber());
+        List<OrderMealDTO> filteredMeals = updatedOrder.getMeals().stream()
+                .filter(m ->OrderMealStatus.valueOf(m.getStatus()) == OrderMealStatus.PREPARING)
+                .collect(Collectors.toList());
+        orderMealService.updateOrderMeals(order, filteredMeals);
     }
 
     @Transactional
@@ -73,7 +68,7 @@ public class OrderService {
         this.updateOrderMeal(restaurantName, mealName, orderNumber, orderMealStatus);
         Order order = orderDAO.findByNumber(orderNumber);
         if (this.checkOrderStatus(order)) {
-            this.changeStatus(order);
+            return this.changeStatus(order);
         }
         return mapper.map(order, false);
     }
@@ -110,7 +105,7 @@ public class OrderService {
         Waiter waiter = waiterService.findByEmail(request.getWaiterEmail());
         Restaurant restaurant = restaurantService.findByName(request.getRestaurantName());
         Table table = tableService.findByNameAndRestaurant(request.getTableName(), request.getRestaurantName())
-                .orElseThrow(()->new RuntimeException("Something gone wrong"));
+                .orElseThrow(() -> new RuntimeException("Something gone wrong"));
         OffsetDateTime time = OffsetDateTime.now();
         Order order = Order.builder()
                 .restaurant(restaurant)
@@ -165,17 +160,18 @@ public class OrderService {
     }
 
     @Transactional
-    public Response changeStatus(String orderNumber) {
+    public OrderDTO changeStatus(String orderNumber) {
         Order order = orderDAO.findByNumber(orderNumber);
-        this.changeStatus(order);
+        return this.changeStatus(order);
 
-        return Response.builder()
-                .code(HttpStatus.OK.value())
-                .message("Successfully change order status")
-                .build();
+//        return Response.builder()
+//                .code(HttpStatus.OK.value())
+//                .message("Successfully change order status")
+//                .build();
     }
 
-    private Order changeStatus(Order order) {
+    @Transactional
+    private OrderDTO changeStatus(Order order) {
         Order updatedOrder = order.withStatus(
                 switch (order.getStatus()) {
                     case NEW -> OrderStatus.PLACED;
@@ -186,8 +182,7 @@ public class OrderService {
         if (updatedOrder.getStatus() == OrderStatus.PAID) {
             updatedOrder = updatedOrder.withCompletedDateTime(OffsetDateTime.now());
         }
-        orderDAO.updateOrder(updatedOrder);
-        return updatedOrder;
+        return mapper.map(orderDAO.updateOrder(updatedOrder), false);
     }
 
     @Transactional

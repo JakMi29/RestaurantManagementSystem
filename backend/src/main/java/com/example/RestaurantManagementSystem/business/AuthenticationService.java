@@ -12,6 +12,7 @@ import com.example.RestaurantManagementSystem.infrastructure.security.UserEntity
 import com.example.RestaurantManagementSystem.infrastructure.security.UserJpaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -63,7 +64,7 @@ public class AuthenticationService {
         );
         var user = repository.findByEmail(request.getEmail())
                 .filter(UserEntity::getActive)
-                .orElseThrow(() -> new NotFoundException("Can not found user with this email or user is not active"));
+                .orElseThrow(() -> new BadCredentialsException("Can not found user with this email or user is not active"));
         var jwtToken = jwtService.generateToken(user);
         String restaurantName = "Italiano";
         return AuthenticationResponse.builder()

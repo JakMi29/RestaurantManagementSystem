@@ -1,10 +1,16 @@
+import { Paper } from '@mui/material';
 import classes from '../../pages/statistics/StatisticPage.module.css';
 
+const cardStyle = {
+    padding: 3,
+    textAlign: "center",
+    borderRadius: 2,
+  };
 
 function OrderMealDetails({ meal }) {
 
     return (
-        <div className={classes.meal} >
+        <Paper elevation={4} sx={cardStyle}>
             <div className={classes.mealImage}>
                 <img src={meal.meal.image} />
             </div>
@@ -15,7 +21,7 @@ function OrderMealDetails({ meal }) {
                     <p>Quantity: {meal.quantity}</p>
                 </div>
             </div>
-        </div>
+        </Paper>
     )
 }
 export default OrderMealDetails;

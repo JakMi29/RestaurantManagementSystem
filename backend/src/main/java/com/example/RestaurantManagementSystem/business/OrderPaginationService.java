@@ -1,8 +1,6 @@
 package com.example.RestaurantManagementSystem.business;
 
 import com.example.RestaurantManagementSystem.api.dto.OrderDTO;
-import com.example.RestaurantManagementSystem.api.dto.OrdersStatisticDTO;
-import com.example.RestaurantManagementSystem.domain.Order;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -29,7 +27,7 @@ public class OrderPaginationService {
 //                Sort.Order.desc("mealOfTheDay"),
 //                Sort.Order.asc("name")
 //        );
-        Sort sort =Sort.unsorted();
+        Sort sort = Sort.unsorted();
         Pageable pageable = PageRequest.of(pageNumber, pageSize, sort);
         return orderService.findAllByPeriod(
                 restaurantName,

@@ -5,8 +5,8 @@ import { getAuthToken } from "../../util/auth";
 import { Suspense, useEffect, useState } from "react";
 import CircularProgress from '@mui/material/CircularProgress';
 import MealList from "../../components/meals/MealList";
-import { MealPageContextProvider } from "../../store/MealPageContext";
 import MealModal from "../../components/meals/MealForm";
+import DialogComponent from "../../components/dialogs/DialogComponent";
 
 function MealsPage() {
     const { meals } = useLoaderData();
@@ -15,7 +15,25 @@ function MealsPage() {
     const currentCategory = queryParams.get('category');
     const [pageNumber, setPageNumber] = useState(0);
     const [searchTerm, setSearchTerm] = useState(queryParams.get('search') || '');
+    const [openForm, setOpenForm] = useState(false)
     const navigate = useNavigate()
+    const [meal, setMeal] = useState()
+    const [mode, setMode] = useState()
+
+    const handleCloseDialog = () => {
+        setMeal(undefined)
+        setOpenForm(false)
+    }
+    const handleOpenDialog = () => {
+        setOpenForm(true)
+        setMode("create")
+    }
+
+    const handleUpdateMeal = (meal) => {
+        setMeal(meal)
+        setMode("update")
+        setOpenForm(true)
+    }
 
     useEffect(() => {
         setPageNumber(0);
@@ -44,53 +62,49 @@ function MealsPage() {
 
     return (
         <div className={classes.mealPage}>
-            <MealPageContextProvider>
-                <MealModal />
-                <MealCategoryContainer currentCategory={currentCategory} order={false} />
-                <div style={{ display: "flex", justifyContent: "flex-end" }}>
-                    <form style={{ marginTop: "20px", marginLeft: "auto" }}>
-                        <input
-                            type="text"
-                            value={searchTerm}
-                            onChange={handleSearchChange}
-                            placeholder="Search for meals..."
-                            className={classes.searchInput}
-                        />
-                    </form>
-                </div>
-                <Suspense fallback={<p style={{ textAlign: 'center' }}><CircularProgress /></p>}>
-                    <Await resolve={meals}>
-                        {(loadedMeals) => (
-                            <>
-                                <div className={classes.mealsContainer}>
-                                    <MealList meals={loadedMeals.content} order={false} />
-                                </div>
-                                <div>
-                                    {!loadedMeals.first && (
-                                        <button
-                                            className={classes.categoryButton}
-                                            style={{ position: "absolute", left: "80px", bottom: "30px" }}
-                                            onClick={handlePreviousPage}
-                                            disabled={loadedMeals.first}
-                                        >
-                                            Previous
-                                        </button>
-                                    )}
-                                    {!loadedMeals.last && (
-                                        <button
-                                            className={classes.categoryButton}
-                                            style={{ position: "absolute", right: "80px", bottom: "30px" }}
-                                            onClick={handleNextPage}
-                                        >
-                                            Next
-                                        </button>
-                                    )}
-                                </div>
-                            </>
-                        )}
-                    </Await>
-                </Suspense>
-            </MealPageContextProvider>
+            <DialogComponent open={openForm} mode={mode} onClose={handleCloseDialog} name={"meal"} object={meal} />
+            <MealCategoryContainer currentCategory={currentCategory} order={false} openDialog={handleOpenDialog} />
+            <div style={{ display: "flex", justifyContent: "flex-end" }}>
+                <form style={{ marginTop: "20px", marginLeft: "auto" }}>
+                    <input
+                        type="text"
+                        value={searchTerm}
+                        onChange={handleSearchChange}
+                        placeholder="Search for meals..."
+                        className={classes.searchInput}
+                    />
+                </form>
+            </div>
+            <Suspense fallback={<p style={{ textAlign: 'center' }}><CircularProgress /></p>}>
+                <Await resolve={meals}>
+                    {(loadedMeals) => (
+                        <>
+                            <MealList meals={loadedMeals.content} order={false} updateMeal={handleUpdateMeal} />
+                            <div>
+                                {!loadedMeals.first && (
+                                    <button
+                                        className={classes.categoryButton}
+                                        style={{ position: "absolute", left: "80px", bottom: "30px" }}
+                                        onClick={handlePreviousPage}
+                                        disabled={loadedMeals.first}
+                                    >
+                                        Previous
+                                    </button>
+                                )}
+                                {!loadedMeals.last && (
+                                    <button
+                                        className={classes.categoryButton}
+                                        style={{ position: "absolute", right: "80px", bottom: "30px" }}
+                                        onClick={handleNextPage}
+                                    >
+                                        Next
+                                    </button>
+                                )}
+                            </div>
+                        </>
+                    )}
+                </Await>
+            </Suspense>
         </div>
     );
 }

@@ -1,6 +1,7 @@
 import { Dialog, DialogTitle, DialogContent } from '@mui/material';
 import WaiterFormDialog from './form/WaiterFormDialog';
 import TableFormDialog from './form/TableFormDialog';
+import MealFormDialog from './form/MealFormDialog';
 
 function DialogComponent({ open, onClose, name, mode, object }) {
     let content;
@@ -14,12 +15,16 @@ function DialogComponent({ open, onClose, name, mode, object }) {
             content = <TableFormDialog onClose={onClose} mode={mode} name={object} />;
             header = mode === "create" ? "Add table" : "Update table"
             break;
+        case "meal":
+            content = <MealFormDialog onClose={onClose} mode={mode} meal={object} />;
+            header = mode === "create" ? "Add meal" : "Update meal"
+            break;
         default:
             content = null;
     }
 
     return (
-        <Dialog open={open===true} header={header}>
+        <Dialog open={open === true} header={header}>
             <DialogTitle sx={{ m: 0, p: 2 }}>
                 {header}
             </DialogTitle>

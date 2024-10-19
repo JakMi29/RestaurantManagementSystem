@@ -20,6 +20,7 @@ public class WaiterDTOMapper {
                 .surname(waiter.getUser().getSurname())
                 .employmentDate(waiter.getEmploymentDate().toString())
                 .salary(waiter.getSalary().toString())
+                .phone(waiter.getUser().getPhone())
                 .build();
     }
 

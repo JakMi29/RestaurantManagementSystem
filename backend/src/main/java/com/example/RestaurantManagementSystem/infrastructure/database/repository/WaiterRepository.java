@@ -12,6 +12,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 @AllArgsConstructor
 public class WaiterRepository implements WaiterDAO {
@@ -21,17 +23,23 @@ public class WaiterRepository implements WaiterDAO {
 
     @Override
     public Waiter createWaiter(Waiter waiter) {
-        return mapper.map(repository.save(mapper.map(waiter)));
+        return mapper.map(repository.save(mapper.mapWithUserAndOrders(waiter)));
     }
 
     @Override
-    public Waiter findByEmail(String email) {
-        return mapper.map(repository.findByEmail(email));
+    public Optional<Waiter> findByEmail(String email) {
+        return repository.findByEmail(email).map(mapper::map);
+    }
+
+    @Override
+    public Optional<Waiter> findByEmailWithUser(String email) {
+        return repository.findByEmail(email).map(mapper::mapWithUserAndOrders);
+
     }
 
     @Override
     public Waiter updateWaiter(Waiter waiter) {
-        return mapper.map(repository.save(mapper.map(waiter)));
+        return mapper.map(repository.save(mapper.mapWithUserAndOrders(waiter)));
     }
 
     @Override
