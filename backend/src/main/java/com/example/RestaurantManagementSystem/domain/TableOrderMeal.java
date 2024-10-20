@@ -20,6 +20,7 @@ public class TableOrderMeal {
     }
 
     public void addMeal(OrderMeal orderMeal) {
+        System.out.println(orderMeal);
         this.quantity += orderMeal.getQuantity();
         this.totalPrice=this.totalPrice.add(this.getMealPrice().multiply(BigDecimal.valueOf(orderMeal.getQuantity())));
         this.time = this.time.plus(Duration.between(orderMeal.getReceivedDateTime(), orderMeal.getCompletedDateTime()))

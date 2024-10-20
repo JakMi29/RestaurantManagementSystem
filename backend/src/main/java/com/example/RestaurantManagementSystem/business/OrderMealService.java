@@ -50,6 +50,7 @@ public class OrderMealService {
                 .order(orderMeal.getOrder())
                 .meal(orderMeal.getMeal())
                 .receivedDateTime(orderMeal.getReceivedDateTime())
+                .completedDateTime(status == OrderMealStatus.RELEASED ? OffsetDateTime.now() : null)
                 .status(status)
                 .price(orderMeal.getMeal().getPrice())
                 .quantity(0)

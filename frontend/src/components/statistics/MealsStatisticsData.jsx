@@ -42,7 +42,7 @@ const MealsStatisticsData = ({ statistics }) => {
         <Grid item xs={12} sm={6} md={3}>
           <Paper elevation={4} sx={cardStyle}>
             <Typography variant="h6">Average meal preapering time</Typography>
-            <Typography variant="h4">{statistics.averagePrepareMealTime}</Typography>
+            <Typography variant="h4">{statistics.averagePrepareMealTime} min</Typography>
           </Paper>
         </Grid>
       </Grid>

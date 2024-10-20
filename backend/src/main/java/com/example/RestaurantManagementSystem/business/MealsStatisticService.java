@@ -1,6 +1,9 @@
 package com.example.RestaurantManagementSystem.business;
 
-import com.example.RestaurantManagementSystem.api.dto.*;
+import com.example.RestaurantManagementSystem.api.dto.DailyMealsStatisticsDTO;
+import com.example.RestaurantManagementSystem.api.dto.MealsStatisticDTO;
+import com.example.RestaurantManagementSystem.api.dto.TableOrderMealDTO;
+import com.example.RestaurantManagementSystem.api.dto.Top5MealsDTO;
 import com.example.RestaurantManagementSystem.business.dao.OrderDAO;
 import com.example.RestaurantManagementSystem.domain.*;
 import lombok.AllArgsConstructor;
@@ -8,11 +11,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.awt.print.Pageable;
 import java.time.Duration;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -36,6 +39,7 @@ public class MealsStatisticService {
         return getMealsStatistics(orders, startDate, endDate);
     }
 
+    @Transactional
     public List<TableOrderMealDTO> getMealsByPeriod(String restaurantName, String period) {
         Restaurant restaurant = restaurantService.findByName(restaurantName);
         OffsetDateTime endDate = OffsetDateTime.now();
@@ -90,10 +94,15 @@ public class MealsStatisticService {
                 .collect(Collectors.toList());
     }
 
-    private List<DailyMealsStatisticsDTO> getDailyMealsStatistics(Map<LocalDate, DailyMealStatistics> dailyStatsMap) {
+    private List<DailyMealsStatisticsDTO> getDailyMealsStatistics(
+            Map<LocalDateTime, DailyMealStatistics> dailyStatsMap,
+            Boolean today
+    ) {
+        DateTimeFormatter formatter = today?DateTimeFormatter.ofPattern("HH:mm"):DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
         return dailyStatsMap.entrySet().stream()
                 .map(entry -> DailyMealsStatisticsDTO.builder()
-                        .date(entry.getKey())
+                        .date(entry.getKey().format(formatter))
                         .quantity(entry.getValue().getQuantity())
                         .duration(String.valueOf(entry.getValue().getQuantity() != 0 ? entry.getValue().getTime().dividedBy(entry.getValue().getQuantity()).toMinutes() : Duration.ZERO))
                         .build())
@@ -102,10 +111,15 @@ public class MealsStatisticService {
     }
 
     public MealsStatisticDTO getMealsStatistics(List<Order> orders, OffsetDateTime startDate, OffsetDateTime endDate) {
-        DailyMealsStatistics dailyMealsStatistics = new DailyMealsStatistics(startDate, endDate);
+        Boolean today = startDate.toLocalDate().isEqual(endDate.toLocalDate());
+
+        DailyMealsStatistics dailyMealsStatistics = new DailyMealsStatistics(
+                startDate.toLocalDateTime(),
+                endDate.toLocalDateTime(),
+                today);
         for (Order order : orders) {
             for (OrderMeal meal : order.getOrderMeals()) {
-                dailyMealsStatistics.addMeal(meal, order.getCompletedDateTime().toLocalDate());
+                dailyMealsStatistics.addMeal(meal, order.getCompletedDateTime().toLocalDateTime(), today);
             }
         }
         return MealsStatisticDTO.builder()
@@ -115,7 +129,7 @@ public class MealsStatisticService {
                 .highestIncomeMeal(getMostIncomeMeals(orders))
                 .averageMealsPerOrder(orders.size() > 0 ? dailyMealsStatistics.getTotalQuantity() / orders.size() : 0)
                 .averagePrepareMealTime(String.valueOf(dailyMealsStatistics.getAverageMealPrepareTime().toMinutes()))
-                .dailyStatistics(getDailyMealsStatistics(dailyMealsStatistics.getDailyMealStatistics()))
+                .dailyStatistics(getDailyMealsStatistics(dailyMealsStatistics.getDailyMealStatistics(),today))
                 .build();
     }
 

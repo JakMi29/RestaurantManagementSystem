@@ -12,7 +12,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 public class DailyMealsStatisticsDTO {
-    LocalDate date;
+    String date;
     int quantity;
     String duration;
 }

@@ -12,7 +12,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 public class DailyOrdersStatisticsDTO {
-    LocalDate date;
+    String date;
     int totalCustomers;
     int totalOrders;
 }

@@ -37,7 +37,7 @@ public class OrderStatisticService {
     private List<DailyOrdersStatisticsDTO> getDailyOrderStatistics(DailyOrdersStatistics dailyOrdersStatistics) {
         return dailyOrdersStatistics.getDateDailyOrderStatisticsMap().entrySet().stream()
                 .map(t -> DailyOrdersStatisticsDTO.builder()
-                        .date(t.getKey())
+                        .date(t.getKey().toString())
                         .totalOrders(t.getValue().getTotalOrders())
                         .totalCustomers(t.getValue().getTotalOrders())
                         .build())
