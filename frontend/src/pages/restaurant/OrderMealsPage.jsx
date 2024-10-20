@@ -1,14 +1,16 @@
 import { Await, defer, json, useLocation, useLoaderData, useNavigate } from "react-router-dom";
 import classes from './EditOrderPage.module.css';
+import uiClasses from '../../components/ui/Ui.module.css';
 import { getAuthToken } from "../../util/auth";
 import { Suspense, useEffect, useRef, useState } from "react";
 import CircularProgress from '@mui/material/CircularProgress';
 import MealList from "../../components/meals/MealList";
 import MealCategoryContainer from "../../components/meals/MealCategoryContainer";
 import { useDispatch, useSelector } from "react-redux";
-import OrderMealEdit from "./OrderMealEdit";
+import OrderMealEdit from "../../components/meals/OrderMealEdit";
 import { orderMealActions } from "../../store/EditOrderSlice";
 import { orderActions } from "../../store/OrderSlice";
+import OrderMeal from "../../components/meals/OrderMeal";
 
 function OrderMealsPage() {
     const dispatch = useDispatch();
@@ -120,11 +122,11 @@ function OrderMealsPage() {
     return (
         <div className={classes.mealPage}>
             <div className={classes.actions}>
-                <button onClick={handleCancel} className={classes.redButton}>
+                <button onClick={handleCancel} className={uiClasses.redButton}>
                     Cancel
                 </button>
 
-                <button onClick={handleConfirm} className={classes.greenButton}>
+                <button onClick={handleConfirm} className={uiClasses.greenButton}>
                     Save
                 </button>
             </div>
@@ -145,13 +147,14 @@ function OrderMealsPage() {
                     />
                 </form>
             </div>
-
             <div className={classes.mealsContainer}>
-                {initialLoad && loading ? (
-                    <p style={{ textAlign: 'center' }}><CircularProgress /></p>
-                ) : (
-                    <MealList meals={meals.content || []} order={true} />
-                )}
+            {initialLoad && loading ? (
+                <p style={{ textAlign: 'center' }}>
+                    <CircularProgress />
+                </p>
+            ) : (
+                meals.content.map(meal => <OrderMeal key={meal.name} meal={meal} />)
+            )}
             </div>
             <div className={classes.paginationContainer}>
                 {!meals.first && (

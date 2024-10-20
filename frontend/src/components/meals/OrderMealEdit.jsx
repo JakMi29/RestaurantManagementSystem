@@ -1,11 +1,8 @@
-import { useContext } from 'react';
 import classes from '../../pages/restaurant/EditOrderPage.module.css';
-import MealPageContext from '../../store/MealPageContext';
 import { useDispatch } from 'react-redux';
 import { orderMealActions } from '../../store/EditOrderSlice';
-
+import uiClasses from '../ui/Ui.module.css';
 function OrderMealEdit({ meal }) {
-    const mealPageCtx = useContext(MealPageContext);
     const dispatch = useDispatch();
 
     return (
@@ -19,10 +16,10 @@ function OrderMealEdit({ meal }) {
                 <img src={meal.meal.image} />
             </div>
             <div className={classes.orderMealActions}>
-                <button className={classes.redButton} onClick={
+                <button className={uiClasses.redButton} onClick={
                     () => dispatch(orderMealActions.decreasemealMealQuantity({ name: meal.meal.name }))}>-</button>
-                <p style={{color:"black"}}>{meal.quantity}</p>
-                <button className={classes.greenButton} onClick={
+                <p style={{ color: "black",padding:"0px", margin:"0px" }}>{meal.quantity}</p>
+                <button className={uiClasses.greenButton} onClick={
                     () => dispatch(orderMealActions.increaseOrderMealQuantity({ meal: meal.meal }))}>+</button>
             </div>
         </div>

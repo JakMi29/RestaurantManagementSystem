@@ -17,7 +17,7 @@ public class OrdersStatisticDTO {
     BigDecimal totalIncome;
     BigDecimal averageDailyIncome;
     BigDecimal averageOrderIncome;
-    Duration averageOrderDuration;
+    String averageOrderDuration;
     Integer totalCustomers;
     Integer averageCustomersPerDay;
     Integer averageCustomersPerOrder;

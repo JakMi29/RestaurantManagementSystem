@@ -4,7 +4,6 @@ import com.example.RestaurantManagementSystem.api.dto.*;
 import com.example.RestaurantManagementSystem.api.dto.mapper.WaiterDTOMapper;
 import com.example.RestaurantManagementSystem.business.dao.OrderDAO;
 import com.example.RestaurantManagementSystem.business.dao.WaiterDAO;
-import com.example.RestaurantManagementSystem.domain.DailyWaitersStatistics;
 import com.example.RestaurantManagementSystem.domain.Order;
 import com.example.RestaurantManagementSystem.domain.Restaurant;
 import com.example.RestaurantManagementSystem.domain.Waiter;
@@ -28,6 +27,7 @@ public class WaiterStatisticService {
     private final OrderDAO orderDAO;
     private final RestaurantService restaurantService;
     private final OrderStatisticService orderStatisticService;
+    private final MealsStatisticService mealsStatisticService;
 
     public Page<WaitersDTO> buildStatistics(Page<Waiter> waiters) {
         return waiters.map(this::getStatistics);
@@ -75,11 +75,12 @@ public class WaiterStatisticService {
         OffsetDateTime startDate = orderStatisticService.getStartPeriod(period, endDate);
         List<Order> orders=orderDAO.findAllByPeriodAndWaiter(waiter, startDate, endDate);
         OrdersStatisticDTO ordersStatisticDTO= orderStatisticService.getOrdersStatistics(orders,startDate,endDate);
-
+        MealsStatisticDTO mealsStatisticDTO=mealsStatisticService.getMealsStatistics(orders,startDate,endDate);
         return WaiterDailyStatisticsDTO
                 .builder()
-                .waiter(mapper.map(waiter))
-                .statistics(ordersStatisticDTO)
+                .waiter(mapper.mapWithUserData(waiter))
+                .orderStatistic(ordersStatisticDTO)
+                .mealsStatistic(mealsStatisticDTO)
         .build();
     }
 }

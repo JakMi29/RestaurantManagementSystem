@@ -147,8 +147,8 @@ function TableList() {
   return (
     <div className={classes.restaurantPage}>
       <DialogComponent open={openForm} onClose={handleCloseDialog} mode={mode} name={"table"} object={table} />
-      <div style={{ display: "flex", justifyContent: "flex-end", alignItems: "center", marginTop: "20px", }}>
-        <button className={uiClasses.blueButton} style={{ padding: "10px" }} onClick={handleCreateTable}>
+      <div style={{ display: "flex", justifyContent: "flex-end", alignItems: "center" }}>
+        <button className={uiClasses.blueButton} onClick={handleCreateTable}>
           New
         </button>
         <form style={{ marginLeft: "auto" }}>

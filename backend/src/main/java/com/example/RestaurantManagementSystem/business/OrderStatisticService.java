@@ -58,7 +58,7 @@ public class OrderStatisticService {
                 .totalOrders(dailyOrdersStatistics.getTotalOrders())
                 .averageDailyIncome(dailyOrdersStatistics.getAverageDailyIncome())
                 .averageCustomersPerOrder(dailyOrdersStatistics.getAverageCustomersPerOrder())
-                .averageOrderDuration(dailyOrdersStatistics.getAverageOrderDuration())
+                .averageOrderDuration(String.valueOf(dailyOrdersStatistics.getAverageOrderDuration().toMinutes()))
                 .averageCustomersPerDay(dailyOrdersStatistics.getAverageCustomersPerDay())
                 .averageMealPerOrder(dailyOrdersStatistics.getAverageMealsPerOrder())
                 .averageCustomersPerDay(dailyOrdersStatistics.getAverageCustomersPerDay())

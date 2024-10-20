@@ -11,5 +11,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class WaiterDailyStatisticsDTO {
    WaiterDTO waiter;
-   OrdersStatisticDTO statistics;
+   OrdersStatisticDTO orderStatistic;
+   MealsStatisticDTO mealsStatistic;
 }

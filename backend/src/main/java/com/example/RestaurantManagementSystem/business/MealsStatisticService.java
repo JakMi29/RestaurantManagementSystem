@@ -101,7 +101,7 @@ public class MealsStatisticService {
                 .collect(Collectors.toList());
     }
 
-    private MealsStatisticDTO getMealsStatistics(List<Order> orders, OffsetDateTime startDate, OffsetDateTime endDate) {
+    public MealsStatisticDTO getMealsStatistics(List<Order> orders, OffsetDateTime startDate, OffsetDateTime endDate) {
         DailyMealsStatistics dailyMealsStatistics = new DailyMealsStatistics(startDate, endDate);
         for (Order order : orders) {
             for (OrderMeal meal : order.getOrderMeals()) {
@@ -114,7 +114,7 @@ public class MealsStatisticService {
                 .mostSalesMeal(getMostSalesMeals(orders))
                 .highestIncomeMeal(getMostIncomeMeals(orders))
                 .averageMealsPerOrder(orders.size() > 0 ? dailyMealsStatistics.getTotalQuantity() / orders.size() : 0)
-                .averagePrepareMealTime(String.valueOf(dailyMealsStatistics.getAverageMealPrepareTime()))
+                .averagePrepareMealTime(String.valueOf(dailyMealsStatistics.getAverageMealPrepareTime().toMinutes()))
                 .dailyStatistics(getDailyMealsStatistics(dailyMealsStatistics.getDailyMealStatistics()))
                 .build();
     }

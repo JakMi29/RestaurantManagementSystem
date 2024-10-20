@@ -28,7 +28,7 @@ public class WaiterRepository implements WaiterDAO {
 
     @Override
     public Optional<Waiter> findByEmail(String email) {
-        return repository.findByEmail(email).map(mapper::map);
+        return repository.findByEmail(email).map(mapper::mapWithUserAndOrders);
     }
 
     @Override
