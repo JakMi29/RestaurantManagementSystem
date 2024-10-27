@@ -2,6 +2,7 @@ package com.example.RestaurantManagementSystem.api.auth;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -21,6 +22,7 @@ public class RegisterRequest {
     @NotBlank
     private String restaurantName;
     @NotBlank
+    @Pattern(regexp = "^[+]\\d{2}\\s\\d{3}\\s\\d{3}\\s\\d{3}$")
     private String phone;
     @NotBlank
     @Email

@@ -55,7 +55,7 @@ public class StatisticsController {
             @RequestParam(required = false) String searchTerm,
             @RequestParam String period
             ) {
-        return ResponseEntity.ok(statisticsPaginationService.findAll(restaurantName, pageNumber, pageSize, searchTerm, period));
+        return ResponseEntity.ok(statisticsPaginationService.getWaitersStatistics(restaurantName, pageNumber, pageSize, searchTerm, period));
     }
 
     @GetMapping("/waiter")

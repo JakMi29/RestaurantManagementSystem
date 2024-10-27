@@ -14,7 +14,7 @@ VALUES
 ('waiterPawel@gmail.com',3300,CURRENT_TIMESTAMP-INTERVAL '80 days',1,8),
 ('waiterWiktoria@gmail.com',3300,CURRENT_TIMESTAMP-INTERVAL '20 days',1,9),
 ('waiterFranciszek@gmail.com',3300,CURRENT_TIMESTAMP-INTERVAL '20 days',1,11),
-('waiterMarian@gmail.com',3300,CURRENT_TIMESTAMP-INTERVAL '20 days',1,9);
+('waiterMarian@gmail.com',3300,CURRENT_TIMESTAMP-INTERVAL '20 days',1,12);
 
 INSERT INTO meal (name, description, category, status, price, restaurant_id, image, meal_of_the_day)
 VALUES

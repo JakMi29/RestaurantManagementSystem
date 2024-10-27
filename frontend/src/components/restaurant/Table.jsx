@@ -116,9 +116,6 @@ const Table = React.memo(({ table, order, updateTable }) => {
                         >
                             Order details
                         </button>
-                        <button onClick={handleTableDatails} className={classes.blueButton}>
-                            Table details
-                        </button>
                     </div>
                 </div>
             )
@@ -150,10 +147,7 @@ const Table = React.memo(({ table, order, updateTable }) => {
                                 <GroupsIcon sx={{ fontSize: 150, color: 'rgba(60, 60, 211, 0.2)' }} />
                             </div>
                             <div className={classes.actions}>
-                                {admin ?
-                                    <button onClick={handleOrderDatails} className={classes.blueButton}>
-                                        Table details
-                                    </button> :
+                                {!admin &&
                                     <>
                                         <button
                                             onClick={craeteOrder}
@@ -181,10 +175,7 @@ const Table = React.memo(({ table, order, updateTable }) => {
                             <CleanHandsIcon sx={{ fontSize: 150, color: 'rgba(255, 224, 99, 0.5)' }} />
                         </div>
                         <div className={classes.actions}>
-                            {admin ?
-                                <button onClick={handleOrderDatails} className={classes.yellowButton}>
-                                    Table statistics
-                                </button> :
+                            {admin &&
                                 <button onClick={()=>handleChangeStatus(false)} className={classes.yellowButton}>
                                     Clear
                                 </button>

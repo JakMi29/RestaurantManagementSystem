@@ -7,18 +7,13 @@ import org.springframework.stereotype.Component;
 @Component
 public class WaiterDTOMapper {
 
-    public WaiterDTO map(Waiter waiter) {
-        return WaiterDTO.builder()
-                .email(waiter.getEmail())
-                .build();
-    }
 
-    public WaiterDTO mapWithUserData(Waiter waiter) {
+    public WaiterDTO map(Waiter waiter) {
         return WaiterDTO.builder()
                 .email(waiter.getEmail())
                 .name(waiter.getUser().getName())
                 .surname(waiter.getUser().getSurname())
-                .employmentDate(waiter.getEmploymentDate().toString())
+                .employmentDate(waiter.getEmploymentDate().toLocalDate().toString())
                 .salary(waiter.getSalary().toString())
                 .phone(waiter.getUser().getPhone())
                 .build();

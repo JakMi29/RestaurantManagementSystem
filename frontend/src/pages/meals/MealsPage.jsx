@@ -13,100 +13,107 @@ function MealsPage() {
     const location = useLocation();
     const queryParams = new URLSearchParams(location.search);
     const currentCategory = queryParams.get('category');
+
     const [pageNumber, setPageNumber] = useState(0);
     const [searchTerm, setSearchTerm] = useState(queryParams.get('search') || '');
-    const [openForm, setOpenForm] = useState(false)
-    const navigate = useNavigate()
-    const [meal, setMeal] = useState()
-    const [mode, setMode] = useState()
+    const [openForm, setOpenForm] = useState(false);
+    const navigate = useNavigate();
+    const [meal, setMeal] = useState();
+    const [mode, setMode] = useState();
 
     const handleCloseDialog = () => {
-        setMeal(undefined)
-        setOpenForm(false)
-    }
+        setMeal(undefined);
+        setOpenForm(false);
+    };
+
     const handleOpenDialog = () => {
-        setOpenForm(true)
-        setMode("create")
-    }
+        setOpenForm(true);
+        setMode("create");
+    };
 
     const handleUpdateMeal = (meal) => {
-        setMeal(meal)
-        setMode("update")
-        setOpenForm(true)
-    }
+        setMeal(meal);
+        setMode("update");
+        setOpenForm(true);
+    };
 
     useEffect(() => {
         setPageNumber(0);
-    }, [currentCategory])
+    }, [currentCategory]);
+
+    useEffect(() => {
+        const searchFromQuery = queryParams.get('search') || "";
+        setSearchTerm(searchFromQuery);
+    }, [location.search]);
 
     const handleNextPage = () => {
-        const page = pageNumber + 1;
-        setPageNumber(page);
-        navigate(`/meals?category=${currentCategory}&pageNumber=${page}&pageSize=${10}`);
+        const pageNumber = queryParams.get('pageNumber') + 1
+        navigate(`/meals?category=${currentCategory}&pageNumber=${pageNumber}&pageSize=10&search=${searchTerm}`);
     };
+
     const handlePreviousPage = () => {
-        if (pageNumber > 0) {
-            const page = pageNumber - 1;
-            setPageNumber(page);
-            navigate(`/meals?category=${currentCategory}&pageNumber=${page}&pageSize=${10}${searchTerm ? `&searchTerm=${searchTerm}` : ""}`);
-        }
+        const pageNumber = queryParams.get('pageNumber') - 1
+        navigate(`/meals?category=${currentCategory}&pageNumber=${pageNumber}&pageSize=10&search=${searchTerm}`);
     }
 
-    const handleSearchChange = (event) => {
-        const search = event.target.value
-        setSearchTerm(search);
-        search === "" ? navigate(`/meals?category=${currentCategory}&pageNumber=0&pageSize=10`) :
-            navigate(`/meals?category=${currentCategory}&pageNumber=0&pageSize=10&searchTerm=${search} `);
-    };
+const handleSearchChange = (event) => {
+    const search = event.target.value;
+    setSearchTerm(search);
+    if (search === "") {
+        navigate(`/meals?category=${currentCategory}&pageNumber=0&pageSize=10`);
+    } else {
+        navigate(`/meals?category=${currentCategory}&pageNumber=0&pageSize=10&search=${search}`);
+    }
+};
 
 
-    return (
-        <div className={classes.mealPage}>
-            <DialogComponent open={openForm} mode={mode} onClose={handleCloseDialog} name={"meal"} object={meal} />
-            <MealCategoryContainer currentCategory={currentCategory} order={false} openDialog={handleOpenDialog} />
-            <div style={{ display: "flex", justifyContent: "flex-end" }}>
-                <form style={{ marginTop: "20px", marginLeft: "auto" }}>
-                    <input
-                        type="text"
-                        value={searchTerm}
-                        onChange={handleSearchChange}
-                        placeholder="Search for meals..."
-                        className={classes.searchInput}
-                    />
-                </form>
-            </div>
-            <Suspense fallback={<p style={{ textAlign: 'center' }}><CircularProgress /></p>}>
-                <Await resolve={meals}>
-                    {(loadedMeals) => (
-                        <>
-                            <MealList meals={loadedMeals.content} order={false} updateMeal={handleUpdateMeal} />
-                            <div>
-                                {!loadedMeals.first && (
-                                    <button
-                                        className={classes.categoryButton}
-                                        style={{ position: "absolute", left: "80px", bottom: "30px" }}
-                                        onClick={handlePreviousPage}
-                                        disabled={loadedMeals.first}
-                                    >
-                                        Previous
-                                    </button>
-                                )}
-                                {!loadedMeals.last && (
-                                    <button
-                                        className={classes.categoryButton}
-                                        style={{ position: "absolute", right: "80px", bottom: "30px" }}
-                                        onClick={handleNextPage}
-                                    >
-                                        Next
-                                    </button>
-                                )}
-                            </div>
-                        </>
-                    )}
-                </Await>
-            </Suspense>
+return (
+    <div className={classes.mealPage}>
+        <DialogComponent open={openForm} mode={mode} onClose={handleCloseDialog} name={"meal"} object={meal} />
+        <MealCategoryContainer currentCategory={currentCategory} order={false} openDialog={handleOpenDialog} />
+        <div style={{ display: "flex", justifyContent: "flex-end" }}>
+            <form style={{ marginTop: "20px", marginLeft: "auto" }}>
+                <input
+                    type="text"
+                    value={searchTerm}
+                    onChange={handleSearchChange}
+                    placeholder="Search for meals..."
+                    className={classes.searchInput}
+                />
+            </form>
         </div>
-    );
+        <Suspense fallback={<p style={{ textAlign: 'center' }}><CircularProgress /></p>}>
+            <Await resolve={meals}>
+                {(loadedMeals) => (
+                    <>
+                        <MealList meals={loadedMeals.content} order={false} updateMeal={handleUpdateMeal} />
+                        <div>
+                            {!loadedMeals.first && (
+                                <button
+                                    className={classes.categoryButton}
+                                    style={{ position: "absolute", left: "80px", bottom: "30px" }}
+                                    onClick={handlePreviousPage}
+                                    disabled={loadedMeals.first}
+                                >
+                                    Previous
+                                </button>
+                            )}
+                            {!loadedMeals.last && (
+                                <button
+                                    className={classes.categoryButton}
+                                    style={{ position: "absolute", right: "80px", bottom: "30px" }}
+                                    onClick={handleNextPage}
+                                >
+                                    Next
+                                </button>
+                            )}
+                        </div>
+                    </>
+                )}
+            </Await>
+        </Suspense>
+    </div>
+);
 }
 export default MealsPage;
 

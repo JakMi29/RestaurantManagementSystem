@@ -14,6 +14,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class OrderEntityMapper {
     private OrderMealEntityMapper orderMealEntityMapper;
+    private WaiterEntityMapper waiterEntityMapper;
 
     public Order map(OrderEntity entity) {
         return Order.builder()
@@ -39,10 +40,7 @@ public class OrderEntityMapper {
                                 .id(entity.getRestaurant().getId())
                                 .build())
                 .waiter(
-                        Waiter.builder()
-                                .id(entity.getWaiter().getId())
-                                .email(entity.getWaiter().getEmail())
-                                .build()
+                       waiterEntityMapper.map(entity.getWaiter())
                 )
                 .orderMeals(
                         entity.getOrderMeals().stream()

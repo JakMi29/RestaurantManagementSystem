@@ -1,5 +1,6 @@
 package com.example.RestaurantManagementSystem.business;
 
+import com.example.RestaurantManagementSystem.api.dto.MealDTO;
 import com.example.RestaurantManagementSystem.api.dto.TableOrderMealDTO;
 import com.example.RestaurantManagementSystem.domain.Meal;
 import lombok.AllArgsConstructor;
@@ -15,7 +16,7 @@ import java.util.List;
 public class MealPaginationService {
     private final MealService mealService;
 
-    public Page<Meal> findAllByCategory(
+    public Page<MealDTO> findAllByCategory(
             String restaurantName,
             String category,
             int pageNumber,

@@ -1,21 +1,23 @@
-import { NavLink, useNavigate } from 'react-router-dom';
+import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import classes from '../../pages/statistics/StatisticPage.module.css';
 import { Select, MenuItem, FormControl, InputLabel } from '@mui/material';
 
 function StatisticsCategoryContainer({ currentCategory, currentPeriod, handleChangeCategory }) {
     const navigate = useNavigate();
+    const location = useLocation();
     const queryParams = new URLSearchParams(location.search);
 
     const isActive = (category) => currentCategory === category;
 
     const handlePeriodChange = (event) => {
         const newPeriod = event.target.value;
-        navigate(`/statistics/${currentCategory}?period=${newPeriod}${currentCategory === "waiters" ? getWaiterPath() : ""}`);
+        queryParams.set('period', newPeriod);
+        navigate(`${location.pathname}?${queryParams.toString()}`);
     };
 
     const getWaiterPath = () => {
         const email = queryParams.get('email')
-        email ? `waiter&email=${email}` : "waiters&pageNumber=0&pageSize=12"
+        email ? `waiter&email=${email}` : "waiters&pageNumber=0&pageSize=9"
     }
     { }
     return (
@@ -41,7 +43,7 @@ function StatisticsCategoryContainer({ currentCategory, currentPeriod, handleCha
             <button
                 onClick={() => {
                     handleChangeCategory("waiters");
-                    navigate(`/statistics/waiters?period=${currentPeriod}&pageNumber=0&pageSize=12`);
+                    navigate(`/statistics/waiters?period=${currentPeriod}&pageNumber=0&pageSize=9`);
                 }}
                 className={isActive("waiters") ? classes.categoryButtonActive : classes.categoryButton}
             >

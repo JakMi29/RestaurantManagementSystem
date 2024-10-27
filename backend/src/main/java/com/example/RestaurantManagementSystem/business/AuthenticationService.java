@@ -3,9 +3,7 @@ package com.example.RestaurantManagementSystem.business;
 import com.example.RestaurantManagementSystem.api.auth.AuthenticationRequest;
 import com.example.RestaurantManagementSystem.api.auth.AuthenticationResponse;
 import com.example.RestaurantManagementSystem.api.auth.RegisterRequest;
-import com.example.RestaurantManagementSystem.domain.exception.NotFoundException;
-import com.example.RestaurantManagementSystem.domain.exception.ObjectAlreadyExist;
-import com.example.RestaurantManagementSystem.infrastructure.database.repository.mapper.UserEntityMapper;
+import com.example.RestaurantManagementSystem.domain.exception.ObjectAlreadyExistException;
 import com.example.RestaurantManagementSystem.infrastructure.security.JwtService;
 import com.example.RestaurantManagementSystem.infrastructure.security.Role;
 import com.example.RestaurantManagementSystem.infrastructure.security.UserEntity;
@@ -35,7 +33,7 @@ public class AuthenticationService {
 
         Optional<UserEntity> existingUser = repository.findByEmail(request.getEmail());
         if (existingUser.isPresent())
-            throw new ObjectAlreadyExist("User with this email already exist!");
+            throw new ObjectAlreadyExistException("User with this email already exist!");
         var user = buildUser(request);
         repository.save(user);
 

@@ -13,11 +13,15 @@ const MealsTable = ({ currentPeriod }) => {
   const [page, setPage] = useState(0);
   const navigate = useNavigate();
   const [totalPages, setTotalPages] = useState(0);
+  const [sortModel, setSortModel] = useState([]);
 
+  const handleChangeSortModel = (sortModel) => {
+    setSortModel(sortModel)
+  }
   const fetchMeals = useCallback(async (page, pageSize, currentPeriod) => {
     setLoading(true);
     try {
-      const response = await fetch(`http://localhost:8080/api/restaurantManagementSystem/admin/statistics/table/meals?restaurantName=Italiano&period=${currentPeriod}&pageSize=${pageSize}&pageNumber=${page}`, {
+      const response = await fetch(`http://localhost:8080/api/restaurantManagementSystem/admin/statistics/table/meals?restaurantName=Italiano&period=${currentPeriod}&pageSize=${pageSize}&pageNumber=${page}${sortModel.length > 0 ? `&sortField=${sortModel[0].field}&sortType=${sortModel[0].sort}` : ''}`, {
         headers: {
           'Authorization': 'Bearer ' + getAuthToken()
         },
@@ -47,16 +51,13 @@ const MealsTable = ({ currentPeriod }) => {
   }, [page, pageSize, currentPeriod, fetchMeals]);
 
   const columns = [
-    { field: 'mealName', headerName: 'Meal name', width: 150 },
-    { field: 'mealPrice', headerName: 'Meal price', width: 200 },
-    { field: 'quantity', headerName: 'Quantity', width: 200 },
-    { field: 'totalPrice', headerName: 'Total price', width: 150 },
-    { field: 'time', headerName: 'Average meal prepare time', width: 180 },
+    { field: 'mealName', headerName: 'Meal name', width: 150, sortable: false, filterable: false },
+    { field: 'mealPrice', headerName: 'Meal price', width: 200, sortable: false, filterable: false, renderCell: (params) => (params.value + " USD") },
+    { field: 'quantity', headerName: 'Quantity', width: 200, sortable: false, filterable: false },
+    { field: 'totalPrice', headerName: 'Total price', width: 150, sortable: false, filterable: false, renderCell: (params) => (params.value + " USD") },
+    { field: 'time', headerName: 'Average meal prepare time', width: 180, sortable: false, filterable: false, renderCell: (params) => (params.value + " min") },
     {
-      field: 'details',
-      headerName: 'Details',
-      width: 150,
-      renderCell: (params) => (
+      field: 'details',headerName: 'Details',width: 150,sortable: false, filterable: false,renderCell: (params) => (
         <button className={uiClasses.blueButton}
           onClick={() => navigate(`/statistics/meal?name=${params.row.id}`)}>
           Details
@@ -76,6 +77,7 @@ const MealsTable = ({ currentPeriod }) => {
 
   return (
     <DataTable
+    handleChangeSortModel={handleChangeSortModel}
     header={"Meals"}
     rows={rows}
     columns={columns}

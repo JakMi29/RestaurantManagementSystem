@@ -5,9 +5,7 @@ import classes from './StatisticPage.module.css';
 function StatisticPage() {
 
     return (
-        <div className={classes.page}>
             <Outlet />
-        </div>
     )
 }
 

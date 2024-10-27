@@ -48,7 +48,7 @@ public class TableController {
             @RequestParam(required = false) boolean reverse
 
     ) {
-        TableDTO table = tableService.changeStatus(tableName, restaurantName,reverse);
+        TableDTO table = tableService.changeStatus(tableName, restaurantName, reverse);
         this.template.convertAndSend("/topic/tables", table);
         return Response.builder()
                 .code(HttpStatus.OK.value())
@@ -60,10 +60,10 @@ public class TableController {
     public Response createTable(
             @RequestParam String tableName,
             @RequestParam String restaurantName) {
-        tableService.createTable(tableName, restaurantName);
+        TableDTO table = tableService.createTable(tableName, restaurantName);
         return Response.builder()
                 .code(HttpStatus.OK.value())
-                .message("Successfully create table")
+                .message(String.format("table %s created Successfully", table.getName()))
                 .build();
     }
 
@@ -72,7 +72,7 @@ public class TableController {
             @RequestParam String tableName,
             @RequestParam String oldTableName,
             @RequestParam String restaurantName) {
-        tableService.updateTable(tableName, oldTableName, restaurantName);
+        TableDTO table = tableService.updateTable(tableName, oldTableName, restaurantName);
         return Response.builder()
                 .code(HttpStatus.OK.value())
                 .message("Successfully change table name")
@@ -83,10 +83,10 @@ public class TableController {
     public Response deleteTable(
             @RequestParam String restaurantName,
             @RequestParam String tableName) {
-        tableWithOrderService.deleteTable(tableName, restaurantName);
+        TableDTO table= tableWithOrderService.deleteTable(tableName, restaurantName);
         return Response.builder()
                 .code(HttpStatus.OK.value())
-                .message("Successfully delete table")
+                .message("Successfully delete table: %s")
                 .build();
     }
 }

@@ -27,7 +27,6 @@ public class OrderController {
     public OrderDTO editOrder(@RequestParam String orderNumber, @RequestParam String editor, @RequestParam Boolean edit) {
         OrderDTO order = orderService.edit(orderNumber, editor, edit);
         this.template.convertAndSend("/topic/orders", order);
-
         return order;
     }
 
@@ -43,9 +42,11 @@ public class OrderController {
             @RequestParam String restaurantName,
             @RequestParam String period,
             @RequestParam Integer pageSize,
-            @RequestParam Integer pageNumber
+            @RequestParam Integer pageNumber,
+            @RequestParam(required = false) String sortField,
+            @RequestParam(required = false) String sortType
     ) {
-        return ResponseEntity.ok(orderPaginationService.findAllByPeriod(restaurantName, period, pageSize, pageNumber));
+        return ResponseEntity.ok(orderPaginationService.findAllByPeriod(restaurantName, period, pageSize, pageNumber, sortField, sortType));
     }
 
     @GetMapping

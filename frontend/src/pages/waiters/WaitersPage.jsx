@@ -21,13 +21,13 @@ const WaitersPage = () => {
   const handleOpenDialog = () => {
     setOpenForm(true)
     setMode("create")
-}
+  }
 
-const handleUpdateWaiter = (waiter) => {
+  const handleUpdateWaiter = (waiter) => {
     setWaiter(waiter)
     setMode("update")
     setOpenForm(true)
-}
+  }
 
   const handleCloseDialog = () => {
     setOpenForm(false)
@@ -38,28 +38,28 @@ const handleUpdateWaiter = (waiter) => {
     const search = event.target.value
 
     setSearchTerm(search);
-    search === "" ? navigate(`/waiters&pageNumber=0&pageSize=12`) :
-      navigate(`/waiters/all?pageNumber=${pageNumber}&pageSize=12${search ? `&searchTerm=${search}` : ""}`);
+    search === "" ? navigate(`/waiters/all?pageNumber=0&pageSize=9`) :
+      navigate(`/waiters/all?pageNumber=${pageNumber}&pageSize=9${search ? `&searchTerm=${search}` : ""}`);
   };
 
   const handleNextPage = () => {
     const page = pageNumber + 1;
     setPageNumber(page);
-    navigate(`/waiters/all/&pageNumber=${page}&pageSize=12`);
+    navigate(`/waiters/all/?pageNumber=${page}&pageSize=9`);
   };
   const handlePreviousPage = () => {
     if (pageNumber > 0) {
       const page = pageNumber - 1;
       setPageNumber(page);
-      navigate(`/waiters/all?pageNumber=${page}&pageSize=12${searchTerm ? `&searchTerm=${searchTerm}` : ""}`);
+      navigate(`/waiters/all?pageNumber=${page}&pageSize=9${searchTerm ? `&searchTerm=${searchTerm}` : ""}`);
     }
   }
 
   return (
     <>
       <DialogComponent open={openForm} onClose={handleCloseDialog} name={"waiter"} mode={mode} object={waiter} />
-      <div style={{ display: "flex", alignItems: "center", marginTop: "20px", justifyContent: "space-between" }}>
-        <button className={uiClasses.blueButton} style={{ padding: "10px" }} onClick={handleOpenDialog}>
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+        <button className={uiClasses.blueButton} onClick={handleOpenDialog}>
           New
         </button>
         <form style={{ marginLeft: "auto" }}>
@@ -83,6 +83,7 @@ const handleUpdateWaiter = (waiter) => {
               <div>
                 {!waiters.first && (
                   <button
+                    className={uiClasses.blueButton}
                     style={{ position: "absolute", left: "80px", bottom: "30px" }}
                     onClick={handlePreviousPage}
                   >
@@ -91,6 +92,7 @@ const handleUpdateWaiter = (waiter) => {
                 )}
                 {!waiters.last && (
                   <button
+                    className={uiClasses.blueButton}
                     style={{ position: "absolute", right: "80px", bottom: "30px" }}
                     onClick={handleNextPage}
                   >
@@ -132,7 +134,7 @@ export async function loader({ request }) {
   const url = new URL(request.url);
   const pageNumber = url.searchParams.get("pageNumber");
   const searchTerm = url.searchParams.get("searchTerm");
-  const pageSize = 12;
+  const pageSize = 9;
 
   return defer({
     waiters: await loadWaiters(pageNumber, pageSize, searchTerm),

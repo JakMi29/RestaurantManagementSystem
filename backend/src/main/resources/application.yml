@@ -1,9 +1,14 @@
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/restaurant_management_system
+    driver-class-name: org.postgresql.Driver
     username: postgres
     password: postgres
-    driver-class-name: org.postgresql.Driver
+    hikari:
+      idle-timeout: 10000
+      connectionTimeout: 20000
+      minimumIdle: 10
+      maximumPoolSize: 20
   jpa:
     hibernate:
       ddl-auto: none
@@ -11,7 +16,6 @@ spring:
     properties:
       hibernate:
         format_sql: true
-    database: postgresql
-    database-platform: org.hibernate.dialect.PostgreSQLDialect
+        dialect: org.hibernate.dialect.PostgreSQLDialect
 
 

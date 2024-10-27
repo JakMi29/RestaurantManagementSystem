@@ -117,6 +117,7 @@ public class MealsStatisticService {
                 startDate.toLocalDateTime(),
                 endDate.toLocalDateTime(),
                 today);
+
         for (Order order : orders) {
             for (OrderMeal meal : order.getOrderMeals()) {
                 dailyMealsStatistics.addMeal(meal, order.getCompletedDateTime().toLocalDateTime(), today);

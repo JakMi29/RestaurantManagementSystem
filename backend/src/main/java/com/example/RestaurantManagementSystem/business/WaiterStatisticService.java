@@ -47,7 +47,7 @@ public class WaiterStatisticService {
             }
         }
         return WaitersDTO.builder()
-                .waiter(mapper.mapWithUserData(waiter))
+                .waiter(mapper.map(waiter))
                 .totalCustomers(totalCustomers)
                 .totalMeals(totalMeals)
                 .totalOrders(waiter.getOrders().size())
@@ -78,7 +78,7 @@ public class WaiterStatisticService {
         MealsStatisticDTO mealsStatisticDTO=mealsStatisticService.getMealsStatistics(orders,startDate,endDate);
         return WaiterDailyStatisticsDTO
                 .builder()
-                .waiter(mapper.mapWithUserData(waiter))
+                .waiter(mapper.map(waiter))
                 .orderStatistic(ordersStatisticDTO)
                 .mealsStatistic(mealsStatisticDTO)
         .build();

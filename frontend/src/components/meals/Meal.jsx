@@ -7,7 +7,7 @@ import MealPageContext from '../../store/MealPageContext';
 import { getAuthToken } from '../../util/auth';
 import { Paper } from '@mui/material';
 
-function Meal({ meal, updateMeal}) {
+function Meal({ meal, updateMeal }) {
     const messageCtx = useContext(MessageContext);
     const navigate = useNavigate()
     const admin = localStorage.getItem('role') === 'ADMIN';
@@ -39,7 +39,7 @@ function Meal({ meal, updateMeal}) {
         });
     };
 
-    const handleEditButton=()=>{
+    const handleEditButton = () => {
         updateMeal(meal)
     }
 
@@ -66,7 +66,7 @@ function Meal({ meal, updateMeal}) {
     }
 
     return (
-        <Paper elevation={4} sx={{borderRadius: 2}} className={classes.meal} >
+        <Paper elevation={4} sx={{ borderRadius: 2 }} className={classes.meal} >
             {admin ? (
                 <div className={meal.mealOfTheDay ? classes.mealOfDayTrue : classes.mealOfDayFalse}>
                     <FavoriteIcon sx={{ fontSize: 30 }} onClick={handleMealofTheDay} />
@@ -77,7 +77,7 @@ function Meal({ meal, updateMeal}) {
                 </div>
             )}
             <div className={classes.mealImage}>
-                <img src={meal.image} />
+                <img src={meal.image.includes("https://") ? meal.image : `http://localhost:8080/api/restaurantManagementSystem/meal/image?image=${meal.image}`} />
             </div>
             <div className={classes.contentContainer}>
                 <div className={classes.mealContent}>

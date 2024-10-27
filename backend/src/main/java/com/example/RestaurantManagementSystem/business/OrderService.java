@@ -6,9 +6,7 @@ import com.example.RestaurantManagementSystem.api.dto.mapper.OrderDTOMapper;
 import com.example.RestaurantManagementSystem.api.rest.request.CreateOrderRequest;
 import com.example.RestaurantManagementSystem.business.dao.OrderDAO;
 import com.example.RestaurantManagementSystem.domain.*;
-import com.example.RestaurantManagementSystem.domain.exception.ObjectAlreadyExist;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
+import com.example.RestaurantManagementSystem.domain.exception.ObjectAlreadyExistException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -28,6 +26,7 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
 
+
 @Slf4j
 @Service
 @AllArgsConstructor
@@ -38,74 +37,95 @@ public class OrderService {
     private final WaiterService waiterService;
     private final OrderMealService orderMealService;
     private final OrderDTOMapper mapper;
-    private final ConcurrentHashMap<String, Lock> orderLocks = new ConcurrentHashMap<>();
+    @Transactional
+    public Page<OrderDTO> findAllByPeriod(String restaurantName, String period, Pageable pageable) {
+        Restaurant restaurant = restaurantService.findByName(restaurantName);
+        OffsetDateTime endDate = OffsetDateTime.now();
+        OffsetDateTime startDate = getStartPeriod(period, endDate);
 
-    @PersistenceContext
-    private EntityManager entityManager;
+        return orderDAO.findAllByPeriod(restaurant, startDate, endDate, pageable)
+                .map(order -> mapper.map(order, false));
+    }
+
+    public OrderDTO findByNumber(String number) {
+        log.info("Finding order by number: {}", number);
+        return mapper.map(orderDAO.findByNumber(number), false);
+    }
+
 
     @Transactional
     public OrderDTO updateOrder(OrderDTO updatedOrder) {
-        this.updateMeals(updatedOrder);
         Order order = orderDAO.findByNumber(updatedOrder.getNumber());
-        return mapper.map(orderDAO.updateOrder(order
+        this.updateMeals(updatedOrder);
+
+        Order updated = orderDAO.updateOrder(order
                 .withEdit(false)
                 .withEditor(null)
                 .withCustomerQuantity(updatedOrder.getCustomerQuantity())
-                .withPrice(updatedOrder.getPrice())), false);
+                .withPrice(updatedOrder.getPrice()));
+
+        log.info("Order:{} updated successfully", updatedOrder.getNumber());
+        return mapper.map(updated, false);
+    }
+
+    @Transactional
+    public Optional<Order> getOrderByTableAndNotStatus(Table table, OrderStatus status) {
+        return orderDAO.findByTableAndNotByStatus(table, status);
+    }
+
+    @Transactional
+    public OrderDTO edit(String orderNumber, String email, Boolean edit) {
+        Lock lock = orderLocks.computeIfAbsent(orderNumber, k -> new ReentrantLock());
+        lock.lock();
+
+        try {
+            Waiter waiter = waiterService.findByEmail(email);
+            Order order = orderDAO.findByNumber(orderNumber);
+
+            if (edit) {
+                validateAndEnableEditing(order);
+                order = order.withEdit(true).withEditor(waiter);
+            } else {
+                validateAndDisableEditing(order, email);
+                order = order.withEdit(false).withEditor(null);
+            }
+
+            return mapper.map(orderDAO.updateOrder(order), true);
+        } finally {
+            lock.unlock();
+            orderLocks.remove(orderNumber);
+            log.info("Lock released for order number: {}", orderNumber);
+        }
     }
 
     @Transactional
     public void updateMeals(OrderDTO updatedOrder) {
         Order order = orderDAO.findByNumber(updatedOrder.getNumber());
         List<OrderMealDTO> filteredMeals = updatedOrder.getMeals().stream()
-                .filter(m ->OrderMealStatus.valueOf(m.getStatus()) == OrderMealStatus.PREPARING)
+                .filter(m -> OrderMealStatus.valueOf(m.getStatus()) == OrderMealStatus.PREPARING)
                 .collect(Collectors.toList());
         orderMealService.updateOrderMeals(order, filteredMeals);
     }
 
     @Transactional
     public OrderDTO updateAndGetOrder(String restaurantName, String mealName, String orderNumber, String orderMealStatus) {
-        this.updateOrderMeal(restaurantName, mealName, orderNumber, orderMealStatus);
         Order order = orderDAO.findByNumber(orderNumber);
         if (this.checkOrderStatus(order)) {
             return this.changeStatus(order);
         }
+
         return mapper.map(order, false);
     }
 
-    private Boolean checkOrderStatus(Order order) {
-        List<OrderMeal> orderMeals = order.getOrderMeals();
-        Map<OrderMealStatus, List<OrderMeal>> mealByStatus = orderMeals.stream()
-                .collect(Collectors.groupingBy(OrderMeal::getStatus));
-        return mealByStatus.size() == 1 && mealByStatus.containsKey(OrderMealStatus.RELEASED);
-    }
-
-    @Transactional
-    private void updateOrderMeal(String restaurantName, String mealName, String orderNumber, String orderMealStatus) {
-        Restaurant restaurant = restaurantService.findByName(restaurantName);
-        Order order = orderDAO.findByNumber(orderNumber);
-        orderMealService.updateStatus(mealName, restaurant, order, OrderMealStatus.valueOf(orderMealStatus));
-    }
-
-    //    @Transactional
-//    public Response updateOrder(UpdateOrderRequest request) {
-//        Order order = orderDAO.findByNumber(request.getOrderNumber());
-//        orderMealService.updateStatus(mealName, restaurant, order);
-//        if (order.getOrderMeals().stream().filter(o -> o.getStatus() == OrderMealStatus.PREPARING).toList().size() == 1) {
-//            orderDAO.updateOrder(order);
-//        }
-//
-//        return Response.builder()
-//                .code(HttpStatus.OK.value())
-//                .message("Successfully update order")
-//                .build();
-//    }
     @Transactional
     public OrderDTO createOrder(CreateOrderRequest request) {
         Waiter waiter = waiterService.findByEmail(request.getWaiterEmail());
         Restaurant restaurant = restaurantService.findByName(request.getRestaurantName());
         Table table = tableService.findByNameAndRestaurant(request.getTableName(), request.getRestaurantName())
-                .orElseThrow(() -> new RuntimeException("Something gone wrong"));
+                .orElseThrow(() -> {
+                    return new RuntimeException("Table not found");
+                });
+
         OffsetDateTime time = OffsetDateTime.now();
         Order order = Order.builder()
                 .restaurant(restaurant)
@@ -119,137 +139,82 @@ public class OrderService {
                 .receivedDateTime(time)
                 .price(BigDecimal.ZERO)
                 .build();
-        return mapper.map(orderDAO.createOrder(order), false);
 
+        Order createdOrder = orderDAO.createOrder(order);
+        return mapper.map(createdOrder, false);
     }
-//    @Transactional
-//    public Response createOrder(CreateOrderRequest request) {
-//        Waiter waiter = waiterService.findByEmail(request.getEmail());
-//        Restaurant restaurant = restaurantService.findByName(request.getRestaurantName());
-//        List<OrderMeal> orderMeals = prepareOrderMeals(request.getMeals(), restaurant);
-//        OffsetDateTime time = OffsetDateTime.now();
-//        Order order = Order.builder()
-//                .restaurant(restaurant)
-//                .status(OrderStatus.PLACED)
-//                .number(OrderNumberGenerator.generateOrderNumber(time))
-//                .waiter(waiter)
-//                .receivedDateTime(time)
-//                .price(calculatePrice(orderMeals))
-//                .build();
-//
-//        orderMeals = orderMeals.stream().map(c -> c.withOrder(order)).collect(Collectors.toList());
-//        orderDAO.createOrder(order.withOrderMeals(orderMeals));
-//        log.info("Successful create order: %s".formatted(order.getNumber()));
-//        return Response.builder()
-//                .message("Successful create order: %s")
-//                .code(HttpStatus.OK.value())
-//                .build();
-//    }
 
     private BigDecimal calculatePrice(List<OrderMeal> orderMeals) {
-        return orderMeals.stream()
-                .map(meal -> meal.getMeal().getPrice().multiply(BigDecimal.valueOf((meal.getQuantity()))))
+        BigDecimal totalPrice = orderMeals.stream()
+                .map(meal -> meal.getMeal().getPrice().multiply(BigDecimal.valueOf(meal.getQuantity())))
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
-    }
 
-    private List<OrderMeal> prepareOrderMeals(Map<String, Integer> mapOfMeals, Restaurant restaurant) {
-        return mapOfMeals.entrySet().stream()
-                .filter(entry -> !entry.getValue().equals(0))
-                .map(entry -> orderMealService.prepareOrderMeal(entry, restaurant))
-                .collect(Collectors.toList());
+        return totalPrice;
     }
 
     @Transactional
     public OrderDTO changeStatus(String orderNumber) {
         Order order = orderDAO.findByNumber(orderNumber);
         return this.changeStatus(order);
-
-//        return Response.builder()
-//                .code(HttpStatus.OK.value())
-//                .message("Successfully change order status")
-//                .build();
     }
 
     @Transactional
     private OrderDTO changeStatus(Order order) {
-        Order updatedOrder = order.withStatus(
-                switch (order.getStatus()) {
-                    case NEW -> OrderStatus.PLACED;
-                    case PLACED -> OrderStatus.RELEASED;
-                    case RELEASED -> OrderStatus.PAID;
-                    case PAID -> null;
-                });
-        if (updatedOrder.getStatus() == OrderStatus.PAID) {
+        OrderStatus newStatus = switch (order.getStatus()) {
+            case NEW -> OrderStatus.PLACED;
+            case PLACED -> OrderStatus.RELEASED;
+            case RELEASED -> OrderStatus.PAID;
+            case PAID -> null;
+        };
+
+        Order updatedOrder = order.withStatus(newStatus);
+
+        if (newStatus == OrderStatus.PAID) {
             updatedOrder = updatedOrder.withCompletedDateTime(OffsetDateTime.now());
         }
+
         return mapper.map(orderDAO.updateOrder(updatedOrder), false);
     }
 
-    @Transactional
-    public Optional<Order> getOrderByTableAndNotStatus(Table table, OrderStatus status) {
-        return orderDAO.findByTableAndNotByStatus(table, status);
+    private Boolean checkOrderStatus(Order order) {
+        Map<OrderMealStatus, List<OrderMeal>> mealByStatus = order.getOrderMeals().stream()
+                .collect(Collectors.groupingBy(OrderMeal::getStatus));
+
+        return mealByStatus.size() == 1 && mealByStatus.containsKey(OrderMealStatus.RELEASED);
     }
 
+    private final ConcurrentHashMap<String, Lock> orderLocks = new ConcurrentHashMap<>();
+
     @Transactional
-    public OrderDTO edit(String orderNumber, String email, Boolean edit) {
-        Lock lock = orderLocks.computeIfAbsent(orderNumber, k -> new ReentrantLock());
+    private void updateOrderMeal(String restaurantName, String mealName, String orderNumber, String orderMealStatus) {
+        Restaurant restaurant = restaurantService.findByName(restaurantName);
+        Order order = orderDAO.findByNumber(orderNumber);
+        orderMealService.updateStatus(mealName, restaurant, order, OrderMealStatus.valueOf(orderMealStatus));
+    }
 
-        lock.lock();
-        try {
-            Waiter waiter = waiterService.findByEmail(email);
-            Order order = orderDAO.findByNumber(orderNumber);
-            if (edit) {
-                if (order.getEdit()) {
-                    throw new ObjectAlreadyExist("Someone else is editing this order!");
-                }
-                order = order.withEdit(true).withEditor(waiter);
-            } else {
-                if (!order.getEdit()) {
-                    throw new RuntimeException("Something gone wrong!");
-                }
-                if (!order.getEditor().getEmail().equals(email)) {
-                    throw new ObjectAlreadyExist("You are not order editor!");
-                }
-                order = order.withEdit(false).withEditor(null);
-            }
 
-            return mapper.map(orderDAO.updateOrder(order), true);
-        } finally {
-            lock.unlock();
-            orderLocks.remove(orderNumber);
+    private void validateAndEnableEditing(Order order) {
+        if (order.getEdit()) {
+            throw new ObjectAlreadyExistException("Someone else is editing this order!");
         }
     }
 
-    @Transactional
-    public Page<OrderDTO> findAllByPeriod(String restaurantName, String period, Pageable pageable) {
-        Restaurant restaurant = restaurantService.findByName(restaurantName);
-        OffsetDateTime endDate = OffsetDateTime.now();
-        OffsetDateTime startDate = getStartPeriod(period, endDate);
-        return orderDAO.findAllByPeriod(restaurant, startDate, endDate, pageable).map(order -> mapper.map(order, false));
+    private void validateAndDisableEditing(Order order, String email) {
+        if (!order.getEdit() || !order.getEditor().getEmail().equals(email)) {
+            throw new ObjectAlreadyExistException("Invalid editor permissions!");
+        }
     }
-
 
     private OffsetDateTime getStartPeriod(String period, OffsetDateTime endDate) {
-        switch (period.toLowerCase()) {
-            case "today":
-                return endDate.truncatedTo(ChronoUnit.DAYS);
-            case "3days":
-                return endDate.minusDays(3).truncatedTo(ChronoUnit.DAYS);
-            case "7days":
-                return endDate.minusDays(7).truncatedTo(ChronoUnit.DAYS);
-            case "1month":
-                return endDate.minusMonths(1).truncatedTo(ChronoUnit.DAYS);
-            case "3months":
-                return endDate.minusMonths(3).truncatedTo(ChronoUnit.DAYS);
-            case "1year":
-                return endDate.minusYears(1).truncatedTo(ChronoUnit.DAYS);
-            case "all":
-            default:
-                return OffsetDateTime.of(2000, 1, 1, 0, 0, 0, 0, ZoneOffset.UTC);
-        }
-    }
-
-    public OrderDTO findByNumber(String number) {
-        return mapper.map(orderDAO.findByNumber(number), false);
+        return switch (period.toLowerCase()) {
+            case "today" -> endDate.truncatedTo(ChronoUnit.DAYS);
+            case "3days" -> endDate.minusDays(3).truncatedTo(ChronoUnit.DAYS);
+            case "7days" -> endDate.minusDays(7).truncatedTo(ChronoUnit.DAYS);
+            case "1month" -> endDate.minusMonths(1).truncatedTo(ChronoUnit.DAYS);
+            case "3months" -> endDate.minusMonths(3).truncatedTo(ChronoUnit.DAYS);
+            case "1year" -> endDate.minusYears(1).truncatedTo(ChronoUnit.DAYS);
+            case "all" -> OffsetDateTime.of(2000, 1, 1, 0, 0, 0, 0, ZoneOffset.UTC);
+            default -> throw new IllegalArgumentException("Invalid period: " + period);
+        };
     }
 }

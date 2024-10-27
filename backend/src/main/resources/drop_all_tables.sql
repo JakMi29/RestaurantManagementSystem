@@ -1,6 +1,7 @@
 DROP TABLE order_meal;
 DROP TABLE _order;
-DROP TABLE _table;
+DROP CONSTRAINT unique_meal_name_restaurant;
+DROP TABLE _table
 DROP TABLE meal;
 DROP TABLE waiter;
 DROP TABLE restaurant;

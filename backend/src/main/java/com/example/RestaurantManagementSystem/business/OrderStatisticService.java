@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.Comparator;
 import java.util.List;
@@ -34,10 +35,12 @@ public class OrderStatisticService {
         return getOrdersStatistics(orders, startDate, endDate);
     }
 
-    private List<DailyOrdersStatisticsDTO> getDailyOrderStatistics(DailyOrdersStatistics dailyOrdersStatistics) {
+    private List<DailyOrdersStatisticsDTO> getDailyOrderStatistics(DailyOrdersStatistics dailyOrdersStatistics,Boolean today) {
+        DateTimeFormatter formatter = today?DateTimeFormatter.ofPattern("HH:mm"):DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
         return dailyOrdersStatistics.getDateDailyOrderStatisticsMap().entrySet().stream()
                 .map(t -> DailyOrdersStatisticsDTO.builder()
-                        .date(t.getKey().toString())
+                        .date(t.getKey().format(formatter))
                         .totalOrders(t.getValue().getTotalOrders())
                         .totalCustomers(t.getValue().getTotalOrders())
                         .build())
@@ -46,10 +49,16 @@ public class OrderStatisticService {
     }
 
     public OrdersStatisticDTO getOrdersStatistics(List<Order> orders, OffsetDateTime startDate, OffsetDateTime endDate) {
-        DailyOrdersStatistics dailyOrdersStatistics = new DailyOrdersStatistics(startDate, endDate);
+        Boolean today = startDate.toLocalDate().isEqual(endDate.toLocalDate());
+
+        DailyOrdersStatistics dailyOrdersStatistics = new DailyOrdersStatistics(
+                startDate.toLocalDateTime(),
+                endDate.toLocalDateTime(),
+                today
+        );
 
         for (Order order : orders) {
-            dailyOrdersStatistics.addOrder(order);
+            dailyOrdersStatistics.addOrder(order,today);
         }
         return OrdersStatisticDTO.builder()
                 .averageOrderIncome(dailyOrdersStatistics.getAverageOrderIncome())
@@ -62,7 +71,7 @@ public class OrderStatisticService {
                 .averageCustomersPerDay(dailyOrdersStatistics.getAverageCustomersPerDay())
                 .averageMealPerOrder(dailyOrdersStatistics.getAverageMealsPerOrder())
                 .averageCustomersPerDay(dailyOrdersStatistics.getAverageCustomersPerDay())
-                .dailyStatistics(getDailyOrderStatistics(dailyOrdersStatistics))
+                .dailyStatistics(getDailyOrderStatistics(dailyOrdersStatistics,today))
                 .averageOrdersPerDay(dailyOrdersStatistics.getAverageOrdersPerDay())
                 .build();
     }

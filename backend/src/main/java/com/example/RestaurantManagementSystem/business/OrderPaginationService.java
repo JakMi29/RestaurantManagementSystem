@@ -20,14 +20,12 @@ public class OrderPaginationService {
             String restaurantName,
             String period,
             int pageSize,
-            int pageNumber
-
+            int pageNumber,
+            String sortField,
+            String sortType
     ) {
-//        Sort sort = Sort.by(
-//                Sort.Order.desc("mealOfTheDay"),
-//                Sort.Order.asc("name")
-//        );
-        Sort sort = Sort.unsorted();
+        Sort sort = sortField != null ? Sort.by(Sort.Direction.fromString(sortType), sortField) : Sort.unsorted();
+        System.out.println(sort);
         Pageable pageable = PageRequest.of(pageNumber, pageSize, sort);
         return orderService.findAllByPeriod(
                 restaurantName,

@@ -5,7 +5,6 @@ import ChartComponent from './ChartComponent';
 
 
 const MealsStatistics = ({ statistics }) => {
-  console.log(statistics)
   return (
     <Box sx={{ padding: 4 }}>
       <Grid container spacing={2} justifyContent="space-between" alignItems="center">

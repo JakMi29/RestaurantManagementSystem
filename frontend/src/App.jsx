@@ -60,13 +60,13 @@ const router = createBrowserRouter([
                 path: "waiters",
                 element: <WaitersStatisticsPage />,
                 loader: waitersStatisticLoader,
-              },
-              {
-                path: "waiter",
-                element: <WaiterStatisticsPage />,
-                loader: waiterStatisticLoader,
-              },
+              }
             ]
+          },
+          {
+            path: "waiter",
+            element: <WaiterStatisticsPage />,
+            loader: waiterStatisticLoader,
           },
           {
             path: "order",

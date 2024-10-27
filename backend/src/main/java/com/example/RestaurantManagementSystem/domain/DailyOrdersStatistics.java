@@ -6,7 +6,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.Duration;
 import java.time.LocalDate;
-import java.time.OffsetDateTime;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -17,26 +17,50 @@ public class DailyOrdersStatistics {
     int totalMeals;
     BigDecimal totalIncome;
     Duration totalDuration;
-    Map<LocalDate, DailyOrderStatistics> dateDailyOrderStatisticsMap;
+    Map<LocalDateTime, DailyOrderStatistics> dateDailyOrderStatisticsMap;
 
-    public DailyOrdersStatistics(OffsetDateTime startDate, OffsetDateTime endDate) {
+    public DailyOrdersStatistics(LocalDateTime startDate, LocalDateTime endDate, Boolean today) {
         dateDailyOrderStatisticsMap = new HashMap<>();
         this.totalIncome = BigDecimal.ZERO;
-        LocalDate currentDate = endDate.toLocalDate();
-        while (!currentDate.isBefore(startDate.toLocalDate())) {
-            dateDailyOrderStatisticsMap.put(currentDate, new DailyOrderStatistics());
-            currentDate = currentDate.minusDays(1);
-            this.totalDuration = Duration.ZERO;
+        this.totalDuration=Duration.ZERO;
+        if (today) {
+            LocalDate todayDate = LocalDate.now();
+            LocalDateTime currentHour = todayDate.atStartOfDay();
+            LocalDateTime endOfDay = todayDate.atTime(23, 0);
+
+            while (!currentHour.isAfter(endOfDay)) {
+                dateDailyOrderStatisticsMap.put(currentHour, new DailyOrderStatistics());
+                currentHour = currentHour.plusHours(1);
+            }
+        } else {
+            LocalDateTime currentDate = endDate.withHour(0).withMinute(0).withSecond(0).withNano(0);
+            while (!currentDate.isBefore(startDate.withHour(0).withMinute(0).withSecond(0).withNano(0))) {
+                dateDailyOrderStatisticsMap.put(currentDate, new DailyOrderStatistics());
+                currentDate = currentDate.minusDays(1);
+            }
         }
     }
 
-    public void addOrder(Order order) {
+    public void addOrder(Order order, Boolean today) {
         this.totalOrders++;
         this.totalCustomers += order.getCustomerQuantity();
-        this.totalMeals+=order.getOrderMeals().size();
+        this.totalMeals += order.getOrderMeals().size();
         this.totalIncome = this.totalIncome.add(order.getPrice());
         this.totalDuration = this.totalDuration.plus(Duration.between(order.getReceivedDateTime(), order.getCompletedDateTime()));
-        dateDailyOrderStatisticsMap.get(order.getCompletedDateTime().toLocalDate()).addOrder(order);
+        dateDailyOrderStatisticsMap.get(
+                today ?
+                        order.getCompletedDateTime()
+                                .toLocalDateTime()
+                                .withMinute(0)
+                                .withSecond(0)
+                                .withNano(0) :
+                        order.getCompletedDateTime()
+                                .toLocalDateTime()
+                                .withHour(0)
+                                .withMinute(0)
+                                .withSecond(0)
+                                .withNano(0)
+        ).addOrder(order);
     }
 
     public BigDecimal getAverageOrderIncome() {
@@ -83,6 +107,7 @@ public class DailyOrdersStatistics {
         }
         return this.totalCustomers / days;
     }
+
     public Integer getAverageOrdersPerDay() {
         int days = dateDailyOrderStatisticsMap.size();
         if (days == 0) {

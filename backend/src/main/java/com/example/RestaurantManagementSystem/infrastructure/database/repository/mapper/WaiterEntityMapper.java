@@ -12,21 +12,7 @@ import org.springframework.stereotype.Component;
 public class WaiterEntityMapper {
     private final UserEntityMapper userMapper;
 
-    public Waiter map(WaiterEntity entity) {
-        return Waiter.builder()
-                .id(entity.getId())
-                .email(entity.getEmail())
-                .build();
-    }
-
     public WaiterEntity map(Waiter waiter) {
-        return WaiterEntity.builder()
-                .id(waiter.getId())
-                .email(waiter.getEmail())
-                .build();
-    }
-
-    public WaiterEntity mapWithUserAndOrders(Waiter waiter) {
         return WaiterEntity.builder()
                 .id(waiter.getId())
                 .email(waiter.getEmail())
@@ -39,7 +25,7 @@ public class WaiterEntityMapper {
                 .build();
     }
 
-    public Waiter mapWithUserAndOrders(WaiterEntity entity) {
+    public Waiter map(WaiterEntity entity) {
         return Waiter.builder()
                 .id(entity.getId())
                 .email(entity.getEmail())

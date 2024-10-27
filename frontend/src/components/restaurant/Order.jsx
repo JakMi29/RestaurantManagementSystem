@@ -103,7 +103,7 @@ function Order({ order, admin }) {
                     </div>
 
                     {order.meals && order.meals.length > 0 ? (
-                        <div style={{ display: "flex", flexDirection: "column", justifyContent: "space-between", height: "175px" }}>
+                        <div style={{ display: "flex", flexDirection: "column", justifyContent: "space-between", height: "200px" }}>
                             <div className={classes.mealsContainer}>
                                 {mealsToDisplay.map(orderMeal => (
                                     <OrderMeal

@@ -4,7 +4,7 @@ import { DataGrid } from '@mui/x-data-grid';
 import uiClasses from '../ui/Ui.module.css';
 import AssessmentIcon from '@mui/icons-material/Assessment';
 import { Box, FormControl, InputLabel, MenuItem, Pagination, Paper, Select } from '@mui/material';
-const DataTable = ({ columns, rows, loading, page, pageSize, totalPages, onPageChange, onPageSizeChange }) => {
+const DataTable = ({ columns, rows, loading, page, pageSize, totalPages, onPageChange, onPageSizeChange,onSortModelChange }) => {
 
   const CustomNoData = () => {
     return (
@@ -26,6 +26,8 @@ const DataTable = ({ columns, rows, loading, page, pageSize, totalPages, onPageC
           sx={{
             border: 0,
           }}
+          sortingMode="server"
+          onSortModelChange={onSortModelChange}
           className="table"
           rows={rows}
           rowCount={rows.length}

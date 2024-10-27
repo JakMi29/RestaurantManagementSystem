@@ -1,0 +1,42 @@
+version: '3.1'
+services:
+  PostgreSQL:
+    image: postgres:15.0
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_DB=restaurant_management_system
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    networks:
+      - spring-boot-postgres
+  backend:
+    build:
+      context: ./backend
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://PostgreSQL:5432/restaurant_management_system
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=postgres
+    networks:
+      - spring-boot-postgres
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+    command: npm run dev
+volumes:
+  db-data:
+
+networks:
+  spring-boot-postgres:

@@ -15,12 +15,10 @@ function PeriodStatisticPage() {
     }
 
     return (
-        <div className={classes.page}>
+        <>
             <StatisticsCategoryContainer currentCategory={category} currentPeriod={currentPeriod} handleChangeCategory={handleChangeCtegory} />
-            <div className={classes.pageContent}>
-                <Outlet />
-            </div>
-        </div>
+            <Outlet />
+        </>
     );
 }
 

@@ -23,29 +23,29 @@ public class WaiterRepository implements WaiterDAO {
 
     @Override
     public Waiter createWaiter(Waiter waiter) {
-        return mapper.map(repository.save(mapper.mapWithUserAndOrders(waiter)));
+        return mapper.map(repository.save(mapper.map(waiter)));
     }
 
     @Override
     public Optional<Waiter> findByEmail(String email) {
-        return repository.findByEmail(email).map(mapper::mapWithUserAndOrders);
+        return repository.findByEmail(email).map(mapper::map);
     }
 
     @Override
     public Optional<Waiter> findByEmailWithUser(String email) {
-        return repository.findByEmail(email).map(mapper::mapWithUserAndOrders);
+        return repository.findByEmail(email).map(mapper::map);
 
     }
 
     @Override
     public Waiter updateWaiter(Waiter waiter) {
-        return mapper.map(repository.save(mapper.mapWithUserAndOrders(waiter)));
+        return mapper.map(repository.save(mapper.map(waiter)));
     }
 
     @Override
     public Page<Waiter> findAllByRestaurant(Restaurant restaurant, Pageable page) {
         RestaurantEntity restaurantEntity= restaurantMapper.map(restaurant);
-        return repository.findAllByRestaurant(restaurantEntity,page).map(mapper::mapWithUserAndOrders);
+        return repository.findAllByRestaurant(restaurantEntity,page).map(mapper::map);
     }
 
     @Override

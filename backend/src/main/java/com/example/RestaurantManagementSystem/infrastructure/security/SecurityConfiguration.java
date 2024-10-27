@@ -33,6 +33,7 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/ws/**").permitAll()
                         .requestMatchers("/api/restaurantManagementSystem/auth/**").permitAll()
+                        .requestMatchers("/api/restaurantManagementSystem/meal/image").permitAll()
                         .requestMatchers("/api/restaurantManagementSystem/waiters/**").hasAnyAuthority("ADMIN")
                         .requestMatchers("/api/restaurantManagementSystem/*/admin/**").hasAnyAuthority("ADMIN")
                         .requestMatchers("/api/restaurantManagementSystem/table/admin").hasAnyAuthority("ADMIN")

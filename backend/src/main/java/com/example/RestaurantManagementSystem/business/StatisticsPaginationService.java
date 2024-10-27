@@ -37,7 +37,7 @@ public class StatisticsPaginationService {
         return new PageImpl<>(paginatedMeals, PageRequest.of(pageNumber, pageSize), totalItems);
     }
 
-    public Page<WaitersDTO> findAll(
+    public Page<WaitersDTO> getWaitersStatistics(
             String restaurantName,
             int pageNumber,
             int pageSize,
@@ -47,6 +47,7 @@ public class StatisticsPaginationService {
         Sort sort = Sort.by(
                 Sort.Order.asc("salary")
         );
+        System.out.println(searchTerm);
         Pageable pageable = PageRequest.of(pageNumber, pageSize, sort);
         return waiterStatisticService.getWaitersStatistics(
                 restaurantName,

@@ -3,6 +3,7 @@ import classes from '../../pages/meals/MealPage.module.css';
 import { useContext, useState } from 'react';
 import MealPageContext from '../../store/MealPageContext';
 import DialogComponent from '../dialogs/DialogComponent';
+import { getRole } from '../../util/data';
 
 // eslint-disable-next-line react/prop-types
 function MealCategoryContainer({ currentCategory, order,openDialog }) {
@@ -50,7 +51,7 @@ function MealCategoryContainer({ currentCategory, order,openDialog }) {
             >
                 Alcoholic drink
             </NavLink>
-            {order !== true && <button
+            {order !== true&& getRole('role') === 'ADMIN' && <button
                 className={classes.newMealButton}
                 onClick={openDialog}
             >

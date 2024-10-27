@@ -1,8 +1,6 @@
 package com.example.RestaurantManagementSystem.infrastructure.database.repository.mapper;
 
 import com.example.RestaurantManagementSystem.domain.User;
-import com.example.RestaurantManagementSystem.domain.Waiter;
-import com.example.RestaurantManagementSystem.infrastructure.database.entity.WaiterEntity;
 import com.example.RestaurantManagementSystem.infrastructure.security.UserEntity;
 import org.springframework.stereotype.Component;
 
@@ -20,6 +18,7 @@ public class UserEntityMapper {
                 .password(entity.getPassword())
                 .build();
     }
+
     public UserEntity map(User user) {
         return UserEntity.builder()
                 .id(user.getId())

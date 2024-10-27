@@ -28,7 +28,7 @@ public interface OrderJpaRepository extends JpaRepository<OrderEntity, Integer> 
     OrderEntity findByNumber(String orderNumber);
     Optional<OrderEntity> findByTableAndStatusNot(TableEntity tableEntity, OrderStatus status);
 
-    @EntityGraph(attributePaths = {"orderMeals", "orderMeals.meal", "waiter", "table"})
+    @EntityGraph(attributePaths = {"orderMeals", "orderMeals.meal", "waiter","waiter.user", "table"})
     @Query("SELECT o FROM OrderEntity o WHERE o.waiter = :waiter AND o.completedDateTime BETWEEN :startDate AND :endDate")
     List<OrderEntity> findByWaiterAndCompletedDateTimeBetween(WaiterEntity waiter, OffsetDateTime startDate, OffsetDateTime endDate);
 }

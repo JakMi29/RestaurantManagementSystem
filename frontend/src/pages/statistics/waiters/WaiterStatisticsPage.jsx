@@ -2,7 +2,7 @@ import React, { Suspense, useState } from 'react';
 import { Await, defer, useLoaderData, useLocation, useNavigate } from 'react-router-dom';
 import { CircularProgress, Box, Paper, Typography, Grid } from '@mui/material';
 import { getAuthToken } from '../../../util/auth';
-import MealsStatistics from '../../../components/statistics/MealsStatistics';
+import uiClasses from '../../../components/ui/Ui.module.css';
 import OrdersStatisticsData from '../../../components/statistics/OrdersStatisticsData';
 import OrdersStatisticsCharts from '../../../components/statistics/OrdersStatisticsCharts';
 import MealsStatisticsData from '../../../components/statistics/MealsStatisticsData';
@@ -14,9 +14,15 @@ const cardStyle = {
 };
 const WaiterStatisticsPage = () => {
   const { waiter } = useLoaderData();
+  const navigate = useNavigate()
 
   return (
     <>
+      <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+        <button className={uiClasses.blueButton} onClick={() => navigate(-1)}>
+          Back
+        </button>
+      </div>
       <Suspense fallback={<p style={{ textAlign: 'center' }}><CircularProgress /></p>}>
         <Await resolve={waiter}>
           {(waiter) => (
