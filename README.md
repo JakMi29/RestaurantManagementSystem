@@ -1,6 +1,6 @@
 # Restaurant Management System
 This is the documentation for the restaurant management system, which includes a backend, a database, and frontend. The application is implemented 
-using Spring Boot and runs on the Tomcat server.
+using Spring Boot, Rest Api and React.
 # Technology
 Java 17<br>
 Spring Boot 3<br>
