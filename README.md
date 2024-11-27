@@ -22,7 +22,7 @@ Docker: https://www.docker.com/
 # Running the Application on Docker
 1. Clone the Repository<br>
 2. Run the following command to start the project: docker compose up 
-3. Open the Application in Your Browser 
+3. Open the Application in Your Browser http://localhost:5173/ 
 # Logging into the Application
 On the login page, enter your username and password to log in.<br><br>
 Restaurant owner:<br><br>
