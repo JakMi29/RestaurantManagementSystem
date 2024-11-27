@@ -16,9 +16,7 @@ public class TableDTOMapper {
         return TableDTO.builder()
                 .name(table.getName())
                 .status(table.getStatus().toString())
-                .order(Optional.ofNullable(table.getOrders())
-                        .map(orders -> orders.stream().map(order -> orderDTOMapper.map(order, false)).findFirst().orElse(null))
-                        .orElse(null))
+                .order(orderDTOMapper.map(table.getOrder(),false))
                 .build();
     }
 

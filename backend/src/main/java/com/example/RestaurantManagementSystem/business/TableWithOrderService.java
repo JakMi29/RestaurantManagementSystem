@@ -16,8 +16,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
-import java.util.List;
 import java.util.Optional;
 
 @Slf4j
@@ -66,7 +64,6 @@ public class TableWithOrderService {
 
     private TableDTO mapTableWithOptionalOrder(Table table) {
         Optional<Order> order = orderDAO.findByTableAndNotByStatus(table, OrderStatus.PAID);
-        List<Order> orders = order.map(List::of).orElse(Collections.emptyList());
-        return mapper.map(table.withOrders(orders));
+        return mapper.map(table.withOrder(order.orElse(null)));
     }
 }

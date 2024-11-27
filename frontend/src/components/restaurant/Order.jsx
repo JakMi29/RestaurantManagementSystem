@@ -9,8 +9,8 @@ import MessageContext from '../../store/MessageContext';
 import { orderActions } from '../../store/OrderSlice';
 import { orderMealActions } from '../../store/EditOrderSlice';
 import OrderMeal from './OrderMeal';
-import { editOrder, updateOrder,changeOrderStatus } from '../../api/OrderApi';
-
+import { editOrder, updateOrder, changeOrderStatus } from '../../api/OrderApi';
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 function sortMeals(meals) {
     const statusOrder = ['PREPARING', 'READY', 'RELEASED'];
     return meals.slice().sort((a, b) => {
@@ -115,7 +115,7 @@ function Order({ order, admin }) {
                                     />
                                 ))}
                             </div>
-                            {order.edit && <button className={classes.addMore} onClick={handleAddMeals}>Add more</button>}
+                            {order.edit && !admin && <button className={classes.addMore} onClick={handleAddMeals}>Add more</button>}
                             <div className={classes.customers}>
                                 <p style={{ margin: "5px" }}>Total cost</p>
                                 <>{order.price.toFixed(2)} USD</>
@@ -124,9 +124,18 @@ function Order({ order, admin }) {
                     ) : (
                         <div className={classes.imageContainer}>
                             {!isDisabled && (
-                                <IconButton onClick={order.edit ? handleAddMeals : handleEditAndAddMeals}>
-                                    <AddShoppingCartIcon sx={{ fontSize: "90px" }} className={classes.iconButton} />
-                                </IconButton>
+                                admin ? (
+                                    <ShoppingCartIcon
+                                        sx={{ fontSize: "90px", color:"rgb(60, 60, 211,0.2)" }}
+                                    />
+                                ) : (
+                                    <IconButton onClick={order.edit ? handleAddMeals : handleEditAndAddMeals}>
+                                        <AddShoppingCartIcon
+                                            sx={{ fontSize: "90px" }}
+                                            className={classes.iconButton}
+                                        />
+                                    </IconButton>
+                                )
                             )}
                         </div>
                     )}
@@ -145,7 +154,7 @@ function Order({ order, admin }) {
                         </div>
                     )}
 
-                    {isDisabled && (
+                    {isDisabled && !admin && (
                         <div className={classes.overlay}>
                             <EditOffIcon sx={{ fontSize: "80px", color: "rgb(60, 60, 211, 0.2)" }} />
                         </div>

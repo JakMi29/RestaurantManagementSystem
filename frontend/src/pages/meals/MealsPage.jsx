@@ -141,7 +141,7 @@ export async function loader({ request }) {
     const url = new URL(request.url);
     const category = url.searchParams.get("category");
     const pageNumber = url.searchParams.get("pageNumber");
-    const searchTerm = url.searchParams.get("searchTerm");
+    const searchTerm = url.searchParams.get("search");
     const pageSize = 10;
     return defer({
         meals: await loadMeals(category, pageNumber, pageSize, searchTerm),

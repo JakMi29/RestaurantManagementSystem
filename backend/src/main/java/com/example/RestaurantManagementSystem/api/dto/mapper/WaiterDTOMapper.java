@@ -9,6 +9,8 @@ public class WaiterDTOMapper {
 
 
     public WaiterDTO map(Waiter waiter) {
+        if (waiter == null)
+            return null;
         return WaiterDTO.builder()
                 .email(waiter.getEmail())
                 .name(waiter.getUser().getName())

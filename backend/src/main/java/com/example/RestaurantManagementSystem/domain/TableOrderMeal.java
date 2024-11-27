@@ -23,6 +23,7 @@ public class TableOrderMeal {
         System.out.println(orderMeal);
         this.quantity += orderMeal.getQuantity();
         this.totalPrice=this.totalPrice.add(this.getMealPrice().multiply(BigDecimal.valueOf(orderMeal.getQuantity())));
+        System.out.println(orderMeal);
         this.time = this.time.plus(Duration.between(orderMeal.getReceivedDateTime(), orderMeal.getCompletedDateTime()))
                 .dividedBy(this.quantity);
     }

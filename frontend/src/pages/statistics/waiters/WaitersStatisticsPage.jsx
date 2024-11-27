@@ -19,12 +19,10 @@ const WaitersStatisticsPage = () => {
 
   const handleSearchChange = (event) => {
     const search = event.target.value
-
     setSearchTerm(search);
     search === "" ? navigate(`/statistics/waiters?pageNumber=0&pageSize=9&period=${period}`) :
       navigate(`/statistics/waiters?pageNumber=${pageNumber}&pageSize=9&period=${period}${search ? `&searchTerm=${search}` : ""}`);
   };
-
   const handleNextPage = () => {
     const page = pageNumber + 1;
     setPageNumber(page);

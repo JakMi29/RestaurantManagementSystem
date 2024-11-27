@@ -41,18 +41,18 @@ public class TableRepository implements TableDAO {
     @Override
     public Optional<Table> findByNameAndRestaurant(String name, Restaurant restaurant) {
         RestaurantEntity restaurantEntity = restaurantEntityMapper.map(restaurant);
-        return repository.findByNameAndRestaurant(name, restaurantEntity).map(mapper::mapWithOrder);
+        return repository.findByNameAndRestaurant(name, restaurantEntity).map(mapper::map);
     }
 
     @Override
     public Page<Table> findAllTablesByRestaurantAndSearchTerm(Restaurant restaurant, Pageable page, String searchTerm) {
         RestaurantEntity restaurantEntity = restaurantEntityMapper.map(restaurant);
-        return repository.findAllTablesByRestaurantAndSearchTerm(restaurantEntity, page, searchTerm).map(mapper::mapWithOrder);
+        return repository.findAllTablesByRestaurantAndSearchTerm(restaurantEntity, page, searchTerm).map(mapper::map);
     }
 
     @Override
     public Page<Table> findAllTablesByRestaurant(Restaurant restaurant, Pageable page) {
         RestaurantEntity restaurantEntity = restaurantEntityMapper.map(restaurant);
-        return repository.findAllTablesByRestaurant(restaurantEntity, page).map(mapper::mapWithOrder);
+        return repository.findAllTablesByRestaurant(restaurantEntity, page).map(mapper::map);
     }
 }

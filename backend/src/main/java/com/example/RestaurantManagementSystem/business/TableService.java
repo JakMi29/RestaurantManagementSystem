@@ -6,7 +6,6 @@ import com.example.RestaurantManagementSystem.business.dao.TableDAO;
 import com.example.RestaurantManagementSystem.domain.Restaurant;
 import com.example.RestaurantManagementSystem.domain.Table;
 import com.example.RestaurantManagementSystem.domain.TableStatus;
-import com.example.RestaurantManagementSystem.domain.exception.BadRequestException;
 import com.example.RestaurantManagementSystem.domain.exception.NotFoundException;
 import com.example.RestaurantManagementSystem.domain.exception.ObjectAlreadyExistException;
 import jakarta.transaction.Transactional;
@@ -47,6 +46,7 @@ public class TableService {
         return mapper.map(table);
     }
 
+    @Transactional
     public TableDTO changeStatus(String tableName, String restaurantName, boolean complete) {
         Restaurant restaurant = restaurantService.findByName(restaurantName);
         Table table = tableDAO.findByNameAndRestaurant(tableName, restaurant)
@@ -58,9 +58,9 @@ public class TableService {
             case BUSY -> TableStatus.DIRTY;
             case DIRTY -> TableStatus.READY;
         };
-        Table updatedTable= tableDAO.updateTable(table.withStatus(tableStatus));
+        Table updatedTable = tableDAO.updateTable(table.withStatus(tableStatus));
         log.info("Successful update table: %s status".formatted(tableName));
-        return mapper.map(table);
+        return mapper.map(updatedTable);
     }
 
     public Optional<Table> findByNameAndRestaurant(String tableName, String restaurantName) {
@@ -68,6 +68,7 @@ public class TableService {
         return tableDAO.findByNameAndRestaurant(tableName, restaurant);
     }
 
+    @Transactional
     public TableDTO updateTable(String tableName, String oldTableName, String restaurantName) {
         Restaurant restaurant = restaurantService.findByName(restaurantName);
         Optional<Table> existingTable = tableDAO.findByNameAndRestaurant(tableName, restaurant);
@@ -77,7 +78,7 @@ public class TableService {
         Table table = tableDAO.findByNameAndRestaurant(oldTableName, restaurant)
                 .orElseThrow(() -> new NotFoundException("Table with this name does not exist"));
 
-        Table updatedTable= tableDAO.updateTable(table.withName(tableName));
+        Table updatedTable = tableDAO.updateTable(table.withName(tableName));
         log.info("Successful update table: %s".formatted(tableName));
         return mapper.map(updatedTable);
     }

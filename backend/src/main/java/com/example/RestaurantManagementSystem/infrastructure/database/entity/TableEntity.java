@@ -27,10 +27,6 @@ public class TableEntity {
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
     private TableStatus status;
-
-    @OneToMany(mappedBy = "table", fetch = FetchType.LAZY)
-    private Set<OrderEntity> orders;
-
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "restaurant_id")
     private RestaurantEntity restaurant;

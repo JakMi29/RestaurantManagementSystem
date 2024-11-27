@@ -11,6 +11,7 @@ import { useLoaderData, useNavigate } from 'react-router-dom';
 import DialogComponent from '../dialogs/DialogComponent';
 
 function TableList() {
+  const admin = localStorage.getItem('role') === 'ADMIN';
   const dispatch = useDispatch();
   const loadedTables = useLoaderData();
   const [loading, setLoading] = useState(true)
@@ -83,14 +84,12 @@ function TableList() {
         { Authorization: `Bearer ${getAuthToken()}` },
         (frame) => {
           console.log('Connected: ' + frame);
-
           newStompClient.subscribe('/topic/tables', (table) => {
             if (table && table.body) {
               const updatedTable = JSON.parse(table.body);
               dispatch(tableActions.updateTable({ table: updatedTable }));
             }
           });
-
           newStompClient.subscribe('/topic/orders', (order) => {
             if (order && order.body) {
               const updatedOrder = JSON.parse(order.body);
@@ -98,19 +97,12 @@ function TableList() {
               dispatch(tableActions.updateOrder({ order: updatedOrder }));
             }
           });
-
-          newStompClient.subscribe('/topic/table', () => {
-
-          }
-          );
-
           setStompClient(newStompClient);
         },
         (error) => {
           console.error('STOMP error: ', error);
         }
       );
-
       return () => {
         if (newStompClient && newStompClient.connected) {
           newStompClient.disconnect();
@@ -118,7 +110,7 @@ function TableList() {
       };
     }
   }, [dispatch, stompClient]);
-  console.log(preprocessedTables)
+
   const getOrder = useCallback((table) => {
     if (table.order) {
       if (table.order.edit) {
@@ -148,9 +140,9 @@ function TableList() {
     <div className={classes.restaurantPage}>
       <DialogComponent open={openForm} onClose={handleCloseDialog} mode={mode} name={"table"} object={table} />
       <div style={{ display: "flex", justifyContent: "flex-end", alignItems: "center" }}>
-        <button className={uiClasses.blueButton} onClick={handleCreateTable}>
+        {admin && <button className={uiClasses.blueButton} onClick={handleCreateTable}>
           New
-        </button>
+        </button>}
         <form style={{ marginLeft: "auto" }}>
           <input
             type="text"

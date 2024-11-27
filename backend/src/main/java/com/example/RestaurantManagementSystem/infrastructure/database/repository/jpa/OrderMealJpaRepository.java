@@ -11,9 +11,9 @@ import java.util.Optional;
 
 public interface OrderMealJpaRepository extends JpaRepository<OrderMealEntity, Integer> {
 
-
     void removeByMealAndOrder(MealEntity meal, OrderEntity order);
 
     List<OrderMealEntity> findAllByMealAndOrder(MealEntity meal, OrderEntity order);
+
     Optional<OrderMealEntity> findByMealAndOrderAndStatus(MealEntity meal, OrderEntity order, OrderMealStatus orderMealStatus);
 }

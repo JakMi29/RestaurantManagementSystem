@@ -1,21 +1,20 @@
 package com.example.RestaurantManagementSystem.business;
 
 import com.example.RestaurantManagementSystem.api.dto.OrderMealDTO;
-import com.example.RestaurantManagementSystem.business.dao.OrderMealDAO;
-import com.example.RestaurantManagementSystem.domain.*;
+import com.example.RestaurantManagementSystem.domain.Meal;
+import com.example.RestaurantManagementSystem.domain.Order;
+import com.example.RestaurantManagementSystem.domain.OrderMeal;
+import com.example.RestaurantManagementSystem.domain.OrderMealStatus;
 import com.example.RestaurantManagementSystem.domain.exception.NotFoundException;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
@@ -23,136 +22,153 @@ import java.util.stream.Collectors;
 public class OrderMealService {
 
     private final MealService mealService;
-    private final OrderMealDAO orderMealDAO;
-
-    @PersistenceContext
-    private EntityManager entityManager;
 
     @Transactional
-    public void updateStatus(String mealName, Restaurant restaurant, Order order, OrderMealStatus orderMealStatus) {
-        Meal meal = mealService.findByNameAndRestaurant(mealName, restaurant);
-        OrderMeal orderMeal = findOrderMealByStatus(meal, order, orderMealStatus);
+    public List<OrderMeal> prepareOrderMeals(List<OrderMealDTO> incomingMeals, Order order) {
+        List<OrderMeal> existingMeals = order.getOrderMeals();
+        List<OrderMeal> updatedMeals = updateMeals(incomingMeals, existingMeals);
+        List<OrderMeal> newMeals = createNewMeals(incomingMeals, updatedMeals, order);
 
-        OrderMealStatus nextStatus = getNextStatus(orderMealStatus);
-        OrderMeal updatedOrderMeal = findOrCreateOrderMealWithStatus(meal, order, nextStatus, orderMeal);
-
-        updateOrderMealQuantities(orderMeal, updatedOrderMeal);
-        clearPersistenceContext();
+        return combineMeals(updatedMeals, newMeals);
     }
 
-    private OrderMeal findOrderMealByStatus(Meal meal, Order order, OrderMealStatus status) {
-        return orderMealDAO.findAllByMealAndOrder(meal, order).stream()
-                .filter(orderMeal -> orderMeal.getStatus() == status)
-                .findFirst()
-                .orElseThrow(() -> new NotFoundException("Order meal with status %s not found".formatted(status)));
+    public List<OrderMeal> updateMeal(Order order, String mealName, String orderMealStatus) {
+        List<OrderMeal> orderMeals = new ArrayList<>(order.getOrderMeals());
+        OrderMealStatus status = OrderMealStatus.valueOf(orderMealStatus);
+
+        OrderMeal orderMeal = findOrderMeal(orderMeals, mealName, status)
+                .orElseThrow(() -> new NotFoundException("OrderMeal not found"));
+
+        orderMeals.remove(orderMeal);
+        updateOrderMeals(orderMeals, order, orderMeal, status);
+
+        return orderMeals;
     }
 
-    private OrderMeal findOrCreateOrderMealWithStatus(Meal meal, Order order, OrderMealStatus status, OrderMeal originalOrderMeal) {
-        return orderMealDAO.findByMealAndOrderAndStatus(meal, order, status)
-                .orElseGet(() -> createOrderMealWithNewStatus(originalOrderMeal, status));
-    }
+    private void updateOrderMeals(List<OrderMeal> orderMeals, Order order, OrderMeal orderMeal, OrderMealStatus status) {
+        OrderMealStatus nextStatus = getNextStatus(status);
+        Optional<OrderMeal> existingMeal = findOrderMeal(orderMeals, orderMeal.getMeal().getName(), nextStatus);
 
-    private OrderMeal createOrderMealWithNewStatus(OrderMeal orderMeal, OrderMealStatus status) {
-        return OrderMeal.builder()
-                .order(orderMeal.getOrder())
-                .meal(orderMeal.getMeal())
-                .receivedDateTime(orderMeal.getReceivedDateTime())
-                .completedDateTime(status == OrderMealStatus.RELEASED ? OffsetDateTime.now() : null)
-                .status(status)
-                .price(orderMeal.getMeal().getPrice())
-                .quantity(0)
-                .build();
-    }
-
-    private void updateOrderMealQuantities(OrderMeal currentOrderMeal, OrderMeal updatedOrderMeal) {
-        if (currentOrderMeal.getQuantity() == 1) {
-            orderMealDAO.delete(currentOrderMeal);
-            if (updatedOrderMeal.getStatus() == OrderMealStatus.RELEASED) {
-                updatedOrderMeal = updatedOrderMeal.withCompletedDateTime(OffsetDateTime.now());
-            }
+        if (orderMeal.getQuantity() == 1) {
+            handleSingleQuantityMeal(orderMeals, order, orderMeal, nextStatus, existingMeal);
         } else {
-            orderMealDAO.save(currentOrderMeal.withQuantity(currentOrderMeal.getQuantity() - 1));
-        }
-        orderMealDAO.save(updatedOrderMeal.withQuantity(updatedOrderMeal.getQuantity() + 1));
-    }
-
-    @Transactional
-    public void removeOrderMeal(String mealName, Restaurant restaurant, Order order) {
-        Meal meal = mealService.findByNameAndRestaurant(mealName, restaurant);
-        orderMealDAO.deleteByMealAndOrderNumber(meal, order);
-    }
-
-    @Transactional
-    public OrderMeal prepareOrderMeal(Map.Entry<String, Integer> entry, Restaurant restaurant) {
-        Meal meal = mealService.findByNameAndRestaurant(entry.getKey(), restaurant);
-        return OrderMeal.builder()
-                .meal(meal)
-                .receivedDateTime(OffsetDateTime.now())
-                .quantity(entry.getValue())
-                .price(meal.getPrice().multiply(BigDecimal.valueOf(entry.getValue())))
-                .build();
-    }
-
-    @Transactional
-    public void updateOrderMeals(Order order, List<OrderMealDTO> meals) {
-        List<OrderMeal> preparingMeals = filterPreparingOrderMeals(order);
-        Map<String, OrderMealDTO> mealMap = meals.stream().collect(Collectors.toMap(
-                dto -> dto.getMeal().getName(),
-                Function.identity()
-        ));
-
-        processUpdatedOrderMeals(preparingMeals, mealMap, order);
-        removeUnusedOrderMeals(preparingMeals, mealMap);
-
-        clearPersistenceContext();
-    }
-
-    private List<OrderMeal> filterPreparingOrderMeals(Order order) {
-        return order.getOrderMeals().stream()
-                .filter(orderMeal -> orderMeal.getStatus() == OrderMealStatus.PREPARING)
-                .toList();
-    }
-
-    private void processUpdatedOrderMeals(List<OrderMeal> preparingMeals, Map<String, OrderMealDTO> mealMap, Order order) {
-        for (OrderMealDTO mealDTO : mealMap.values()) {
-            OrderMeal orderMeal = preparingMeals.stream()
-                    .filter(m -> m.getMeal().getName().equals(mealDTO.getMeal().getName()))
-                    .findFirst()
-                    .orElseGet(() -> createOrderMeal(mealDTO.getMeal().getName(), order));
-            orderMealDAO.save(orderMeal
-                    .withQuantity(mealDTO.getQuantity())
-                    .withPrice(mealDTO.getMeal().getPrice().multiply(BigDecimal.valueOf(mealDTO.getQuantity())))
-            );
+            handleMultipleQuantityMeal(orderMeals, order, orderMeal, nextStatus, existingMeal);
         }
     }
 
-    private void removeUnusedOrderMeals(List<OrderMeal> preparingMeals, Map<String, OrderMealDTO> mealMap) {
-        preparingMeals.stream()
-                .filter(orderMeal -> !mealMap.containsKey(orderMeal.getMeal().getName()))
-                .forEach(orderMealDAO::delete);
+    private void handleSingleQuantityMeal(List<OrderMeal> orderMeals, Order order, OrderMeal orderMeal, OrderMealStatus nextStatus, Optional<OrderMeal> existingMeal) {
+        if (existingMeal.isPresent()) {
+            updateExistingMeal(orderMeals, existingMeal.get());
+        } else {
+            addNewMeal(orderMeals, order, orderMeal, nextStatus);
+        }
     }
 
-    private OrderMeal createOrderMeal(String mealName, Order order) {
-        Meal meal = mealService.findByNameAndRestaurant(mealName, order.getRestaurant());
-        return OrderMeal.builder()
+    private void handleMultipleQuantityMeal(List<OrderMeal> orderMeals, Order order, OrderMeal orderMeal, OrderMealStatus nextStatus, Optional<OrderMeal> existingMeal) {
+        if (existingMeal.isPresent()) {
+            updateExistingMeal(orderMeals, existingMeal.get());
+        } else {
+            addNewMeal(orderMeals, order, orderMeal, nextStatus);
+        }
+        orderMeals.add(orderMeal.withQuantity(orderMeal.getQuantity() - 1));
+    }
+
+    private void updateExistingMeal(List<OrderMeal> orderMeals, OrderMeal existingMeal) {
+        OrderMeal updatedMeal = existingMeal
+                .withQuantity(existingMeal.getQuantity() + 1)
+                .withReceivedDateTime(existingMeal.getReceivedDateTime())
+                .withCompletedDateTime(existingMeal.getStatus() == OrderMealStatus.RELEASED ? OffsetDateTime.now() : null);
+        orderMeals.remove(existingMeal);
+        orderMeals.add(updatedMeal);
+    }
+
+    private void addNewMeal(List<OrderMeal> orderMeals, Order order, OrderMeal orderMeal, OrderMealStatus nextStatus) {
+        orderMeals.add(OrderMeal.builder()
                 .order(order)
-                .meal(meal)
-                .receivedDateTime(OffsetDateTime.now())
-                .status(OrderMealStatus.PREPARING)
-                .build();
+                .status(nextStatus)
+                .meal(orderMeal.getMeal())
+                .price(orderMeal.getMeal().getPrice())
+                .receivedDateTime(orderMeal.getReceivedDateTime())
+                .completedDateTime(nextStatus == OrderMealStatus.RELEASED ? OffsetDateTime.now() : null)
+                .quantity(1)
+                .build());
     }
 
     private OrderMealStatus getNextStatus(OrderMealStatus status) {
         return switch (status) {
+            case NEW -> OrderMealStatus.PREPARING;
             case PREPARING -> OrderMealStatus.READY;
-            case READY -> OrderMealStatus.RELEASED;
-            default -> throw new IllegalArgumentException("Invalid status: " + status);
+            case READY, RELEASED -> OrderMealStatus.RELEASED;
         };
     }
 
-    private void clearPersistenceContext() {
-        entityManager.flush();
-        entityManager.clear();
+    @Transactional
+    private OrderMeal buildNewMeal(OrderMealDTO incomingMeal, Order order) {
+        Meal meal = mealService.findByNameAndRestaurant(incomingMeal.getMeal().getName(), order.getRestaurant());
+        return OrderMeal.builder()
+                .order(order)
+                .meal(meal)
+                .price(calculatePrice(meal, incomingMeal.getQuantity()))
+                .status(OrderMealStatus.PREPARING)
+                .completedDateTime(null)
+                .quantity(incomingMeal.getQuantity())
+                .receivedDateTime(OffsetDateTime.now())
+                .build();
+    }
+
+    private Optional<OrderMeal> findOrderMeal(List<OrderMeal> orderMeals, String mealName, OrderMealStatus orderMealStatus) {
+        return orderMeals.stream().
+                filter(meal -> meal.getMeal().getName().equals(mealName) &&
+                        meal.getStatus().equals(orderMealStatus))
+                .findFirst();
+    }
+
+    private List<OrderMeal> updateMeals(List<OrderMealDTO> incomingMeals, List<OrderMeal> existingMeals) {
+        return existingMeals.stream()
+                .filter(meal -> hasMatchingIncomingMeal(meal, incomingMeals))
+                .map(meal -> updateMealQuantity(meal, incomingMeals))
+                .collect(Collectors.toList());
+    }
+
+    private OrderMeal updateMealQuantity(OrderMeal meal, List<OrderMealDTO> incomingMeals) {
+        return incomingMeals.stream()
+                .filter(incomingMeal -> isMatchingMeal(meal, incomingMeal))
+                .findFirst()
+                .map(matchingMeal -> meal.withQuantity(matchingMeal.getQuantity()))
+                .orElse(meal);
+    }
+
+    private boolean hasMatchingIncomingMeal(OrderMeal meal, List<OrderMealDTO> incomingMeals) {
+        return incomingMeals.stream()
+                .anyMatch(incomingMeal -> isMatchingMeal(meal, incomingMeal));
+    }
+
+    private boolean isMatchingMeal(OrderMeal meal, OrderMealDTO incomingMeal) {
+        return incomingMeal.getMeal().getName().equals(meal.getMeal().getName()) &&
+                OrderMealStatus.valueOf(incomingMeal.getStatus()).equals(meal.getStatus());
+    }
+
+    private List<OrderMeal> createNewMeals(List<OrderMealDTO> incomingMeals, List<OrderMeal> existingMeals, Order order) {
+        return incomingMeals.stream()
+                .filter(incomingMeal -> isNewMeal(incomingMeal, existingMeals))
+                .map(incomingMeal -> buildNewMeal(incomingMeal, order))
+                .collect(Collectors.toList());
+    }
+
+    private boolean isNewMeal(OrderMealDTO incomingMeal, List<OrderMeal> existingMeals) {
+        return existingMeals.stream()
+                .noneMatch(existingMeal -> incomingMeal.getMeal().getName().equals(existingMeal.getMeal().getName()) &&
+                        OrderMealStatus.valueOf(incomingMeal.getStatus()).equals(existingMeal.getStatus()));
+    }
+
+    private BigDecimal calculatePrice(Meal meal, Integer quantity) {
+        return meal.getPrice().multiply(BigDecimal.valueOf(quantity));
+    }
+
+    private List<OrderMeal> combineMeals(List<OrderMeal> updatedMeals, List<OrderMeal> newMeals) {
+        List<OrderMeal> combinedMeals = new ArrayList<>(updatedMeals);
+        combinedMeals.addAll(newMeals);
+        return combinedMeals;
     }
 }
 

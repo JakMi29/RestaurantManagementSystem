@@ -18,7 +18,27 @@ import java.util.Optional;
 @Slf4j
 @ControllerAdvice
 public class GlobalExceptionHandler {
-
+//    @ExceptionHandler(NotFoundException.class)
+//    public ResponseEntity<Response> handleNotFoundException(NotFoundException ex) {
+//        log.error(ex.getMessage());
+//        Response response = Response.builder()
+//                .message(ex.getMessage())
+//                .code(HttpStatus.NOT_FOUND.value())
+//                .build();
+//        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+//    }
+//
+//    @ExceptionHandler(BadRequestException.class)
+//    public ResponseEntity<Response> handleBadRequestException(BadRequestException ex) {
+//        log.error(ex.getMessage());
+//        Response response = Response.builder()
+//                .message(ex.getMessage())
+//                .code(HttpStatus.BAD_REQUEST.value())
+//                .build();
+//        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+//    }
+//
+//
 //    @ExceptionHandler(BadCredentialsException.class)
 //    public ResponseEntity<Response> handleException(BadCredentialsException ex) {
 //        log.error(ex.getMessage());
@@ -38,26 +58,6 @@ public class GlobalExceptionHandler {
 //                .code(HttpStatus.BAD_REQUEST.value())
 //                .build();
 //        return ResponseEntity.badRequest().body(response);
-//    }
-//
-//    @ExceptionHandler(NotFoundException.class)
-//    public ResponseEntity<Response> handleNotFoundException(NotFoundException ex) {
-//        log.error(ex.getMessage());
-//        Response response = Response.builder()
-//                .message(ex.getMessage())
-//                .code(HttpStatus.NOT_FOUND.value())
-//                .build();
-//        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
-//    }
-//
-//    @ExceptionHandler(BadRequestException.class)
-//    public ResponseEntity<Response> handleBadRequestException(BadRequestException ex) {
-//        log.error(ex.getMessage());
-//        Response response = Response.builder()
-//                .message(ex.getMessage())
-//                .code(HttpStatus.BAD_REQUEST.value())
-//                .build();
-//        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
 //    }
 //
 //    @ExceptionHandler(BindException.class)

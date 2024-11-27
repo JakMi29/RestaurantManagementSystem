@@ -6,6 +6,7 @@ import com.example.RestaurantManagementSystem.api.dto.mapper.OrderDTOMapper;
 import com.example.RestaurantManagementSystem.api.rest.request.CreateOrderRequest;
 import com.example.RestaurantManagementSystem.business.dao.OrderDAO;
 import com.example.RestaurantManagementSystem.domain.*;
+import com.example.RestaurantManagementSystem.domain.exception.NotFoundException;
 import com.example.RestaurantManagementSystem.domain.exception.ObjectAlreadyExistException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,12 +20,9 @@ import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
-import java.util.stream.Collectors;
 
 
 @Slf4j
@@ -37,6 +35,8 @@ public class OrderService {
     private final WaiterService waiterService;
     private final OrderMealService orderMealService;
     private final OrderDTOMapper mapper;
+    private final ConcurrentHashMap<String, Lock> orderLocks = new ConcurrentHashMap<>();
+
     @Transactional
     public Page<OrderDTO> findAllByPeriod(String restaurantName, String period, Pageable pageable) {
         Restaurant restaurant = restaurantService.findByName(restaurantName);
@@ -47,30 +47,24 @@ public class OrderService {
                 .map(order -> mapper.map(order, false));
     }
 
+    @Transactional
     public OrderDTO findByNumber(String number) {
-        log.info("Finding order by number: {}", number);
         return mapper.map(orderDAO.findByNumber(number), false);
     }
-
 
     @Transactional
     public OrderDTO updateOrder(OrderDTO updatedOrder) {
         Order order = orderDAO.findByNumber(updatedOrder.getNumber());
-        this.updateMeals(updatedOrder);
-
+        List<OrderMeal> meals = updateMeals(updatedOrder.getMeals(), order);
         Order updated = orderDAO.updateOrder(order
+                .withOrderMeals(meals)
                 .withEdit(false)
                 .withEditor(null)
                 .withCustomerQuantity(updatedOrder.getCustomerQuantity())
-                .withPrice(updatedOrder.getPrice()));
+                .withPrice(calculateOrderPrice(meals)));
 
         log.info("Order:{} updated successfully", updatedOrder.getNumber());
         return mapper.map(updated, false);
-    }
-
-    @Transactional
-    public Optional<Order> getOrderByTableAndNotStatus(Table table, OrderStatus status) {
-        return orderDAO.findByTableAndNotByStatus(table, status);
     }
 
     @Transactional
@@ -81,7 +75,6 @@ public class OrderService {
         try {
             Waiter waiter = waiterService.findByEmail(email);
             Order order = orderDAO.findByNumber(orderNumber);
-
             if (edit) {
                 validateAndEnableEditing(order);
                 order = order.withEdit(true).withEditor(waiter);
@@ -89,7 +82,6 @@ public class OrderService {
                 validateAndDisableEditing(order, email);
                 order = order.withEdit(false).withEditor(null);
             }
-
             return mapper.map(orderDAO.updateOrder(order), true);
         } finally {
             lock.unlock();
@@ -98,23 +90,17 @@ public class OrderService {
         }
     }
 
-    @Transactional
-    public void updateMeals(OrderDTO updatedOrder) {
-        Order order = orderDAO.findByNumber(updatedOrder.getNumber());
-        List<OrderMealDTO> filteredMeals = updatedOrder.getMeals().stream()
-                .filter(m -> OrderMealStatus.valueOf(m.getStatus()) == OrderMealStatus.PREPARING)
-                .collect(Collectors.toList());
-        orderMealService.updateOrderMeals(order, filteredMeals);
+    public List<OrderMeal> updateMeals(List<OrderMealDTO> meals, Order order) {
+        return orderMealService.prepareOrderMeals(meals, order);
     }
 
     @Transactional
-    public OrderDTO updateAndGetOrder(String restaurantName, String mealName, String orderNumber, String orderMealStatus) {
+    public OrderDTO updateOrderMeal(String mealName, String orderNumber, String orderMealStatus) {
         Order order = orderDAO.findByNumber(orderNumber);
-        if (this.checkOrderStatus(order)) {
-            return this.changeStatus(order);
-        }
-
-        return mapper.map(order, false);
+        order = order.withOrderMeals(orderMealService.updateMeal(order, mealName, orderMealStatus));
+        if (checkIfOrderIsComplete(order))
+            return changeStatus(order);
+        return mapper.map(orderDAO.updateOrder(order), false);
     }
 
     @Transactional
@@ -122,9 +108,7 @@ public class OrderService {
         Waiter waiter = waiterService.findByEmail(request.getWaiterEmail());
         Restaurant restaurant = restaurantService.findByName(request.getRestaurantName());
         Table table = tableService.findByNameAndRestaurant(request.getTableName(), request.getRestaurantName())
-                .orElseThrow(() -> {
-                    return new RuntimeException("Table not found");
-                });
+                .orElseThrow(() -> new NotFoundException("Table not found"));
 
         OffsetDateTime time = OffsetDateTime.now();
         Order order = Order.builder()
@@ -144,12 +128,10 @@ public class OrderService {
         return mapper.map(createdOrder, false);
     }
 
-    private BigDecimal calculatePrice(List<OrderMeal> orderMeals) {
-        BigDecimal totalPrice = orderMeals.stream()
+    private BigDecimal calculateOrderPrice(List<OrderMeal> orderMeals) {
+        return orderMeals.stream()
                 .map(meal -> meal.getMeal().getPrice().multiply(BigDecimal.valueOf(meal.getQuantity())))
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
-
-        return totalPrice;
     }
 
     @Transactional
@@ -166,32 +148,17 @@ public class OrderService {
             case RELEASED -> OrderStatus.PAID;
             case PAID -> null;
         };
-
         Order updatedOrder = order.withStatus(newStatus);
-
         if (newStatus == OrderStatus.PAID) {
             updatedOrder = updatedOrder.withCompletedDateTime(OffsetDateTime.now());
         }
-
         return mapper.map(orderDAO.updateOrder(updatedOrder), false);
     }
 
-    private Boolean checkOrderStatus(Order order) {
-        Map<OrderMealStatus, List<OrderMeal>> mealByStatus = order.getOrderMeals().stream()
-                .collect(Collectors.groupingBy(OrderMeal::getStatus));
-
-        return mealByStatus.size() == 1 && mealByStatus.containsKey(OrderMealStatus.RELEASED);
+    private Boolean checkIfOrderIsComplete(Order order) {
+        return order.getOrderMeals().stream()
+                .allMatch(meal -> meal.getStatus().equals(OrderMealStatus.RELEASED));
     }
-
-    private final ConcurrentHashMap<String, Lock> orderLocks = new ConcurrentHashMap<>();
-
-    @Transactional
-    private void updateOrderMeal(String restaurantName, String mealName, String orderNumber, String orderMealStatus) {
-        Restaurant restaurant = restaurantService.findByName(restaurantName);
-        Order order = orderDAO.findByNumber(orderNumber);
-        orderMealService.updateStatus(mealName, restaurant, order, OrderMealStatus.valueOf(orderMealStatus));
-    }
-
 
     private void validateAndEnableEditing(Order order) {
         if (order.getEdit()) {

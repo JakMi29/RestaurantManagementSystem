@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.*;
 public class OrderController {
     private final OrderService orderService;
     private final OrderPaginationService orderPaginationService;
-
     private SimpMessagingTemplate template;
 
     @PatchMapping("/waiter/edit")
@@ -46,7 +45,15 @@ public class OrderController {
             @RequestParam(required = false) String sortField,
             @RequestParam(required = false) String sortType
     ) {
-        return ResponseEntity.ok(orderPaginationService.findAllByPeriod(restaurantName, period, pageSize, pageNumber, sortField, sortType));
+        return ResponseEntity.ok(
+                orderPaginationService.findAllByPeriod(
+                        restaurantName,
+                        period,
+                        pageSize,
+                        pageNumber,
+                        sortField,
+                        sortType
+                ));
     }
 
     @GetMapping
@@ -73,8 +80,7 @@ public class OrderController {
             @RequestParam String orderNumber,
             @RequestParam String status
     ) {
-        OrderDTO order = orderService.updateAndGetOrder(restaurantName, mealName, orderNumber, status);
-        System.out.println(order);
+        OrderDTO order = orderService.updateOrderMeal(mealName, orderNumber, status);
         this.template.convertAndSend("/topic/orders", order);
 
         return Response.builder()

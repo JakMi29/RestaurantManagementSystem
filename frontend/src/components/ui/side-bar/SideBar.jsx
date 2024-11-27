@@ -6,7 +6,7 @@ import GroupOutlinedIcon from '@mui/icons-material/GroupOutlined';
 import classes from '../Ui.module.css';
 
 
-function Sidebar() {
+const Sidebar=() =>{
 
   return (
     <div className={classes.sidebar}>

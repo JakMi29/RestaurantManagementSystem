@@ -42,7 +42,6 @@ public class OrderMealEntity {
     @JoinColumn(name = "order_id")
     private OrderEntity order;
 
-
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "meal_id")
     private MealEntity meal;

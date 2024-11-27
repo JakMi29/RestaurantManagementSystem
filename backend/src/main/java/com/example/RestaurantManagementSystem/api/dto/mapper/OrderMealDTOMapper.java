@@ -13,7 +13,7 @@ public class OrderMealDTOMapper {
 
     public OrderMealDTO map(OrderMeal orderMeal) {
         return OrderMealDTO.builder()
-                .meal(mealDTOMapper.mapOrderMeal(orderMeal.getMeal()))
+                .meal(mealDTOMapper.map(orderMeal.getMeal()))
                 .status(orderMeal.getStatus().toString())
                 .quantity(orderMeal.getQuantity())
                 .build();

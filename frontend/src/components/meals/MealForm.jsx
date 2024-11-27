@@ -202,6 +202,7 @@ export async function action({ request }) {
     restaurantName: "Italiano",
     oldName: data.get('oldName')
   };
+  console.log(data)
   
   const formData = new FormData();
   const mealBlob = new Blob([JSON.stringify(mealData)], { type: 'application/json' });

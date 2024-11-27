@@ -39,11 +39,7 @@ public class OrderMealEntityMapper {
                 .order(OrderEntity.builder()
                         .id(orderMeal.getOrder().getId())
                         .build())
-                .meal(
-                        MealEntity.builder()
-                                .id(orderMeal.getMeal().getId())
-                                .name(orderMeal.getMeal().getName())
-                                .build())
+                .meal(mealEntityMapper.map(orderMeal.getMeal()))
                 .build();
     }
 }

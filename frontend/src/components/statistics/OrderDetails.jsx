@@ -17,7 +17,7 @@ const cardStyle = {
 const OrderDetails = ({ order }) => {
   const navigate = useNavigate()
   return (
-    <Box sx={{ padding: 4 }}>
+    <Box sx={{ padding:0 }}>
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
         <Typography variant="h4" sx={{ color: "rgba(60, 60, 211,1)", fontWeight: "bold" }}>
           Orders details
@@ -61,7 +61,7 @@ const OrderDetails = ({ order }) => {
           <Grid item xs={12} sm={6} md={3}>
             <Paper elevation={4} sx={cardStyle}>
               <Typography variant="subtitle1">Completed time</Typography>
-              <Typography variant="h5">{order.completedDateTime}</Typography>
+              <Typography variant="h5">{order.completedDateTime??"-"}</Typography>
             </Paper>
           </Grid>
           <Grid item xs={12} sm={6} md={3}>

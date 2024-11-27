@@ -13,7 +13,6 @@ import java.util.Optional;
 @Component
 @AllArgsConstructor
 public class TableEntityMapper {
-    private final OrderEntityMapper orderEntityMapper;
 
     public Table map(TableEntity entity) {
         return Table.builder()
@@ -21,11 +20,6 @@ public class TableEntityMapper {
                 .name(entity.getName())
                 .status(entity.getStatus())
                 .active(entity.getActive())
-                .orders(Optional.ofNullable(entity.getOrders())
-                        .orElseGet(Collections::emptySet)
-                        .stream()
-                        .map(orderEntityMapper::map)
-                        .toList())
                 .restaurant(
                         Restaurant
                                 .builder()
@@ -36,36 +30,6 @@ public class TableEntityMapper {
     }
 
     public TableEntity map(Table table) {
-        return TableEntity.builder()
-                .id(table.getId())
-                .name(table.getName())
-                .status(table.getStatus())
-                .active(table.getActive())
-                .restaurant(
-                        RestaurantEntity
-                                .builder()
-                                .id(table.getRestaurant().getId())
-                                .name(table.getRestaurant().getName())
-                                .build())
-                .build();
-    }
-
-    public Table mapWithOrder(TableEntity entity) {
-        return Table.builder()
-                .id(entity.getId())
-                .name(entity.getName())
-                .status(entity.getStatus())
-                .active(entity.getActive())
-                .restaurant(
-                        Restaurant
-                                .builder()
-                                .id(entity.getRestaurant().getId())
-                                .name(entity.getRestaurant().getName())
-                                .build())
-                .build();
-    }
-
-    public TableEntity mapWithOrder(Table table) {
         return TableEntity.builder()
                 .id(table.getId())
                 .name(table.getName())

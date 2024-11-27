@@ -49,6 +49,7 @@ public class TableController {
 
     ) {
         TableDTO table = tableService.changeStatus(tableName, restaurantName, reverse);
+        System.out.println(table);
         this.template.convertAndSend("/topic/tables", table);
         return Response.builder()
                 .code(HttpStatus.OK.value())

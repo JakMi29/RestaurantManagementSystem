@@ -18,5 +18,5 @@ public class Table {
     Boolean creatingOrder;
     Boolean active;
     Restaurant restaurant;
-    List<Order> orders;
+    Order order;
 }

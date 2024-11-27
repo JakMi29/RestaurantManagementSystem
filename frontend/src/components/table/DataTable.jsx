@@ -77,19 +77,16 @@ const DataTable = ({ columns, rows, loading, page, pageSize, totalPages, onPageC
                     Previous
                   </button>
                   <Pagination
-                    sx={{
-                      '& .MuiPaginationItem-root': {
-                        '&:hover': {
-                          backgroundColor: 'rgba(60, 60, 211, 0.2)',
+                      sx={{
+                        '& .MuiPaginationItem-root': {
+                          '&:hover': {
+                            backgroundColor: 'rgba(60, 60, 211, 0.2)',
+                          },
+                          '&.Mui-selected': {
+                            backgroundColor: 'rgba(60, 60, 211, 0.2)',
+                          },
                         },
-                      },
-                      '& .Mui-selected': {
-                        backgroundColor: 'rgba(60, 60, 211)',
-                        '&:hover': {
-                          backgroundColor: 'rgba(60, 60, 211)',
-                        },
-                      },
-                    }}
+                      }}
                     count={totalPages}
                     page={page + 1}
                     siblingCount={1}

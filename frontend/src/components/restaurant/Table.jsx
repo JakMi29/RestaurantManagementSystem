@@ -125,16 +125,12 @@ const Table = React.memo(({ table, order, updateTable }) => {
                 return (
                     <div className={classes.contentContainer}>
                         <div className={classes.iconContainer}>
-                            <TableRestaurantIcon sx={{ fontSize: 150, color: 'rgba(60, 60, 211, 0.2)' }} />
+                            <TableRestaurantIcon sx={{ fontSize: 150, color: 'rgb(60, 60, 211, 0.2)'}} />
                         </div>
                         <div className={classes.actions}>
-                            {admin ?
-                                <button onClick={handleOrderDatails} className={classes.blueButton}>
-                                    Statistics
-                                </button> :
-                                <button onClick={()=>handleChangeStatus(false)} className={classes.blueButton}>
-                                    Ocuppy
-                                </button>
+                            {!admin && <button onClick={() => handleChangeStatus(false)} className={classes.blueButton}>
+                                Ocuppy
+                            </button>
                             }
                         </div>
                     </div>
@@ -156,7 +152,7 @@ const Table = React.memo(({ table, order, updateTable }) => {
                                             Order
                                         </button>
                                         <button
-                                            onClick={()=>handleChangeStatus(true)}
+                                            onClick={() => handleChangeStatus(true)}
                                             className={classes.redButton}
                                         >
                                             Vacate
@@ -175,8 +171,8 @@ const Table = React.memo(({ table, order, updateTable }) => {
                             <CleanHandsIcon sx={{ fontSize: 150, color: 'rgba(255, 224, 99, 0.5)' }} />
                         </div>
                         <div className={classes.actions}>
-                            {admin &&
-                                <button onClick={()=>handleChangeStatus(false)} className={classes.yellowButton}>
+                            {!admin &&
+                                <button onClick={() => handleChangeStatus(false)} className={classes.yellowButton}>
                                     Clear
                                 </button>
                             }
