@@ -1,0 +1,59 @@
+.page {
+    display: flex;
+    flex-direction: column;
+    max-width: 100%;
+    gap: 15px;
+    padding-right: 20px;
+    margin-bottom: 20px;
+    box-sizing: border-box;
+}
+
+.paginationContainer {
+    display: flex;
+    width: 100%;
+}
+
+.actions {
+    display: flex;
+    justify-content: space-between;
+}
+
+.mealsContainer {
+   flex:1;
+}
+
+.meal {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 290px;
+    height: 185px;
+    background-color: #f7f7f7;
+}
+
+.orderMeal {
+    display: flex;
+    flex-direction: column;
+    min-width: 240px;
+    padding: 10px;
+    gap: 5px;
+    box-sizing: border-box;
+    flex-shrink: 0;
+}
+
+.orderMealActions {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.mealImage {
+    height: 130px;
+}
+
+.mealImage img {
+    border-radius: 4px;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}

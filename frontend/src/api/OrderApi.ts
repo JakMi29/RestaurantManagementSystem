@@ -1,10 +1,19 @@
 // api/orderApi.js
 
-import { getAuthToken } from "../util/auth";
+import { OrderInterface } from "../interfaces/Order";
+import { getAuthToken, getEmail, getRestaurantName } from "../services/LocalStorage";
 
 
-export const editOrder = (orderNumber, edit, editorEmail) => {
-    return fetch(`http://localhost:8080/api/restaurantManagementSystem/order/waiter/edit?orderNumber=${orderNumber}&editor=${editorEmail}&edit=${edit}`, {
+export const getOrder = async (orderNumber: string): Promise<Response> => {
+    return await fetch(`http://localhost:8080/api/restaurantManagementSystem/order?number=${orderNumber}`, {
+        headers: {
+            'Authorization': 'Bearer ' + getAuthToken()
+        }
+    });
+};
+
+export const editOrder = async (orderNumber: string, edit: boolean, editorEmail?: string): Promise<Response> => {
+    return await fetch(`http://localhost:8080/api/restaurantManagementSystem/order/waiter/edit?orderNumber=${orderNumber}&editor=${editorEmail}&edit=${edit}`, {
         method: 'PATCH',
         headers: {
             'Content-Type': 'application/json',
@@ -13,8 +22,8 @@ export const editOrder = (orderNumber, edit, editorEmail) => {
     });
 };
 
-export const updateOrder = (order) => {
-    return fetch(`http://localhost:8080/api/restaurantManagementSystem/order/waiter/update`, {
+export const updateOrder = async (order: OrderInterface): Promise<Response> => {
+    return await fetch(`http://localhost:8080/api/restaurantManagementSystem/order/waiter/update`, {
         method: 'PUT',
         body: JSON.stringify(order),
         headers: {
@@ -24,12 +33,27 @@ export const updateOrder = (order) => {
     });
 };
 
-export const changeOrderStatus = (orderNumber) => {
-    return fetch(`http://localhost:8080/api/restaurantManagementSystem/order/waiter/status?orderNumber=${orderNumber}`, {
+export const changeOrderStatus = async (orderNumber: string): Promise<Response> => {
+    return await fetch(`http://localhost:8080/api/restaurantManagementSystem/order/waiter/status?orderNumber=${orderNumber}`, {
         method: 'PATCH',
         headers: {
             'Content-Type': 'application/json',
             'Authorization': 'Bearer ' + getAuthToken(),
         }
     });
+};
+
+export const createOrder = async (tableName: string): Promise<Response> => {
+    return await fetch(`http://localhost:8080/api/restaurantManagementSystem/order/waiter`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + getAuthToken()
+        },
+        body: JSON.stringify({
+            tableName: tableName,
+            restaurantName: getRestaurantName(),
+            waiterEmail: getEmail()
+        })
+    })
 };

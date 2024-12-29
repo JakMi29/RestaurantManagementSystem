@@ -1,0 +1,26 @@
+body {
+  margin: 0;
+  background-color: #f7f7f7;
+  font-family: Arial, sans-serif;
+}
+
+button {
+  color: rgb(249, 249, 249);
+  padding: 10px 20px;
+  border-radius: 4px;
+  font-size: 16px;
+  border: none;
+  text-decoration: none;
+}
+
+h1 {
+  color: rgb(60, 60, 211);
+}
+
+a {
+  padding: 10px 20px;
+  border-radius: 4px;
+  font-size: 16px;
+  border: none;
+  text-decoration: none;
+}

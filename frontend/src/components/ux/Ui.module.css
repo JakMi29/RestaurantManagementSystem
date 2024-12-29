@@ -1,0 +1,195 @@
+.header {
+    top:0;
+    position: fixed;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #f7f7f7;
+    box-sizing: border-box;
+    width: 100vw;
+    height: 80px;
+    gap: 20px;
+    padding: 0 30px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    z-index: 100;
+}
+
+.navLinkLogin {
+    background-color: rgba(60, 60, 211);
+    color: rgb(249, 249, 249);
+}
+
+.navLinkLogin:hover {
+    background-color: rgba(60, 60, 211, 0.2);
+    color: rgb(249, 249, 249);
+}
+
+.navLinkLogin.active {
+    background-color: rgba(60, 60, 211, 0.2);
+    color: rgb(249, 249, 249);
+}
+
+.navLinkCategory {
+    background-color: rgba(60, 60, 211, 0.2);
+    color: rgb(249, 249, 249);
+}
+
+.navLinkCategory:hover {
+    background-color: rgba(60, 60, 211);
+    color: rgb(249, 249, 249);
+}
+
+.navLinkCategory.active {
+    background-color: rgba(60, 60, 211);
+    color: rgb(249, 249, 249);
+}
+
+.textField {
+    height: 40px;
+}
+
+.sidebar {
+    position: fixed;
+    top:80px;
+    left: 0px;
+    width: 250px;
+    height: 100%;
+    background-color: #f7f7f7;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    z-index: 98;
+}
+
+.sidebarMenu {
+    margin-top: 100px;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.sidebarItem {
+    border-radius: 4px;
+    padding: 8px;
+    margin: 5px 10px;
+    text-decoration: none;
+    color: rgb(60, 60, 211);
+    font-size: 20px;
+}
+
+.sidebarItemContent {
+    gap: 20px;
+    display: flex;
+    align-items: center;
+}
+
+.sidebarItem.active {
+    background-color: rgb(60, 60, 211);
+    color: rgb(249, 249, 249);
+}
+
+.sidebarItem:hover {
+    background-color: rgb(60, 60, 211, 0.2);
+    color: rgb(249, 249, 249);
+}
+
+.sidebar .text {
+    font-size: 25px;
+    font-weight: 500;
+    color: rgb(0, 0, 0);
+}
+
+.sideBarButton {
+    position: fixed;
+    margin-left: 10px;
+    top:90px;
+    left: 0px;
+    border-radius: 4px;
+    background-color: rgb(60, 60, 211);
+    color: rgb(249, 249, 249);
+    z-index: 99;
+}
+
+.content {
+    padding: 30px;
+    font-size: 20px;
+    gap:50px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.actions {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: space-between;
+}
+
+.progress {
+    width: 100%;
+    height: 5px;
+    bottom: 0;
+    margin: 0;
+    left: 0;
+    appearance: none;
+    position: absolute;
+    background-color: transparent;
+  }
+  
+  .progress::-webkit-progress-bar {
+    background-color: rgba(255, 255, 255, 0);
+  }
+  
+  .progress::-webkit-progress-value {
+    background-color: rgb(60, 60, 211,0.4); 
+  }
+
+.sideBarButton:hover {
+    color: rgb(60, 60, 211);
+    background-color: rgb(249, 249, 249);
+}
+
+.greenButton {
+    background-color: rgba(14, 185, 88, 0.2);
+}
+
+.greenButton:hover {
+    background-color: rgb(79, 156, 109);
+}
+
+.greenButton:disabled {
+    background-color: rgba(14, 185, 88, 0.2);
+}
+
+.redButton {
+    background-color: rgba(255, 0, 0, 0.2);
+}
+
+.redButton:hover {
+    background-color: rgb(237, 14, 14);
+}
+
+.yellowButton {
+    background-color: rgba(255, 224, 99, 0.5);
+}
+
+.yellowButton:hover {
+    background-color: rgb(255, 223, 99);
+}
+
+.blueButton {
+    background-color: rgba(60, 60, 211, 0.2);
+    color: rgb(249, 249, 249);
+}
+
+.blueButton:hover {
+    background-color: rgba(60, 60, 211);
+    color: rgb(249, 249, 249);
+}
+
+.blueButton:disabled {
+    background-color: rgba(60, 60, 211, 0.2);
+}
+
+.blueButton.active {
+    background-color: rgba(60, 60, 211);
+    color: rgb(249, 249, 249);
+}

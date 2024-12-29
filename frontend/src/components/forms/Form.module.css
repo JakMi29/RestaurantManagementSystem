@@ -1,0 +1,40 @@
+.form {
+  display: flex;
+  margin:10px 20px;
+  flex-direction: column;
+  min-width: 300px;
+  gap:15px;
+  border-radius: 8px;
+}
+
+.imagePlaceholder {
+  width: 320px;
+  height: 150px;
+  border: 1px dashed #ccc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.imagePlaceholder p {
+  color: #333;
+  z-index: 1;
+}
+
+.imagePlaceholder::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 0;
+}
+
+.actions {
+  margin-top: 10px;
+  display: flex;
+  justify-content: space-between;
+}

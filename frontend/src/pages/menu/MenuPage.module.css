@@ -1,0 +1,93 @@
+.page {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 10px;
+    margin-right: 20px;
+    margin-bottom: 20px;
+}
+
+.headerContainer {
+    display: flex;
+    justify-content: space-between;
+}
+
+.actionContainer {
+    display: flex;
+    gap: 10px;
+    box-sizing: border-box;
+}
+
+.mealOfDayBase {
+    position: absolute;
+    top: -15px;
+    right: -15px;
+    z-index: 10;
+    transition: opacity 0.3s ease, color 0.3s ease;
+}
+
+.mealOfDayFalse {
+    opacity: 0;
+    color: rgba(60, 60, 211, 0.2);
+}
+
+.mealOfDayFalse:hover {
+    color: rgb(60, 60, 211);
+}
+
+.meal:hover .mealOfDayFalse {
+    opacity: 1;
+}
+
+.mealOfDayTrue {
+    opacity: 1;
+    color: rgb(60, 60, 211);
+}
+
+.mealOfDayTrue:hover {
+    color: rgba(60, 60, 211, 0.2);
+}
+
+.paginationContainer {
+    display: flex;
+    width: 100%;
+}
+
+.categoryContainer{
+    display: flex;
+    gap: 5px;
+}
+
+.meal {
+    padding:10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 340px;
+    width: 340px;
+    box-sizing: border-box;
+    position: relative;
+ }
+
+.meal:hover {
+    box-shadow: 0px 0px 20px rgba(60, 60, 211, 0.2);
+}
+
+.meal img {
+    padding-top: 5px;
+    height: 150px;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+}
+
+.mealContent {
+    flex:1;
+    text-align: center;
+    width: 100%;
+}
+
+.actions {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
