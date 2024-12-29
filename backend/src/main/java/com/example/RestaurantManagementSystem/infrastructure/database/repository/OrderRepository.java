@@ -58,10 +58,6 @@ public class OrderRepository implements OrderDAO {
     @Override
     public List<Order> findAllByPeriod(Restaurant restaurant, OffsetDateTime startDate, OffsetDateTime endDate) {
         RestaurantEntity restaurantEntity = restaurantMapper.map(restaurant);
-        System.out.println(repository.findByRestaurantAndCompletedDateTimeBetween(restaurantEntity, startDate, endDate)
-                .stream()
-                .map(mapper::map)
-                .toList());
         return repository.findByRestaurantAndCompletedDateTimeBetween(restaurantEntity, startDate, endDate)
                 .stream()
                 .map(mapper::map)

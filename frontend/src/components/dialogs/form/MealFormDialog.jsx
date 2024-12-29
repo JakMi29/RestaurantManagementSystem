@@ -181,16 +181,13 @@ export async function action({ request }) {
     restaurantName: getRestaurantName(),
     oldName: data.get('oldName')
   };
-
   const formData = new FormData();
   const mealBlob = new Blob([JSON.stringify(mealData)], { type: 'application/json' });
-
   formData.append('meal', mealBlob);
   formData.append('image', data.get('image'));
   if (method === "patch") {
     formData.append('oldName', data.get('oldName'));
   }
-
   const url = 'http://localhost:8080/api/restaurantManagementSystem/meal/admin';
   const response = await fetch(url, {
     method: method,
@@ -199,18 +196,15 @@ export async function action({ request }) {
     },
     body: formData,
   });
-
   if (response.status === 422) {
     return response;
   }
   if (response.status === 400) {
     return response;
   }
-
   if (!response.ok) {
     throw new Response(JSON.stringify({ message: 'Could not save meal.' }), { status: 500 });
   }
-
   return response;
 }
 

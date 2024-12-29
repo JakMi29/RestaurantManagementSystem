@@ -13,10 +13,8 @@ import java.util.List;
 import java.util.Optional;
 
 public interface MealJpaRepository extends JpaRepository<MealEntity, Integer> {
-
     @EntityGraph(attributePaths = { "restaurant"})
     List<MealEntity> findAllByRestaurant(RestaurantEntity restaurant);
-
     Page<MealEntity> findAllByRestaurantAndCategoryAndStatusNot(
             RestaurantEntity restaurant,
             Category category,

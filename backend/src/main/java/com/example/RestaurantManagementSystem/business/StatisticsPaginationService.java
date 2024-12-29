@@ -47,7 +47,6 @@ public class StatisticsPaginationService {
         Sort sort = Sort.by(
                 Sort.Order.asc("salary")
         );
-        System.out.println(searchTerm);
         Pageable pageable = PageRequest.of(pageNumber, pageSize, sort);
         return waiterStatisticService.getWaitersStatistics(
                 restaurantName,

@@ -1,6 +1,7 @@
 package com.example.RestaurantManagementSystem.api.rest;
 
 import com.example.RestaurantManagementSystem.api.dto.TableDTO;
+import com.example.RestaurantManagementSystem.api.rest.request.CreateTableRequest;
 import com.example.RestaurantManagementSystem.api.rest.response.Response;
 import com.example.RestaurantManagementSystem.business.TablePaginationService;
 import com.example.RestaurantManagementSystem.business.TableService;
@@ -49,7 +50,6 @@ public class TableController {
 
     ) {
         TableDTO table = tableService.changeStatus(tableName, restaurantName, reverse);
-        System.out.println(table);
         this.template.convertAndSend("/topic/tables", table);
         return Response.builder()
                 .code(HttpStatus.OK.value())
@@ -59,21 +59,18 @@ public class TableController {
 
     @PostMapping("/admin")
     public Response createTable(
-            @RequestParam String tableName,
-            @RequestParam String restaurantName) {
-        TableDTO table = tableService.createTable(tableName, restaurantName);
+            @RequestBody CreateTableRequest request) {
+        TableDTO table = tableService.createTable(request);
         return Response.builder()
                 .code(HttpStatus.OK.value())
-                .message(String.format("table %s created Successfully", table.getName()))
+                .message(String.format("Table %s created Successfully", table.getName()))
                 .build();
     }
 
     @PutMapping("/admin")
     public Response updateTable(
-            @RequestParam String tableName,
-            @RequestParam String oldTableName,
-            @RequestParam String restaurantName) {
-        TableDTO table = tableService.updateTable(tableName, oldTableName, restaurantName);
+            @RequestBody CreateTableRequest request) {
+        TableDTO table = tableService.updateTable(request);
         return Response.builder()
                 .code(HttpStatus.OK.value())
                 .message("Successfully change table name")

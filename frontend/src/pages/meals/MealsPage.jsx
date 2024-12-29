@@ -56,44 +56,44 @@ function MealsPage() {
         navigate(`/meals?category=${currentCategory}&pageNumber=${pageNumber}&pageSize=10&search=${searchTerm}`);
     }
 
-const handleSearchChange = (event) => {
-    const search = event.target.value;
-    setSearchTerm(search);
-    if (search === "") {
-        navigate(`/meals?category=${currentCategory}&pageNumber=0&pageSize=10`);
-    } else {
-        navigate(`/meals?category=${currentCategory}&pageNumber=0&pageSize=10&search=${search}`);
-    }
-};
+    const handleSearchChange = (event) => {
+        const search = event.target.value;
+        setSearchTerm(search);
+        if (search === "") {
+            navigate(`/meals?category=${currentCategory}&pageNumber=0&pageSize=10`);
+        } else {
+            navigate(`/meals?category=${currentCategory}&pageNumber=0&pageSize=10&search=${search}`);
+        }
+    };
 
 
-return (
-    <div className={classes.mealPage}>
-        <DialogComponent open={openForm} mode={mode} onClose={handleCloseDialog} name={"meal"} object={meal} />
-        <MealCategoryContainer currentCategory={currentCategory} order={false} openDialog={handleOpenDialog} />
-        <div style={{ display: "flex", justifyContent: "flex-end" }}>
-            <form style={{ marginTop: "20px", marginLeft: "auto" }}>
-                <input
-                    type="text"
-                    value={searchTerm}
-                    onChange={handleSearchChange}
-                    placeholder="Search for meals..."
-                    className={classes.searchInput}
-                />
-            </form>
-        </div>
-        <Suspense fallback={<p style={{ textAlign: 'center' }}><CircularProgress /></p>}>
-            <Await resolve={meals}>
+    return (
+        <div className={classes.mealPage}>
+            <DialogComponent open={openForm} mode={mode} onClose={handleCloseDialog} name={"meal"} object={meal} />
+            <MealCategoryContainer currentCategory={currentCategory} order={false} openDialog={handleOpenDialog} />
+            <div style={{ display: "flex", justifyContent: "flex-end" }}>
+                <form style={{ marginTop: "20px", marginLeft: "auto" }}>
+                    <input
+                        type="text"
+                        value={searchTerm}
+                        onChange={handleSearchChange}
+                        placeholder="Search for meals..."
+                        className={classes.searchInput}
+                    />
+                </form>
+            </div>
+            <Suspense fallback={<p style={{ textAlign: 'center' }}><CircularProgress /></p>}>
+                <Await resolve={meals}>
                 {(loadedMeals) => (
                     <>
                         <MealList meals={loadedMeals.content} order={false} updateMeal={handleUpdateMeal} />
                         <div>
                             {!loadedMeals.first && (
-                                <button
-                                    className={classes.categoryButton}
-                                    style={{ position: "absolute", left: "80px", bottom: "30px" }}
-                                    onClick={handlePreviousPage}
-                                    disabled={loadedMeals.first}
+                            <button
+                                className={classes.categoryButton}
+                                style={{ position: "absolute", left: "80px", bottom: "30px" }}
+                                onClick={handlePreviousPage}
+                                disabled={loadedMeals.first}
                                 >
                                     Previous
                                 </button>
@@ -110,10 +110,10 @@ return (
                         </div>
                     </>
                 )}
-            </Await>
-        </Suspense>
-    </div>
-);
+                </Await>
+            </Suspense>
+        </div>
+    );
 }
 export default MealsPage;
 

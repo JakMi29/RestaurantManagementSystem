@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import classes from '../../pages/restaurant/RestaurantPage.module.css';
 import MessageContext from '../../store/MessageContext';
-import React, { useContext, useState } from 'react';
+import React, { useContext} from 'react';
 import CleanHandsIcon from '@mui/icons-material/CleanHands';
 import TableRestaurantIcon from '@mui/icons-material/TableRestaurant';
 import GroupsIcon from '@mui/icons-material/Groups';
@@ -10,7 +10,6 @@ import { useDispatch } from 'react-redux';
 import { orderActions } from '../../store/OrderSlice';
 import { getAuthToken } from '../../util/auth';
 import EditIcon from '@mui/icons-material/Edit';
-import DialogComponent from '../dialogs/DialogComponent';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { styled } from '@mui/system';
 import { getRestaurantName } from '../../util/data';

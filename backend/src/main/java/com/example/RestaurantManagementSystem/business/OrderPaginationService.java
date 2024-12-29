@@ -25,7 +25,6 @@ public class OrderPaginationService {
             String sortType
     ) {
         Sort sort = sortField != null ? Sort.by(Sort.Direction.fromString(sortType), sortField) : Sort.unsorted();
-        System.out.println(sort);
         Pageable pageable = PageRequest.of(pageNumber, pageSize, sort);
         return orderService.findAllByPeriod(
                 restaurantName,

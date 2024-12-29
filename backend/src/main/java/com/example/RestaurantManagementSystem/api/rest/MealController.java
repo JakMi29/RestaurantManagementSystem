@@ -68,7 +68,6 @@ public class MealController {
 
     @GetMapping("/image")
     public ResponseEntity<byte[]> getImage(@RequestParam String image) throws IOException {
-        System.out.println(image);
         Resource resource = new ClassPathResource("/static/images/" + image);
         byte[] imageBytes = Files.readAllBytes(Path.of(resource.getURI()));
         return ResponseEntity.ok().contentType(MediaType.IMAGE_PNG).body(imageBytes);

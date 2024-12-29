@@ -2,6 +2,7 @@ package com.example.RestaurantManagementSystem.business;
 
 import com.example.RestaurantManagementSystem.api.dto.TableDTO;
 import com.example.RestaurantManagementSystem.api.dto.mapper.TableDTOMapper;
+import com.example.RestaurantManagementSystem.api.rest.request.CreateTableRequest;
 import com.example.RestaurantManagementSystem.business.dao.TableDAO;
 import com.example.RestaurantManagementSystem.domain.Restaurant;
 import com.example.RestaurantManagementSystem.domain.Table;
@@ -23,22 +24,19 @@ public class TableService {
     private final TableDAO tableDAO;
     private final TableDTOMapper mapper;
     private final RestaurantService restaurantService;
-
-
     @Transactional
     public List<Table> findAllTablesByRestaurant(String restaurantName) {
         Restaurant restaurant = restaurantService.findByName(restaurantName);
         return tableDAO.findAllByRestaurant(restaurant);
     }
-
     @Transactional
-    public TableDTO createTable(String tableName, String restaurantName) {
-        Restaurant restaurant = restaurantService.findByName(restaurantName);
-        tableDAO.findByNameAndRestaurant(tableName, restaurant).ifPresent(meal -> {
-            throw new ObjectAlreadyExistException("table with this name already exists!");
+    public TableDTO createTable(CreateTableRequest request) {
+        Restaurant restaurant = restaurantService.findByName(request.getRestaurantName());
+        tableDAO.findByNameAndRestaurant(request.getName(), restaurant).ifPresent(meal -> {
+            throw new ObjectAlreadyExistException("Table with this name already exists!");
         });
         Table table = tableDAO.createTable(Table.builder()
-                .name(tableName)
+                .name(request.getName())
                 .restaurant(restaurant)
                 .active(true)
                 .status(TableStatus.READY).build());
@@ -69,17 +67,17 @@ public class TableService {
     }
 
     @Transactional
-    public TableDTO updateTable(String tableName, String oldTableName, String restaurantName) {
-        Restaurant restaurant = restaurantService.findByName(restaurantName);
-        Optional<Table> existingTable = tableDAO.findByNameAndRestaurant(tableName, restaurant);
+    public TableDTO updateTable(CreateTableRequest request) {
+        Restaurant restaurant = restaurantService.findByName(request.getRestaurantName());
+        Optional<Table> existingTable = tableDAO.findByNameAndRestaurant(request.getName(), restaurant);
         existingTable.ifPresent(table -> {
             throw new ObjectAlreadyExistException("Table with this name already exists");
         });
-        Table table = tableDAO.findByNameAndRestaurant(oldTableName, restaurant)
+        Table table = tableDAO.findByNameAndRestaurant(request.getOldName(), restaurant)
                 .orElseThrow(() -> new NotFoundException("Table with this name does not exist"));
 
-        Table updatedTable = tableDAO.updateTable(table.withName(tableName));
-        log.info("Successful update table: %s".formatted(tableName));
+        Table updatedTable = tableDAO.updateTable(table.withName(request.getName()));
+        log.info("Successful update table: %s".formatted(request.getName()));
         return mapper.map(updatedTable);
     }
 }

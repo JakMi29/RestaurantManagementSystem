@@ -26,7 +26,7 @@ public class WaiterController {
         WaiterDTO waiter = waiterService.createWaiter(request);
         return Response.builder()
                 .code(HttpStatus.OK.value())
-                .message(("waiter %s %s added successfully.".formatted(waiter.getName(), waiter.getSurname())))
+                .message(("Waiter %s %s added successfully.".formatted(waiter.getName(), waiter.getSurname())))
                 .build();
     }
 
@@ -36,7 +36,7 @@ public class WaiterController {
         WaiterDTO waiter = waiterService.updateWaiter(request);
         return Response.builder()
                 .code(HttpStatus.OK.value())
-                .message(("waiter %s %s updated successfully.".formatted(waiter.getName(), waiter.getSurname())))
+                .message(("Waiter %s %s updated successfully.".formatted(waiter.getName(), waiter.getSurname())))
                 .build();
     }
 
@@ -46,7 +46,7 @@ public class WaiterController {
         WaiterDTO waiter = waiterService.deleteWaiter(email);
         return Response.builder()
                 .code(HttpStatus.OK.value())
-                .message(("waiter %s %s deleted successfully.".formatted(waiter.getName(), waiter.getSurname())))
+                .message(("Waiter %s %s deleted successfully.".formatted(waiter.getName(), waiter.getSurname())))
                 .build();
     }
 

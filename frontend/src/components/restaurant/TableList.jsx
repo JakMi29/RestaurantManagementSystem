@@ -26,6 +26,7 @@ function TableList() {
   const [openForm, setOpenForm] = useState(false);
   const [mode, setMode] = useState();
   const [table, setTable] = useState();
+  
   const handleCloseDialog = () => {
     setOpenForm(false)
     setTable(undefined)

@@ -21,10 +21,8 @@ import java.util.List;
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfiguration {
-
     private final JwtAuthenticationFilter jwtAuthFilter;
     private final AuthenticationProvider authenticationProvider;
-
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
@@ -34,7 +32,8 @@ public class SecurityConfiguration {
                         .requestMatchers("/ws/**").permitAll()
                         .requestMatchers("/api/restaurantManagementSystem/auth/**").permitAll()
                         .requestMatchers("/api/restaurantManagementSystem/meal/image").permitAll()
-                        .requestMatchers("/api/restaurantManagementSystem/waiters/**").hasAnyAuthority("ADMIN")
+                        .requestMatchers("/api/restaurantManagementSystem/waiters/**")
+                        .hasAnyAuthority("ADMIN")
                         .requestMatchers("/api/restaurantManagementSystem/*/admin/**").hasAnyAuthority("ADMIN")
                         .requestMatchers("/api/restaurantManagementSystem/table/admin").hasAnyAuthority("ADMIN")
                         .requestMatchers("/api/restaurantManagementSystem/*/waiter/**").hasAnyAuthority("WAITER")
@@ -51,7 +50,6 @@ public class SecurityConfiguration {
 
         return http.build();
     }
-
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
@@ -64,5 +62,4 @@ public class SecurityConfiguration {
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }
-
 }

@@ -57,6 +57,7 @@ public class OrderService {
         Order order = orderDAO.findByNumber(updatedOrder.getNumber());
         List<OrderMeal> meals = updateMeals(updatedOrder.getMeals(), order);
         Order updated = orderDAO.updateOrder(order
+                        .withStatus(checkStatus(meals))
                 .withOrderMeals(meals)
                 .withEdit(false)
                 .withEditor(null)
@@ -65,6 +66,13 @@ public class OrderService {
 
         log.info("Order:{} updated successfully", updatedOrder.getNumber());
         return mapper.map(updated, false);
+    }
+
+    private OrderStatus checkStatus(List<OrderMeal> meals) {
+        if(meals.stream().anyMatch(meal-> meal.getStatus()!=OrderMealStatus.READY)){
+            return OrderStatus.PLACED;
+        }
+        return OrderStatus.RELEASED;
     }
 
     @Transactional
