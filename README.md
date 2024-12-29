@@ -8,8 +8,6 @@ Hibernate<br>
 React<br>
 TypeScript<br>
 REST API
-JUnit 5<br>
-Mockito<br>
 Gradle<br>
 Lombok<br>
 Postgres<br>
