@@ -6,9 +6,10 @@ export interface TableData {
   restaurantName: string,
   oldName: string,
 }
+const apiUrl = import.meta.env.VITE_BACKEND_URL;
 
 export async function updateTable(method: string, table: TableData): Promise<any> {
-  return await fetch('http://localhost:8080/api/restaurantManagementSystem/table/admin', {
+  return await fetch(`${apiUrl}/api/restaurantManagementSystem/table/admin`, {
     method: method,
     headers: {
       'Content-Type': 'application/json',

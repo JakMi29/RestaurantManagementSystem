@@ -8,9 +8,10 @@ interface getWaitersProps {
     searchTerm?: string;
 }
 
+const apiUrl = import.meta.env.VITE_BACKEND_URL;
 export async function getWaiters(props: getWaitersProps): Promise<any> {
     return await fetch(
-        `http://localhost:8080/api/restaurantManagementSystem/waiters/all?restaurantName=Italiano&pageNumber=${props.pageNumber}&pageSize=${props.pageSize}${props.searchTerm ? `&searchTerm=${props.searchTerm}` : ''}`,
+        `${apiUrl}/api/restaurantManagementSystem/waiters/all?restaurantName=Italiano&pageNumber=${props.pageNumber}&pageSize=${props.pageSize}${props.searchTerm ? `&searchTerm=${props.searchTerm}` : ''}`,
         {
             headers: {
                 'Authorization': `Bearer ${getAuthToken()}`,
@@ -19,7 +20,7 @@ export async function getWaiters(props: getWaitersProps): Promise<any> {
     )
 }
 export async function deleteWaiter(email:string): Promise<any> {
-    return  await fetch(`http://localhost:8080/api/restaurantManagementSystem/waiters/admin?email=${email}`, {
+    return  await fetch(`${apiUrl}/api/restaurantManagementSystem/waiters/admin?email=${email}`, {
         method: 'PATCH',
         headers: {
             'Authorization': 'Bearer ' + getAuthToken()

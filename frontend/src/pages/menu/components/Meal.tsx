@@ -16,6 +16,7 @@ const Meal = (props: { meal: MealInterface, updateMeal: (meal: MealInterface) =>
     const navigate = useNavigate()
     const admin = getRole() === Role.ADMIN;
     const { meal } = props;
+    const apiUrl = import.meta.env.VITE_BACKEND_URL;
 
     const handleEditButton = () => {
         props.updateMeal(meal)
@@ -61,7 +62,7 @@ const Meal = (props: { meal: MealInterface, updateMeal: (meal: MealInterface) =>
             <Typography variant="h6">{meal.name}</Typography>
             <div className={classes.mealContent}>
                 <div className={classes.image}>
-                    <img src={meal.image.includes("https://") ? meal.image : `http://localhost:8080/api/restaurantManagementSystem/meal/image?image=${meal.image}`} />
+                    <img src={meal.image.includes("https://") ? meal.image : `${apiUrl}/api/restaurantManagementSystem/meal/image?image=${meal.image}`} />
                 </div>
                 <Typography variant="body1">{meal.price} usd</Typography>
                 <Typography variant="body1">{meal.description}</Typography>

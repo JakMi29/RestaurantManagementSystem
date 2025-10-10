@@ -10,9 +10,10 @@ export interface WaiterData {
     oldEmail: string,
     password:  string
 }
+const apiUrl = import.meta.env.VITE_BACKEND_URL;
 
 export async function updateWaiter(method: string, waiter: WaiterData):Promise<any> {
-    return await fetch('http://localhost:8080/api/restaurantManagementSystem/waiters/admin', {
+    return await fetch(`${apiUrl}/api/restaurantManagementSystem/waiters/admin`, {
         method: method,
         headers: {
           'Content-Type': 'application/json',

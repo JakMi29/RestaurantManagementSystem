@@ -6,9 +6,9 @@ export interface AuthData {
     restaurantName?: string;
     phone?: string;
 }
-
+const apiUrl = import.meta.env.VITE_BACKEND_URL;
 export async function authenticate(mode: 'login' | 'signup', authData: AuthData): Promise<void> {
-    const response = await fetch(`http://localhost:8080/api/restaurantManagementSystem/auth/${mode}`, {
+    const response = await fetch(`${apiUrl}/api/restaurantManagementSystem/auth/${mode}`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',

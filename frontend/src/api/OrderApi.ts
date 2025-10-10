@@ -3,9 +3,10 @@
 import { OrderInterface } from "../interfaces/Order";
 import { getAuthToken, getEmail, getRestaurantName } from "../services/LocalStorage";
 
+const apiUrl = import.meta.env.VITE_BACKEND_URL;
 
 export const getOrder = async (orderNumber: string): Promise<Response> => {
-    return await fetch(`http://localhost:8080/api/restaurantManagementSystem/order?number=${orderNumber}`, {
+    return await fetch(`${apiUrl}/api/restaurantManagementSystem/order?number=${orderNumber}`, {
         headers: {
             'Authorization': 'Bearer ' + getAuthToken()
         }
@@ -13,7 +14,7 @@ export const getOrder = async (orderNumber: string): Promise<Response> => {
 };
 
 export const editOrder = async (orderNumber: string, edit: boolean, editorEmail?: string): Promise<Response> => {
-    return await fetch(`http://localhost:8080/api/restaurantManagementSystem/order/waiter/edit?orderNumber=${orderNumber}&editor=${editorEmail}&edit=${edit}`, {
+    return await fetch(`${apiUrl}/api/restaurantManagementSystem/order/waiter/edit?orderNumber=${orderNumber}&editor=${editorEmail}&edit=${edit}`, {
         method: 'PATCH',
         headers: {
             'Content-Type': 'application/json',
@@ -23,7 +24,7 @@ export const editOrder = async (orderNumber: string, edit: boolean, editorEmail?
 };
 
 export const updateOrder = async (order: OrderInterface): Promise<Response> => {
-    return await fetch(`http://localhost:8080/api/restaurantManagementSystem/order/waiter/update`, {
+    return await fetch(`${apiUrl}/api/restaurantManagementSystem/order/waiter/update`, {
         method: 'PUT',
         body: JSON.stringify(order),
         headers: {
@@ -34,7 +35,7 @@ export const updateOrder = async (order: OrderInterface): Promise<Response> => {
 };
 
 export const changeOrderStatus = async (orderNumber: string): Promise<Response> => {
-    return await fetch(`http://localhost:8080/api/restaurantManagementSystem/order/waiter/status?orderNumber=${orderNumber}`, {
+    return await fetch(`${apiUrl}/api/restaurantManagementSystem/order/waiter/status?orderNumber=${orderNumber}`, {
         method: 'PATCH',
         headers: {
             'Content-Type': 'application/json',
@@ -44,7 +45,7 @@ export const changeOrderStatus = async (orderNumber: string): Promise<Response> 
 };
 
 export const createOrder = async (tableName: string): Promise<Response> => {
-    return await fetch(`http://localhost:8080/api/restaurantManagementSystem/order/waiter`, {
+    return await fetch(`${apiUrl}/api/restaurantManagementSystem/order/waiter`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',

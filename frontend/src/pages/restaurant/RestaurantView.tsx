@@ -20,7 +20,7 @@ import Role from '../../constants/Role';
 import { getRole } from '../../services/LocalStorage';
 import { getTables } from '../../api/TableApi';
 
-
+const apiUrl = import.meta.env.VITE_BACKEND_URL;
 const RestaurantView = () => {
     const [openForm, setOpenForm] = useState<boolean>(false);
     const queryParams = new URLSearchParams(location.search);
@@ -64,7 +64,7 @@ const RestaurantView = () => {
 
     useEffect(() => {
         if (!stompClient) {
-            const socket = new SockJS('http://localhost:8080/ws');
+            const socket = new SockJS(`${apiUrl}/ws`);
             const newStompClient = Stomp.over(socket);
             newStompClient.connect(
                 { Authorization: `Bearer ${getAuthToken()}` },

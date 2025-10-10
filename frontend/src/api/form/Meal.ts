@@ -9,7 +9,7 @@ export interface MealData {
     restaurantName: string;
     oldName?: string;
 }
-
+const apiUrl = import.meta.env.VITE_BACKEND_URL;
 export async function manageMeal(method: string, mealData: MealData, image: File): Promise<any> {
     const formData = new FormData();
     const mealBlob = new Blob([JSON.stringify(mealData)], { type: 'application/json' });
@@ -21,7 +21,7 @@ export async function manageMeal(method: string, mealData: MealData, image: File
         formData.append('oldName', mealData.oldName || '');
     }
 
-    const url = 'http://localhost:8080/api/restaurantManagementSystem/meal/admin';
+    const url = `${apiUrl}/api/restaurantManagementSystem/meal/admin`;
     const response = await fetch(url, {
         method: method.toUpperCase(),
         headers: {
@@ -41,7 +41,7 @@ export async function manageMeal(method: string, mealData: MealData, image: File
 
 export async function mealOfTheDay(mealName: string):Promise<any> {
     const restaurantName = getRestaurantName(); 
-    return await fetch(`http://localhost:8080/api/restaurantManagementSystem/meal/admin/mealOfTheDay?restaurantName=${restaurantName}&name=${mealName}`, {
+    return await fetch(`${apiUrl}/api/restaurantManagementSystem/meal/admin/mealOfTheDay?restaurantName=${restaurantName}&name=${mealName}`, {
         method: 'PATCH',
         headers: {
             'Content-Type': 'application/json',
@@ -52,7 +52,7 @@ export async function mealOfTheDay(mealName: string):Promise<any> {
 
 export async function deleteMeal(mealName: string):Promise<any> {
     const restaurantName = getRestaurantName(); 
-    return await fetch(`http://localhost:8080/api/restaurantManagementSystem/meal/admin?restaurantName=${restaurantName}&name=${mealName}`, {
+    return await fetch(`${apiUrl}/api/restaurantManagementSystem/meal/admin?restaurantName=${restaurantName}&name=${mealName}`, {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json',

@@ -10,8 +10,11 @@ export interface getMealsProps {
     tags?: string;
 }
 
+const apiUrl = import.meta.env.VITE_BACKEND_URL;
+
 export async function getMeals(props: getMealsProps): Promise<Response> {
-    return await fetch(`http://localhost:8080/api/restaurantManagementSystem/meal/all?restaurantName=${getRestaurantName()}&category=${props.category}&pageNumber=${props.pageNumber}&pageSize=${props.pageSize}${props.searchTerm ? `&searchTerm=${props.searchTerm}` : ''}${props.tags ? `&${props.tags}` : ''}`, {
+    const url = `${apiUrl}/api/restaurantManagementSystem/meal/all?restaurantName=${getRestaurantName()}&category=${props.category}&pageNumber=${props.pageNumber}&pageSize=${props.pageSize}${props.searchTerm ? `&searchTerm=${props.searchTerm}` : ''}${props.tags ? `&${props.tags}` : ''}`;
+    return await fetch(url, {
         headers: {
             'Authorization': 'Bearer ' + getAuthToken()
         }
