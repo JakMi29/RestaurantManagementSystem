@@ -29,7 +29,7 @@ public class SecurityConfiguration {
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/ws/**").permitAll()
+                        .requestMatchers("/","/ws/**").permitAll()
                         .requestMatchers("/api/restaurantManagementSystem/auth/**").permitAll()
                         .requestMatchers("/api/restaurantManagementSystem/meal/image").permitAll()
                         .requestMatchers("/api/restaurantManagementSystem/waiters/**")
