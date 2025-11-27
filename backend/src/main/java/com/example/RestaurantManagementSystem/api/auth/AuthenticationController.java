@@ -27,8 +27,4 @@ public class AuthenticationController {
         return ResponseEntity.ok(service.authenticate(request));
     }
 
-    @GetMapping("/")
-    public String home() {
-        return "App is working";
-    }
 }

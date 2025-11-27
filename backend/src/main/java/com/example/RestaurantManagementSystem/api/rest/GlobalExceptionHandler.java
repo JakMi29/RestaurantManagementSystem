@@ -13,6 +13,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import java.nio.file.AccessDeniedException;
 import java.util.Optional;
 
 @Slf4j
@@ -71,6 +72,16 @@ public class GlobalExceptionHandler {
                 .code(HttpStatus.BAD_REQUEST.value())
                 .build();
         return ResponseEntity.badRequest().body(response);
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<Response> handleAccessDeniedException(Exception ex) {
+        log.error(ex.getMessage());
+        Response response = Response.builder()
+                .message("Access denied.")
+                .code(HttpStatus.FORBIDDEN.value())
+                .build();
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
     }
 
     @ExceptionHandler(RuntimeException.class)

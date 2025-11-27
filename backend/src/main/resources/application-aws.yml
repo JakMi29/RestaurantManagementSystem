@@ -1,0 +1,9 @@
+spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: https://cognito-idp.us-east-1.amazonaws.com/us-east-1_n7thzsTn8
+s3:
+  bucket:
+    name: asdasfsadxasd23e32creadasdasfcafae

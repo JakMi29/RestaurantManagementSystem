@@ -16,8 +16,5 @@ spring:
       hibernate:
         format_sql: true
         dialect: org.hibernate.dialect.PostgreSQLDialect
-  s3:
-    bucket:
-      name: ${S3_BUCKET_NAME}
-  cors:
-    allowed-origin: ${FRONTEND_URL:http://localhost:5173}
+cors:
+  allowed-origin: ${FRONTEND_URL:http://localhost:5173}
